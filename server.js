@@ -765,8 +765,8 @@ const server = http.createServer((request, response) => {
   serveStatic(request, response);
 });
 
-server.listen(port, "127.0.0.1", () => {
-  console.log(`Walk With God app running at http://127.0.0.1:${port}`);
+server.listen(port, "0.0.0.0", () => {
+  console.log(`Walk With God app running on port ${port}`);
   if (!webPush) {
     console.log("Install the web-push package to enable real push delivery: npm install");
   }
