@@ -46,6 +46,7 @@
           <div class="account-actions" id="accountActions">
             <button class="copy-button" id="showSignupButton" type="button">Create Account</button>
             <button class="quiet-button" id="showLoginButton" type="button">Log In</button>
+            <button class="quiet-button" id="showReminderSettingsButton" type="button" hidden>Reminder Settings</button>
             <button class="quiet-button" id="logoutButton" type="button" hidden>Sign Out</button>
           </div>
           <form class="auth-form" id="authForm" hidden>
@@ -69,6 +70,54 @@
             </div>
             <p class="copy-status" id="authMessage" role="status" aria-live="polite"></p>
           </form>
+
+          <div class="settings-panel" id="reminderSettingsPanel" hidden>
+            <div class="settings-panel-heading">
+              <p class="eyebrow">Profile Settings</p>
+              <h3>Daily Reminder</h3>
+            </div>
+            <form class="reminder-form" id="reminderForm">
+              <label>
+                Reminder time
+                <input id="reminderTime" type="time" />
+              </label>
+              <label>
+                Reminder words
+                <input id="reminderMessage" placeholder="Spend uninterrupted time with God today." />
+              </label>
+              <fieldset class="reminder-channels">
+                <legend>Reminder method</legend>
+                <label>
+                  <input id="reminderPush" type="checkbox" />
+                  App notification
+                </label>
+                <label>
+                  <input id="reminderEmail" type="checkbox" />
+                  Email
+                </label>
+                <label>
+                  <input id="reminderSms" type="checkbox" />
+                  Text message
+                </label>
+              </fieldset>
+              <div class="form-grid">
+                <label>
+                  Reminder email
+                  <input id="reminderEmailAddress" type="email" placeholder="you@example.com" />
+                </label>
+                <label>
+                  Text number
+                  <input id="reminderPhone" type="tel" placeholder="+15551234567" />
+                </label>
+              </div>
+              <div class="reflection-actions">
+                <button class="copy-button" type="submit">Save Reminder</button>
+                <button class="quiet-button" id="enablePushButton" type="button">Enable Push</button>
+                <button class="quiet-button" id="testPushButton" type="button">Test Reminder</button>
+              </div>
+              <p class="copy-status" id="reminderStatus" role="status" aria-live="polite"></p>
+            </form>
+          </div>
         </div>
       </section>
 
@@ -149,58 +198,6 @@
           </div>
           </div>
         </section>
-      </section>
-
-      <section class="daily" id="daily">
-        <div class="section-heading">
-          <p class="eyebrow">Daily Reminder</p>
-          <h2>Make room for the focus</h2>
-          <p class="section-copy">
-            Choose when you want to be reminded, then enable browser notifications for true daily push reminders.
-          </p>
-        </div>
-
-        <form class="reminder-form" id="reminderForm">
-          <label>
-            Reminder time
-            <input id="reminderTime" type="time" />
-          </label>
-          <label>
-            Reminder words
-            <input id="reminderMessage" placeholder="Spend uninterrupted time with God today." />
-          </label>
-          <fieldset class="reminder-channels">
-            <legend>Reminder method</legend>
-            <label>
-              <input id="reminderPush" type="checkbox" />
-              App notification
-            </label>
-            <label>
-              <input id="reminderEmail" type="checkbox" />
-              Email
-            </label>
-            <label>
-              <input id="reminderSms" type="checkbox" />
-              Text message
-            </label>
-          </fieldset>
-          <div class="form-grid">
-            <label>
-              Reminder email
-              <input id="reminderEmailAddress" type="email" placeholder="you@example.com" />
-            </label>
-            <label>
-              Text number
-              <input id="reminderPhone" type="tel" placeholder="+15551234567" />
-            </label>
-          </div>
-          <div class="reflection-actions">
-            <button class="copy-button" type="submit">Save Reminder</button>
-            <button class="quiet-button" id="enablePushButton" type="button">Enable Push</button>
-            <button class="quiet-button" id="testPushButton" type="button">Test Push</button>
-          </div>
-          <p class="copy-status" id="reminderStatus" role="status" aria-live="polite"></p>
-        </form>
       </section>
 
       <section class="daily" id="community">

@@ -116,6 +116,7 @@ const supportMessageList = document.querySelector("#supportMessageList");
 const accountActions = document.querySelector("#accountActions");
 const showSignupButton = document.querySelector("#showSignupButton");
 const showLoginButton = document.querySelector("#showLoginButton");
+const showReminderSettingsButton = document.querySelector("#showReminderSettingsButton");
 const authForm = document.querySelector("#authForm");
 const authName = document.querySelector("#authName");
 const authEmail = document.querySelector("#authEmail");
@@ -156,6 +157,7 @@ const reminderEmail = document.querySelector("#reminderEmail");
 const reminderSms = document.querySelector("#reminderSms");
 const reminderEmailAddress = document.querySelector("#reminderEmailAddress");
 const reminderPhone = document.querySelector("#reminderPhone");
+const reminderSettingsPanel = document.querySelector("#reminderSettingsPanel");
 const enablePushButton = document.querySelector("#enablePushButton");
 const testPushButton = document.querySelector("#testPushButton");
 const soloModeButton = document.querySelector("#soloModeButton");
@@ -301,11 +303,14 @@ function renderAccount() {
     authForm.hidden = true;
     showSignupButton.hidden = true;
     showLoginButton.hidden = true;
+    showReminderSettingsButton.hidden = false;
     logoutButton.hidden = false;
   } else {
     accountStatus.textContent = "You are not signed in.";
     showSignupButton.hidden = false;
     showLoginButton.hidden = false;
+    showReminderSettingsButton.hidden = true;
+    reminderSettingsPanel.hidden = true;
     logoutButton.hidden = true;
   }
   supportMessageList.innerHTML = state.supportMessages.length
@@ -636,6 +641,7 @@ reminderForm.addEventListener("submit", (event) => {
   apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) })
     .then(() => {
       reminderStatus.textContent = `Reminder saved for ${state.reminder.time}.`;
+      reminderSettingsPanel.hidden = true;
     })
     .catch((error) => {
       reminderStatus.textContent = error.message;
@@ -736,6 +742,7 @@ communityForm.addEventListener("submit", (event) => {
 function openAuthForm(mode) {
   state.authMode = mode;
   authForm.hidden = false;
+  reminderSettingsPanel.hidden = true;
   authName.closest("label").hidden = mode === "login";
   submitAuthButton.textContent = mode === "signup" ? "Create Account" : "Log In";
   authMessage.textContent = mode === "signup" ? "Create your account to save progress and join community." : "Log in to continue.";
@@ -743,6 +750,13 @@ function openAuthForm(mode) {
 
 showSignupButton.addEventListener("click", () => openAuthForm("signup"));
 showLoginButton.addEventListener("click", () => openAuthForm("login"));
+showReminderSettingsButton.addEventListener("click", () => {
+  reminderSettingsPanel.hidden = !reminderSettingsPanel.hidden;
+  if (!reminderSettingsPanel.hidden) {
+    authForm.hidden = true;
+    reminderStatus.textContent = state.user ? `Reminder set for ${reminderTime.value}.` : "";
+  }
+});
 cancelAuthButton.addEventListener("click", () => {
   authForm.hidden = true;
   authMessage.textContent = "";
