@@ -654,6 +654,10 @@ enablePushButton.addEventListener("click", async () => {
     const keyResult = await apiFetch("/api/push/public-key");
     if (!keyResult.publicKey) throw new Error("Push keys are not ready. Run npm install and restart the server.");
     const registration = await navigator.serviceWorker.register("/service-worker.js");
+    const existingSubscription = await registration.pushManager.getSubscription();
+    if (existingSubscription) {
+      await existingSubscription.unsubscribe();
+    }
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(keyResult.publicKey)
