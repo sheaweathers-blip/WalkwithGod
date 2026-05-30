@@ -87,6 +87,235 @@ const defaultFocuses = [
       ["Day 6", "Receive the Gift", "Acts 2:38", "Repentance and baptism are joined with forgiveness and the gift of the Holy Spirit."],
       ["Day 7", "The Coming King", "Zechariah 9:9", "The King comes righteous, victorious, and humble."]
     ]
+  },
+  {
+    id: "ten-commandments",
+    label: "Theme 5",
+    mark: "10",
+    title: "The Ten Commandments",
+    description: "A 30-day focus walking through the Ten Commandments with three days for each commandment: receiving God's word, examining the heart, and living it out.",
+    days: [
+      ["Day 1", "No Other Gods: The Command", "Exodus 20:1-3", "God begins by reminding His people that He rescued them, then calls them to worship Him alone."],
+      ["Day 2", "No Other Gods: The Heart", "Deuteronomy 6:4-5", "Love for the Lord is meant to fill the whole heart, soul, and strength."],
+      ["Day 3", "No Other Gods: Daily Allegiance", "Matthew 6:24", "Jesus teaches that divided masters divide the heart; devotion to God must come first."],
+      ["Day 4", "No Idols: The Command", "Exodus 20:4-6", "God forbids His people from reducing His glory to anything made by human hands."],
+      ["Day 5", "No Idols: True Worship", "John 4:23-24", "The Father seeks worshipers who worship in spirit and truth."],
+      ["Day 6", "No Idols: Guarded Affections", "1 John 5:21", "God's children are called to keep themselves from idols, including the hidden idols of the heart."],
+      ["Day 7", "God's Name: The Command", "Exodus 20:7", "The Lord's name is holy and must not be carried lightly, falsely, or carelessly."],
+      ["Day 8", "God's Name: Reverence", "Psalm 29:2", "The Lord is worthy of glory, honor, and worship in the splendor of holiness."],
+      ["Day 9", "God's Name: Words That Honor", "Colossians 3:17", "Everything said and done can become an act of honoring the name of the Lord Jesus."],
+      ["Day 10", "Sabbath: The Command", "Exodus 20:8-11", "God commands a holy rhythm of work and rest rooted in His own creation pattern."],
+      ["Day 11", "Sabbath: Gift of Rest", "Mark 2:27", "Jesus teaches that Sabbath was made as a gift for people, not as a burden to crush them."],
+      ["Day 12", "Sabbath: Soul Rest", "Matthew 11:28-30", "Christ invites the weary to come to Him and receive rest for their souls."],
+      ["Day 13", "Honor Parents: The Command", "Exodus 20:12", "God calls His people to honor father and mother as part of a life ordered under Him."],
+      ["Day 14", "Honor Parents: Receiving Wisdom", "Proverbs 1:8-9", "Instruction and wisdom from parents can become a graceful covering for life."],
+      ["Day 15", "Honor Parents: Care and Integrity", "1 Timothy 5:4", "Honoring family includes practical care, gratitude, and faithful responsibility."],
+      ["Day 16", "Do Not Murder: The Command", "Exodus 20:13", "God protects human life because every person bears weight and value before Him."],
+      ["Day 17", "Do Not Murder: The Heart", "Matthew 5:21-24", "Jesus exposes anger, contempt, and unreconciled relationships as matters of the heart."],
+      ["Day 18", "Do Not Murder: Choose Peace", "Romans 12:18", "As far as it depends on us, God calls us to pursue peace with others."],
+      ["Day 19", "Do Not Commit Adultery: The Command", "Exodus 20:14", "God protects covenant faithfulness, purity, and trust in marriage."],
+      ["Day 20", "Do Not Commit Adultery: The Heart", "Matthew 5:27-30", "Jesus calls His followers to deal honestly and seriously with lust and compromise."],
+      ["Day 21", "Do Not Commit Adultery: Faithful Love", "Hebrews 13:4", "Marriage is to be honored, and faithfulness matters before God."],
+      ["Day 22", "Do Not Steal: The Command", "Exodus 20:15", "God forbids taking what belongs to another and calls His people to integrity."],
+      ["Day 23", "Do Not Steal: Honest Work", "Ephesians 4:28", "The redeemed life turns from stealing toward honest work and generosity."],
+      ["Day 24", "Do Not Steal: Open Hands", "Proverbs 11:25", "God forms His people into generous people who refresh others."],
+      ["Day 25", "Do Not Bear False Witness: The Command", "Exodus 20:16", "God cares about truth, justice, and the way our words affect our neighbor."],
+      ["Day 26", "Do Not Bear False Witness: Truthful Speech", "Ephesians 4:25", "Because believers belong to one another, they are called to put away falsehood and speak truth."],
+      ["Day 27", "Do Not Bear False Witness: Words That Heal", "Proverbs 12:18", "Reckless words wound, but wise words can bring healing."],
+      ["Day 28", "Do Not Covet: The Command", "Exodus 20:17", "God addresses desire itself, teaching His people not to grasp after what belongs to others."],
+      ["Day 29", "Do Not Covet: Contentment", "Philippians 4:11-13", "Paul learned contentment through Christ's strength in every circumstance."],
+      ["Day 30", "Do Not Covet: Treasure in God", "Luke 12:15", "Jesus warns that life does not consist in the abundance of possessions."]
+    ]
+  },
+  {
+    id: "women-of-the-bible",
+    label: "Theme 6",
+    mark: "W",
+    title: "Women of the Bible",
+    description: "A 14-day focus on women whose faith, courage, sorrow, wisdom, and obedience reveal God's work in ordinary and extraordinary lives.",
+    days: [
+      ["Day 1", "Eve: Made in God's Image", "Genesis 1:27-28", "Woman and man are created in God's image and blessed with purpose."],
+      ["Day 2", "Sarah: Promise and Waiting", "Genesis 18:10-14", "God meets Sarah's laughter and doubt with the question: is anything too hard for the Lord?"],
+      ["Day 3", "Hagar: Seen by God", "Genesis 16:7-13", "The Lord sees Hagar in distress and reveals Himself as the God who sees."],
+      ["Day 4", "Miriam: Deliverance Song", "Exodus 15:20-21", "Miriam leads worship after God brings His people through the sea."],
+      ["Day 5", "Rahab: Courageous Faith", "Joshua 2:8-14", "Rahab responds to God's reputation with risky faith and courageous action."],
+      ["Day 6", "Deborah: Wise Leadership", "Judges 4:4-9", "Deborah serves with wisdom, courage, and trust in God's command."],
+      ["Day 7", "Ruth: Loyal Love", "Ruth 1:16-17", "Ruth's steadfast love points toward covenant faithfulness and costly devotion."],
+      ["Day 8", "Hannah: Honest Prayer", "1 Samuel 1:10-18", "Hannah pours out her soul before the Lord and receives peace before circumstances change."],
+      ["Day 9", "Abigail: Peacemaking Wisdom", "1 Samuel 25:23-35", "Abigail acts with humility and wisdom to prevent bloodshed."],
+      ["Day 10", "Esther: Courage for the Moment", "Esther 4:13-16", "Esther risks comfort and safety to act faithfully in her appointed moment."],
+      ["Day 11", "Mary: Willing Surrender", "Luke 1:26-38", "Mary receives God's word with humility and offers herself to the Lord's will."],
+      ["Day 12", "Elizabeth: Spirit-Filled Encouragement", "Luke 1:39-45", "Elizabeth blesses Mary's faith and recognizes God's work with joy."],
+      ["Day 13", "Mary Magdalene: Witness to Resurrection", "John 20:11-18", "Mary Magdalene meets the risen Christ and is sent to tell the good news."],
+      ["Day 14", "Priscilla: Faithful Teaching", "Acts 18:24-26", "Priscilla and Aquila help Apollos understand the way of God more accurately."]
+    ]
+  },
+  {
+    id: "prophets-of-the-bible",
+    label: "Theme 7",
+    mark: "P",
+    title: "Prophets of the Bible",
+    description: "A 14-day focus on prophetic voices that called God's people to repentance, justice, faithfulness, courage, and hope.",
+    days: [
+      ["Day 1", "Moses: Speak What God Commands", "Deuteronomy 18:15-19", "God promises a prophet like Moses and calls His people to listen."],
+      ["Day 2", "Samuel: Here I Am", "1 Samuel 3:1-10", "Samuel learns to recognize and answer the voice of the Lord."],
+      ["Day 3", "Nathan: Truth to Power", "2 Samuel 12:1-13", "Nathan confronts David with courage, exposing sin and opening the way to repentance."],
+      ["Day 4", "Elijah: Choose the Lord", "1 Kings 18:20-24", "Elijah calls the people away from divided loyalty and back to the living God."],
+      ["Day 5", "Elisha: Opened Eyes", "2 Kings 6:15-17", "Elisha's servant learns that God's unseen help is greater than visible danger."],
+      ["Day 6", "Isaiah: Sent by God", "Isaiah 6:1-8", "Isaiah sees God's holiness, receives cleansing, and answers God's call."],
+      ["Day 7", "Jeremiah: Called in Weakness", "Jeremiah 1:4-10", "God appoints Jeremiah and promises His presence despite fear."],
+      ["Day 8", "Ezekiel: A New Heart", "Ezekiel 36:24-28", "God promises cleansing, a new heart, and His Spirit within His people."],
+      ["Day 9", "Daniel: Faithful Under Pressure", "Daniel 6:10-23", "Daniel remains prayerful and faithful when obedience becomes costly."],
+      ["Day 10", "Hosea: Steadfast Love", "Hosea 11:1-9", "God's wounded love reveals His mercy toward a wandering people."],
+      ["Day 11", "Amos: Justice Like Waters", "Amos 5:21-24", "God rejects empty religion and calls for justice and righteousness."],
+      ["Day 12", "Jonah: Mercy Beyond Borders", "Jonah 4:1-11", "God exposes Jonah's resentment and reveals His compassion for the lost."],
+      ["Day 13", "Micah: What the Lord Requires", "Micah 6:6-8", "The Lord calls His people to justice, mercy, and humble walking with Him."],
+      ["Day 14", "Malachi: Return to Me", "Malachi 3:6-12", "God calls His people to return and trust His covenant faithfulness."]
+    ]
+  },
+  {
+    id: "biblical-marriage",
+    label: "Theme 8",
+    mark: "M",
+    title: "Marriage",
+    description: "A 14-day focus on covenant love, humility, forgiveness, friendship, service, and faithfulness in marriage.",
+    days: [
+      ["Day 1", "One Flesh Covenant", "Genesis 2:18-25", "Marriage begins with God's design for companionship, unity, and unashamed intimacy."],
+      ["Day 2", "Love Is Patient", "1 Corinthians 13:4-7", "Covenant love is shaped by patience, kindness, humility, and endurance."],
+      ["Day 3", "Mutual Honor", "Ephesians 5:21", "A Christ-centered marriage begins with reverence for Christ and mutual humility."],
+      ["Day 4", "Faithful Love", "Proverbs 3:3-4", "Steadfast love and faithfulness are to be treasured and practiced."],
+      ["Day 5", "Gentle Words", "Proverbs 15:1", "Gentle answers can turn away anger and protect connection."],
+      ["Day 6", "Quick to Listen", "James 1:19-20", "Listening, slow speech, and restrained anger create room for righteousness."],
+      ["Day 7", "Forgive as Forgiven", "Colossians 3:12-14", "Compassion, humility, patience, and forgiveness hold relationships together in love."],
+      ["Day 8", "Serve Like Christ", "Mark 10:43-45", "Jesus redefines greatness as service and self-giving love."],
+      ["Day 9", "Guard the Covenant", "Malachi 2:14-16", "God cares about faithfulness and the covenant promises made between spouses."],
+      ["Day 10", "Do Not Let the Sun Go Down", "Ephesians 4:26-32", "God calls couples away from bitterness and toward tenderhearted forgiveness."],
+      ["Day 11", "Pray Together", "Matthew 18:19-20", "Shared prayer invites the presence and help of Christ into shared burdens."],
+      ["Day 12", "Friendship and Delight", "Song of Solomon 2:10-13", "Marriage includes delight, pursuit, affection, and joy."],
+      ["Day 13", "Build the Home", "Proverbs 24:3-4", "Wisdom, understanding, and knowledge strengthen a household."],
+      ["Day 14", "A Cord of Three Strands", "Ecclesiastes 4:9-12", "Shared strength and God's presence help a marriage endure."]
+    ]
+  },
+  {
+    id: "hardship-and-suffering",
+    label: "Theme 9",
+    mark: "H",
+    title: "Hardship and Suffering",
+    description: "A 14-day focus for seasons of pain, pressure, grief, anxiety, endurance, and hope in God's faithful presence.",
+    days: [
+      ["Day 1", "God Is Near", "Psalm 34:17-18", "The Lord is near to the brokenhearted and hears the cry of the righteous."],
+      ["Day 2", "Strength in Weakness", "2 Corinthians 12:7-10", "Christ's grace is sufficient, and His power is made perfect in weakness."],
+      ["Day 3", "Cast Your Cares", "1 Peter 5:6-7", "God invites His people to cast anxiety on Him because He cares."],
+      ["Day 4", "Peace Beyond Understanding", "Philippians 4:4-9", "Prayer, thanksgiving, and guarded thoughts open space for God's peace."],
+      ["Day 5", "Walking Through Waters", "Isaiah 43:1-3", "God promises His presence through waters, rivers, and fire."],
+      ["Day 6", "Lament Honestly", "Psalm 13:1-6", "Faith can bring sorrow, questions, trust, and praise honestly before God."],
+      ["Day 7", "Consider It Joy", "James 1:2-5", "Trials can produce steadfastness, and God gives wisdom generously."],
+      ["Day 8", "Hope Does Not Shame", "Romans 5:1-5", "Suffering can produce endurance, character, and hope through God's love."],
+      ["Day 9", "The Lord Is My Shepherd", "Psalm 23:1-6", "God shepherds His people through want, fear, enemies, and the valley."],
+      ["Day 10", "When I Am Afraid", "Psalm 56:3-4", "Fear becomes a doorway to trust in God's word."],
+      ["Day 11", "Comfort Others", "2 Corinthians 1:3-7", "God comforts us so we can comfort others with His comfort."],
+      ["Day 12", "Do Not Lose Heart", "2 Corinthians 4:16-18", "Present affliction is not the final word; unseen glory is eternal."],
+      ["Day 13", "Jesus Wept", "John 11:32-36", "Jesus enters grief with compassion, presence, and tears."],
+      ["Day 14", "Nothing Can Separate", "Romans 8:35-39", "No suffering can separate God's people from the love of God in Christ."]
+    ]
+  },
+  {
+    id: "divorce-and-healing",
+    label: "Theme 10",
+    mark: "D",
+    title: "Divorce and Healing",
+    description: "A 10-day focus for grief, wisdom, protection, repentance where needed, and hope in God's nearness after relational rupture.",
+    days: [
+      ["Day 1", "God Sees the Brokenhearted", "Psalm 34:18", "God draws near to the brokenhearted and does not despise crushed places."],
+      ["Day 2", "Tell the Truth in Grief", "Psalm 62:8", "God invites His people to pour out their hearts before Him."],
+      ["Day 3", "Wisdom and Counsel", "Proverbs 11:14", "Wise counsel helps protect people in confusing and painful decisions."],
+      ["Day 4", "Peace Where Possible", "Romans 12:17-18", "God calls His people to pursue peace as far as it depends on them."],
+      ["Day 5", "Protection from Harm", "Psalm 82:3-4", "God cares about justice, protection, and deliverance for the vulnerable."],
+      ["Day 6", "Forgiveness and Boundaries", "Ephesians 4:31-32", "Forgiveness releases bitterness while wisdom still walks in truth and care."],
+      ["Day 7", "A Future and a Hope", "Jeremiah 29:11-13", "God's people are invited to seek Him with hope even after loss."],
+      ["Day 8", "New Mercies", "Lamentations 3:21-24", "The steadfast love of the Lord does not cease, and His mercies are new."],
+      ["Day 9", "Identity in Christ", "Romans 8:1", "In Christ, condemnation does not define the believer's life."],
+      ["Day 10", "God Restores Souls", "Psalm 23:3", "The Shepherd restores the soul and leads His people in paths of righteousness."]
+    ]
+  },
+  {
+    id: "health-and-wellness",
+    label: "Theme 11",
+    mark: "HW",
+    title: "Health and Wellness in the Bible",
+    description: "A 14-day focus on stewarding body, mind, rest, food, emotions, community, and worship as whole-person devotion to God.",
+    days: [
+      ["Day 1", "Body as a Temple", "1 Corinthians 6:19-20", "The body belongs to God and can be used to honor Him."],
+      ["Day 2", "Renewed Mind", "Romans 12:1-2", "Transformation includes offering the body and renewing the mind."],
+      ["Day 3", "Rest as Trust", "Psalm 127:1-2", "God gives sleep to His beloved and frees His people from anxious striving."],
+      ["Day 4", "Food with Gratitude", "1 Timothy 4:4-5", "God's gifts are received with thanksgiving and consecrated by His word and prayer."],
+      ["Day 5", "Strength for Today", "Isaiah 40:28-31", "The Lord renews strength for the weary who hope in Him."],
+      ["Day 6", "A Cheerful Heart", "Proverbs 17:22", "The condition of the heart affects the life of the body."],
+      ["Day 7", "Anxiety and Peace", "Matthew 6:25-34", "Jesus calls His people away from anxious living and toward trust in the Father."],
+      ["Day 8", "Wise Discipline", "1 Corinthians 9:24-27", "Discipline can serve a greater purpose when aimed toward faithfulness."],
+      ["Day 9", "Community Care", "Galatians 6:2", "Bearing burdens together is part of fulfilling the law of Christ."],
+      ["Day 10", "Sabbath Rhythm", "Exodus 20:8-11", "God builds rest into the rhythm of human life."],
+      ["Day 11", "Guard the Heart", "Proverbs 4:20-27", "Wisdom watches over the heart, eyes, speech, and steps."],
+      ["Day 12", "Moderation and Self-Control", "Titus 2:11-12", "Grace trains God's people in self-control and godly living."],
+      ["Day 13", "Healing and Prayer", "James 5:13-16", "Suffering, sickness, confession, and prayer are brought into the community of faith."],
+      ["Day 14", "Whole-Person Love", "Mark 12:29-31", "Love for God involves heart, soul, mind, and strength."]
+    ]
+  },
+  {
+    id: "prayer-and-listening",
+    label: "Theme 12",
+    mark: "PR",
+    title: "Prayer and Listening",
+    description: "A 10-day focus on honest prayer, quiet listening, intercession, confession, persistence, and delighting in God's presence.",
+    days: [
+      ["Day 1", "Teach Us to Pray", "Luke 11:1-4", "Jesus teaches prayer rooted in God's holiness, provision, forgiveness, and dependence."],
+      ["Day 2", "Pray in Secret", "Matthew 6:5-8", "The Father sees hidden prayer and knows what His children need."],
+      ["Day 3", "Be Still", "Psalm 46:10", "Stillness makes room to know that God is God."],
+      ["Day 4", "Pour Out Your Heart", "Psalm 62:5-8", "God is a refuge who can receive the whole heart."],
+      ["Day 5", "Ask for Wisdom", "James 1:5-8", "God gives wisdom generously to those who ask in faith."],
+      ["Day 6", "Intercede for Others", "1 Timothy 2:1-4", "Prayer includes requests, intercession, thanksgiving, and concern for all people."],
+      ["Day 7", "Confess and Receive Mercy", "1 John 1:8-9", "God is faithful and just to forgive and cleanse those who confess."],
+      ["Day 8", "Persistent Prayer", "Luke 18:1-8", "Jesus teaches His disciples to pray and not lose heart."],
+      ["Day 9", "Pray Without Ceasing", "1 Thessalonians 5:16-18", "Joy, prayer, and thanksgiving form a daily rhythm in God's will."],
+      ["Day 10", "Abide in Christ", "John 15:4-7", "Fruitful prayer grows from remaining in Christ and His words remaining in us."]
+    ]
+  },
+  {
+    id: "fruit-of-the-spirit",
+    label: "Theme 13",
+    mark: "FS",
+    title: "Fruit of the Spirit",
+    description: "A 9-day focus on the Spirit-formed character of love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, and self-control.",
+    days: [
+      ["Day 1", "Love", "Galatians 5:22 and 1 John 4:7-12", "The Spirit grows love rooted in God's own love for us."],
+      ["Day 2", "Joy", "Galatians 5:22 and Philippians 4:4", "Joy in the Lord can be practiced and received beyond changing circumstances."],
+      ["Day 3", "Peace", "Galatians 5:22 and John 14:27", "Christ gives a peace unlike the world gives."],
+      ["Day 4", "Patience", "Galatians 5:22 and Colossians 3:12-13", "Patience grows through compassion, humility, and bearing with others."],
+      ["Day 5", "Kindness", "Galatians 5:22 and Ephesians 4:32", "Kindness reflects God's tender mercy toward us in Christ."],
+      ["Day 6", "Goodness", "Galatians 5:22 and Romans 12:9-21", "Goodness resists evil and actively pursues what honors God."],
+      ["Day 7", "Faithfulness", "Galatians 5:22 and Lamentations 3:22-24", "Human faithfulness grows as we behold the Lord's steadfast faithfulness."],
+      ["Day 8", "Gentleness", "Galatians 5:23 and Matthew 11:28-30", "Jesus is gentle and lowly, and His way forms gentleness in His people."],
+      ["Day 9", "Self-Control", "Galatians 5:23 and 2 Timothy 1:7", "The Spirit forms power, love, and self-control instead of fear."]
+    ]
+  },
+  {
+    id: "serving-and-mission",
+    label: "Theme 14",
+    mark: "S",
+    title: "Serving and Mission",
+    description: "A 10-day focus on active obedience: serving neighbors, carrying compassion into daily life, and joining God's mission with humility.",
+    days: [
+      ["Day 1", "Created for Good Works", "Ephesians 2:8-10", "Grace saves us and sends us into good works prepared by God."],
+      ["Day 2", "Love Your Neighbor", "Luke 10:25-37", "Jesus defines neighbor love through costly mercy toward the person in need."],
+      ["Day 3", "Serve the Least", "Matthew 25:35-40", "Jesus identifies care for the hungry, stranger, sick, and imprisoned as service to Him."],
+      ["Day 4", "Use Your Gifts", "1 Peter 4:8-11", "Each gift is entrusted for serving others and glorifying God."],
+      ["Day 5", "Do Justice and Mercy", "Micah 6:8", "God calls His people to justice, mercy, and humble walking."],
+      ["Day 6", "Be Salt and Light", "Matthew 5:13-16", "Visible faith points others toward the Father through good works."],
+      ["Day 7", "Go and Make Disciples", "Matthew 28:18-20", "Jesus sends His people with His authority and presence."],
+      ["Day 8", "Speak with Grace", "Colossians 4:5-6", "Wise witness includes gracious words and thoughtful attention to outsiders."],
+      ["Day 9", "Do Not Grow Weary", "Galatians 6:9-10", "God encourages steady goodness, especially toward the household of faith."],
+      ["Day 10", "Serve Like Jesus", "John 13:12-17", "Jesus washes feet and calls His followers to humble, practical service."]
+    ]
   }
 ];
 
@@ -343,6 +572,16 @@ function getDayExtras(focus, day) {
   if (title.includes("sin") || focusTitle.includes("fall")) deed = "Confess one specific sin or broken pattern to God and take one step away from it.";
   if (focusTitle.includes("redemption")) deed = "Encourage someone with a word of hope rooted in God's rescue and mercy.";
   if (focusTitle.includes("consummation")) deed = "Make one choice today that reflects hope in God's coming kingdom.";
+  if (focusTitle.includes("commandments")) deed = "Choose one concrete act of obedience today that honors this commandment in your thoughts, words, or actions.";
+  if (focusTitle.includes("women")) deed = "Name one faithful quality from this woman's story and practice it in one relationship today.";
+  if (focusTitle.includes("prophets")) deed = "Respond to God's word with one courageous act of truth, repentance, justice, or hope today.";
+  if (focusTitle.includes("marriage")) deed = "Offer one humble act of love, listening, service, or repair in your closest relationship today.";
+  if (focusTitle.includes("hardship")) deed = "Bring one burden honestly to God, then take one small faithful step instead of carrying it alone.";
+  if (focusTitle.includes("divorce")) deed = "Choose one healing action today: prayer, wise counsel, a boundary, forgiveness, rest, or asking for help.";
+  if (focusTitle.includes("health")) deed = "Honor God with one whole-person choice today: rest, movement, nourishment, prayer, or reaching out for support.";
+  if (focusTitle.includes("prayer")) deed = "Set a timer for five quiet minutes after praying, leaving room to listen before moving on.";
+  if (focusTitle.includes("fruit")) deed = "Practice this fruit of the Spirit in one specific interaction before the day ends.";
+  if (focusTitle.includes("serving")) deed = "Serve one person in a practical way today without needing attention or credit.";
   return {
     active: "Set aside 10-15 uninterrupted minutes. Read the passage slowly, sit with the verse, pray honestly, and listen before writing or moving on.",
     application: `Where does ${day[1]} invite me to trust, repent, obey, serve, or worship today?`,
