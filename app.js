@@ -411,6 +411,20 @@ function renderMode() {
   communityFeed.hidden = state.mode !== "community";
 }
 
+function reminderFromForm() {
+  return {
+    time: reminderTime.value || "07:00",
+    message: reminderMessage.value.trim() || "Spend uninterrupted time with God today.",
+    channels: {
+      push: reminderPush.checked,
+      email: reminderEmail.checked,
+      sms: reminderSms.checked
+    },
+    email: reminderEmailAddress.value.trim(),
+    phone: reminderPhone.value.trim()
+  };
+}
+
 function renderCommunity() {
   const focus = activeFocus();
   const entries = (focus ? state.community.filter((entry) => entry.focusId === focus.id) : state.community).slice(-8).reverse();
@@ -613,17 +627,7 @@ nextButton.addEventListener("click", () => {
 
 reminderForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  state.reminder = {
-    time: reminderTime.value || "07:00",
-    message: reminderMessage.value.trim() || "Spend uninterrupted time with God today.",
-    channels: {
-      push: reminderPush.checked,
-      email: reminderEmail.checked,
-      sms: reminderSms.checked
-    },
-    email: reminderEmailAddress.value.trim(),
-    phone: reminderPhone.value.trim()
-  };
+  state.reminder = reminderFromForm();
   saveReminder();
   if (!state.user) {
     reminderStatus.textContent = "Reminder saved on this device. Sign in to enable push delivery.";
@@ -671,7 +675,10 @@ enablePushButton.addEventListener("click", async () => {
 
 testPushButton.addEventListener("click", async () => {
   try {
-    if (!state.user) throw new Error("Sign in before testing push notifications.");
+    if (!state.user) throw new Error("Sign in before testing reminders.");
+    state.reminder = reminderFromForm();
+    saveReminder();
+    await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
     const result = await apiFetch("/api/push/test", { method: "POST", body: JSON.stringify({}) });
     const channelResults = (result.results || []).map((item) => `${item.channel}: ${item.ok ? "sent" : item.error || "failed"}`);
     reminderStatus.textContent = channelResults.length
