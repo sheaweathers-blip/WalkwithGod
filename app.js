@@ -390,8 +390,6 @@ const supportMessageList = document.querySelector("#supportMessageList");
 const accountActions = document.querySelector("#accountActions");
 const showSignupButton = document.querySelector("#showSignupButton");
 const showLoginButton = document.querySelector("#showLoginButton");
-const lockedSignupButton = document.querySelector("#lockedSignupButton");
-const lockedLoginButton = document.querySelector("#lockedLoginButton");
 const showReminderSettingsButton = document.querySelector("#showReminderSettingsButton");
 const authForm = document.querySelector("#authForm");
 const authName = document.querySelector("#authName");
@@ -615,7 +613,7 @@ function renderAccount() {
     showReminderSettingsButton.hidden = false;
     logoutButton.hidden = false;
   } else {
-    accountStatus.textContent = "You are not signed in.";
+    accountStatus.textContent = "Choose one option below to begin.";
     showSignupButton.hidden = false;
     showLoginButton.hidden = false;
     showReminderSettingsButton.hidden = true;
@@ -1329,14 +1327,6 @@ function openAuthForm(mode) {
 
 showSignupButton.addEventListener("click", () => openAuthForm("signup"));
 showLoginButton.addEventListener("click", () => openAuthForm("login"));
-lockedSignupButton.addEventListener("click", () => {
-  document.querySelector("#account").scrollIntoView({ behavior: "smooth" });
-  openAuthForm("signup");
-});
-lockedLoginButton.addEventListener("click", () => {
-  document.querySelector("#account").scrollIntoView({ behavior: "smooth" });
-  openAuthForm("login");
-});
 onboardingOptions.addEventListener("click", (event) => {
   const button = event.target.closest("[data-suggest-focus]");
   if (!button) return;

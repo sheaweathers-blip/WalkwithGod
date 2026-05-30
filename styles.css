@@ -955,10 +955,6 @@ select:focus {
   font-weight: 750;
 }
 
-.locked-actions {
-  margin-top: 18px;
-}
-
 .admin-unlock-form,
 .auth-form,
 .add-focus-form,
