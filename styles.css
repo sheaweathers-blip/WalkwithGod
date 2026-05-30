@@ -631,7 +631,8 @@ button:hover {
 }
 
 .favorite-item,
-.prayer-entry {
+.prayer-entry,
+.note-library-item {
   padding: 12px;
   border: 1px solid rgba(31, 75, 59, 0.14);
   border-radius: 8px;
@@ -639,8 +640,37 @@ button:hover {
 }
 
 .favorite-item + .favorite-item,
-.prayer-entry + .prayer-entry {
+.prayer-entry + .prayer-entry,
+.note-library-item + .note-library-item {
   margin-top: 10px;
+}
+
+.notes-library-section {
+  background: var(--nature-water);
+}
+
+.notes-library-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.note-library-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+  padding: 16px;
+}
+
+.note-library-item h3 {
+  margin-bottom: 4px;
+  color: var(--deep-green);
+}
+
+.note-library-item p:last-of-type {
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .completion-card {
@@ -1372,6 +1402,7 @@ select:focus {
   .today-card,
   .guided-checkin,
   .locked-benefits-grid,
+  .note-library-item,
   .daily-rhythm-grid,
   .admin-grid,
   .admin-summary {

@@ -373,6 +373,7 @@ const lockedBenefits = document.querySelector("#lockedBenefits");
 const gatedSections = [
   document.querySelector("#today"),
   document.querySelector("#themes"),
+  document.querySelector("#notesLibrary"),
   document.querySelector("#community"),
   document.querySelector("#install"),
   document.querySelector("#feedback"),
@@ -430,6 +431,7 @@ const saveNoteButton = document.querySelector("#saveNoteButton");
 const noteStatus = document.querySelector("#noteStatus");
 const favoriteVersesList = document.querySelector("#favoriteVersesList");
 const completionContainer = document.querySelector("#completionContainer");
+const notesLibraryList = document.querySelector("#notesLibraryList");
 const completeButton = document.querySelector("#completeButton");
 const nextButton = document.querySelector("#nextButton");
 const reminderForm = document.querySelector("#reminderForm");
@@ -710,6 +712,39 @@ function renderFavorites() {
         .map((item) => `<article class="favorite-item"><strong>${escapeHtml(item.reference)}</strong><p>${escapeHtml(item.title)} from ${escapeHtml(item.focusTitle)}</p></article>`)
         .join("")
     : '<p class="empty-feed">Saved verses will appear here.</p>';
+}
+
+function noteEntries() {
+  return Object.entries(state.notes)
+    .filter(([, text]) => text && text.trim())
+    .map(([key, text]) => {
+      const [focusId, dayIndexText] = key.split(":");
+      const dayIndex = Number(dayIndexText);
+      const focus = state.focuses.find((item) => item.id === focusId);
+      const day = focus?.days[dayIndex];
+      return { key, focus, focusId, dayIndex, day, text };
+    })
+    .filter((entry) => entry.focus && entry.day)
+    .sort((a, b) => a.focus.title.localeCompare(b.focus.title) || a.dayIndex - b.dayIndex);
+}
+
+function renderNotesLibrary() {
+  const entries = noteEntries();
+  notesLibraryList.innerHTML = entries.length
+    ? entries
+        .map((entry) => `
+          <article class="note-library-item">
+            <div>
+              <p class="block-label">${escapeHtml(entry.focus.title)} - ${escapeHtml(entry.day[0])}</p>
+              <h3>${escapeHtml(entry.day[1])}</h3>
+              <p class="scripture-reference">${escapeHtml(entry.day[2])}</p>
+              <p>${escapeHtml(entry.text)}</p>
+            </div>
+            <button class="quiet-button open-note-day" type="button" data-focus-id="${escapeHtml(entry.focusId)}" data-day-index="${entry.dayIndex}">Open Day</button>
+          </article>
+        `)
+        .join("")
+    : '<p class="empty-feed">Saved private notes will appear here.</p>';
 }
 
 function renderCompletion(focus, isFocusComplete) {
@@ -1013,6 +1048,7 @@ function render() {
   renderMode();
   renderCommunity();
   renderPrayerRequests();
+  renderNotesLibrary();
   renderAdmin();
   if (!focus) {
     progressFill.style.width = "0%";
@@ -1062,6 +1098,7 @@ function render() {
   renderMode();
   renderCommunity();
   renderPrayerRequests();
+  renderNotesLibrary();
   renderAdmin();
   saveActivePosition();
 }
@@ -1079,6 +1116,15 @@ dayList.addEventListener("click", (event) => {
   if (!button) return;
   state.activeDayIndex = Number(button.dataset.index);
   render();
+});
+
+notesLibraryList.addEventListener("click", (event) => {
+  const button = event.target.closest(".open-note-day");
+  if (!button) return;
+  state.activeId = button.dataset.focusId;
+  state.activeDayIndex = Number(button.dataset.dayIndex);
+  document.querySelector("#themes").scrollIntoView({ behavior: "smooth" });
+  loadCommunity().finally(render);
 });
 
 completeButton.addEventListener("click", () => {
@@ -1153,6 +1199,7 @@ saveNoteButton.addEventListener("click", () => {
   })
     .then(() => {
       noteStatus.textContent = "Note saved to your account.";
+      renderNotesLibrary();
     })
     .catch((error) => {
       noteStatus.textContent = error.message;
