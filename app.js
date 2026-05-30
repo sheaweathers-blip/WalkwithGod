@@ -316,6 +316,29 @@ const defaultFocuses = [
       ["Day 9", "Do Not Grow Weary", "Galatians 6:9-10", "God encourages steady goodness, especially toward the household of faith."],
       ["Day 10", "Serve Like Jesus", "John 13:12-17", "Jesus washes feet and calls His followers to humble, practical service."]
     ]
+  },
+  {
+    id: "holy-spirit",
+    label: "Theme 15",
+    mark: "HS",
+    title: "The Holy Spirit",
+    description: "A 14-day focus on the person and work of the Holy Spirit: presence, conviction, new birth, guidance, power, fruit, gifts, comfort, and daily life with God.",
+    days: [
+      ["Day 1", "The Spirit of God Hovering", "Genesis 1:1-2", "The Spirit of God is present at creation, hovering over the waters as God's creative work begins."],
+      ["Day 2", "A New Heart and Spirit", "Ezekiel 36:26-27", "God promises to give His people a new heart and put His Spirit within them."],
+      ["Day 3", "Born of the Spirit", "John 3:5-8", "Jesus teaches that new birth comes by the Spirit, whose work is real even when unseen."],
+      ["Day 4", "The Helper Promised", "John 14:15-17", "Jesus promises the Spirit of truth, the Helper who will be with and in His people."],
+      ["Day 5", "The Spirit Teaches", "John 14:25-26", "The Holy Spirit teaches, reminds, and helps Christ's followers remember His words."],
+      ["Day 6", "The Spirit Bears Witness", "Romans 8:14-16", "The Spirit leads God's children and bears witness that they belong to the Father."],
+      ["Day 7", "Conviction and Truth", "John 16:7-11", "The Spirit convicts the world concerning sin, righteousness, and judgment."],
+      ["Day 8", "Guided into Truth", "John 16:12-15", "The Spirit guides believers into truth and glorifies Christ."],
+      ["Day 9", "Power to Witness", "Acts 1:8", "The Holy Spirit empowers Christ's people to bear witness near and far."],
+      ["Day 10", "Filled with the Spirit", "Ephesians 5:18-21", "The Spirit-filled life overflows in worship, gratitude, and humble relationships."],
+      ["Day 11", "Walk by the Spirit", "Galatians 5:16-18", "Walking by the Spirit means resisting the desires that pull us away from God."],
+      ["Day 12", "Fruit of the Spirit", "Galatians 5:22-25", "The Spirit forms Christlike character and calls believers to keep in step with Him."],
+      ["Day 13", "Gifts for the Body", "1 Corinthians 12:4-11", "The Spirit gives gifts for the common good, not personal pride."],
+      ["Day 14", "Help in Weakness", "Romans 8:26-27", "The Spirit helps in weakness and intercedes when words fail."]
+    ]
   }
 ];
 
@@ -582,6 +605,7 @@ function getDayExtras(focus, day) {
   if (focusTitle.includes("prayer")) deed = "Set a timer for five quiet minutes after praying, leaving room to listen before moving on.";
   if (focusTitle.includes("fruit")) deed = "Practice this fruit of the Spirit in one specific interaction before the day ends.";
   if (focusTitle.includes("serving")) deed = "Serve one person in a practical way today without needing attention or credit.";
+  if (focusTitle.includes("holy spirit")) deed = "Pause before one decision today and ask the Holy Spirit to lead your words, desires, and next step.";
   return {
     active: "Set aside 10-15 uninterrupted minutes. Read the passage slowly, sit with the verse, pray honestly, and listen before writing or moving on.",
     application: `Where does ${day[1]} invite me to trust, repent, obey, serve, or worship today?`,
