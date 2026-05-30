@@ -366,6 +366,8 @@ const state = {
 };
 
 const themeList = document.querySelector("#themeList");
+const breatheInText = document.querySelector("#breatheInText");
+const breatheOutText = document.querySelector("#breatheOutText");
 const serverWarning = document.querySelector("#serverWarning");
 const todayTitle = document.querySelector("#todayTitle");
 const todayCopy = document.querySelector("#todayCopy");
@@ -794,6 +796,24 @@ function renderFocusList() {
     .join("");
 }
 
+function renderPrayerBreath() {
+  const focus = activeFocus();
+  const day = focus?.days[state.activeDayIndex];
+  const options = [
+    ["Lord, draw near.", "I will walk with You."],
+    ["Your word is life.", "My pace belongs to You."],
+    ["Spirit, lead me.", "I release my hurry."],
+    ["Jesus, give me peace.", "I receive Your rest."],
+    ["Father, guide me.", "I take the next faithful step."],
+    ["Your mercy is new.", "I let go of yesterday."],
+    ["You are with me.", "I do not walk alone."]
+  ];
+  const dayNumber = Number((day?.[0]?.match(/\d+/) || [1])[0]);
+  const selected = options[(dayNumber - 1) % options.length];
+  breatheInText.textContent = selected[0];
+  breatheOutText.textContent = selected[1];
+}
+
 function renderDayList(focus) {
   const completed = completedSet(focus.id);
   dayList.innerHTML = focus.days
@@ -961,6 +981,7 @@ function render() {
   renderAccount();
   renderToday();
   renderFocusList();
+  renderPrayerBreath();
   renderReminder();
   renderMode();
   renderCommunity();
@@ -1007,6 +1028,7 @@ function render() {
 
   renderFocusList();
   renderDayList(focus);
+  renderPrayerBreath();
   renderFavorites();
   renderToday();
   renderReminder();

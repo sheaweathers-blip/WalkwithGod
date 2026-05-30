@@ -321,6 +321,40 @@ button:hover {
   margin-top: 20px;
 }
 
+.prayer-breath-panel {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 90% 12%, rgba(72, 107, 130, 0.18), transparent 28%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(222, 237, 230, 0.82));
+}
+
+.breath-line {
+  display: grid;
+  gap: 4px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(31, 75, 59, 0.12);
+}
+
+.breath-line:first-of-type {
+  border-top: 0;
+}
+
+.breath-line span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.breath-line strong {
+  color: var(--deep-green);
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+
 .theme-button {
   position: relative;
   overflow: hidden;
