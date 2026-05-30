@@ -6,6 +6,9 @@
     <title>Walk With God</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#1f4b3b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Walk With God" />
+    <link rel="apple-touch-icon" href="/assets/icon-192.png" />
     <link rel="stylesheet" href="styles.css?v=20260530-engage" />
   </head>
   <body>
@@ -24,7 +27,7 @@
             Move through the story of Scripture one focused day at a time, completing each theme in its guided number of days.
           </p>
           <div class="hero-actions">
-            <a class="primary-link" href="#themes">Begin a Focus</a>
+            <a class="primary-link" href="#account">Create Free Account</a>
             <a class="secondary-link" href="#account">Account</a>
             <a class="secondary-link" href="#admin">Admin</a>
           </div>
@@ -149,6 +152,33 @@
             </form>
           </div>
         </div>
+      </section>
+
+      <section class="daily locked-section" id="lockedBenefits">
+        <div class="section-heading">
+          <p class="eyebrow">Free Account Required</p>
+          <h2>Create an account to begin your walk</h2>
+          <p class="section-copy">
+            Themes, daily progress, notes, prayer requests, community encouragement, reminders, and favorites are free after sign in.
+          </p>
+        </div>
+        <div class="locked-benefits-grid">
+          <article>
+            <strong>Daily Focuses</strong>
+            <p>Choose a Scripture theme and continue one guided day at a time.</p>
+          </article>
+          <article>
+            <strong>Prayer and Community</strong>
+            <p>Share prayer requests, react with encouragement, and walk with others.</p>
+          </article>
+          <article>
+            <strong>Personal Progress</strong>
+            <p>Save notes, favorite verses, reminders, and your daily rhythm.</p>
+          </article>
+        </div>
+        <p class="premium-note">
+          Coming later: optional premium experiences like virtual Bible classes, God-focused movement, breathwork, and deeper guided studies.
+        </p>
       </section>
 
       <section class="workspace" id="themes">
@@ -313,7 +343,7 @@
           <h2>Add Walk With God to your phone</h2>
           <p class="section-copy">Install the app shortcut for quicker daily access when your reminder arrives.</p>
         </div>
-        <button class="copy-button" id="installAppButton" type="button" hidden>Install App</button>
+        <button class="copy-button" id="installAppButton" type="button">Install App</button>
         <p class="copy-status" id="installStatus" role="status" aria-live="polite"></p>
       </section>
 
