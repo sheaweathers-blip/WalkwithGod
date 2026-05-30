@@ -67,7 +67,9 @@ function defaultDb() {
     pushSubscriptions: [],
     feedback: [],
     reports: [],
-    supportMessages: []
+    supportMessages: [],
+    prayerRequests: [],
+    reactions: []
   };
 }
 
@@ -406,7 +408,11 @@ async function handleApi(request, response) {
       .filter((post) => !post.hiddenAt)
       .filter((post) => !focusId || post.focusId === focusId)
       .slice(-50)
-      .map((post) => ({ ...post, userName: db.users.find((user) => user.id === post.userId)?.name || "Community member" }));
+      .map((post) => ({
+        ...post,
+        userName: db.users.find((user) => user.id === post.userId)?.name || "Community member",
+        reactions: db.reactions.filter((reaction) => reaction.postId === post.id)
+      }));
     return json(response, 200, { posts });
   }
 
@@ -428,6 +434,64 @@ async function handleApi(request, response) {
     db.posts.push(post);
     await writeDb(db);
     return json(response, 201, { post: { ...post, userName: user.name } });
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/community/react") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const body = await readBody(request);
+    const postId = normalizeText(body.postId, 120);
+    const type = normalizeText(body.type, 30);
+    const allowed = new Set(["praying", "encouraged", "amen"]);
+    if (!db.posts.some((post) => post.id === postId && !post.hiddenAt)) return json(response, 404, { error: "Community post not found." });
+    if (!allowed.has(type)) return json(response, 400, { error: "Reaction was not recognized." });
+    db.reactions = db.reactions.filter((reaction) => !(reaction.postId === postId && reaction.userId === user.id && reaction.type === type));
+    db.reactions.push({ id: crypto.randomUUID(), postId, userId: user.id, type, createdAt: new Date().toISOString() });
+    await writeDb(db);
+    return json(response, 200, { reactions: db.reactions.filter((reaction) => reaction.postId === postId) });
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/prayer-requests") {
+    const requests = db.prayerRequests
+      .filter((requestItem) => !requestItem.hiddenAt)
+      .slice(-40)
+      .reverse()
+      .map((requestItem) => ({
+        ...requestItem,
+        userName: requestItem.isAnonymous ? "Anonymous" : db.users.find((user) => user.id === requestItem.userId)?.name || "Community member"
+      }));
+    return json(response, 200, { requests });
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/prayer-requests") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const body = await readBody(request);
+    const text = normalizeText(body.text, 1000);
+    if (!text) return json(response, 400, { error: "Prayer request text is required." });
+    const prayerRequest = {
+      id: crypto.randomUUID(),
+      userId: user.id,
+      text,
+      isAnonymous: Boolean(body.isAnonymous),
+      prayedBy: [],
+      createdAt: new Date().toISOString()
+    };
+    db.prayerRequests.push(prayerRequest);
+    await writeDb(db);
+    return json(response, 201, { request: { ...prayerRequest, userName: prayerRequest.isAnonymous ? "Anonymous" : user.name } });
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/prayer-requests/prayed") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const body = await readBody(request);
+    const requestItem = db.prayerRequests.find((item) => item.id === normalizeText(body.id, 120) && !item.hiddenAt);
+    if (!requestItem) return json(response, 404, { error: "Prayer request not found." });
+    if (!Array.isArray(requestItem.prayedBy)) requestItem.prayedBy = [];
+    if (!requestItem.prayedBy.includes(user.id)) requestItem.prayedBy.push(user.id);
+    await writeDb(db);
+    return json(response, 200, { request: requestItem });
   }
 
   if (request.method === "POST" && url.pathname === "/api/community/report") {

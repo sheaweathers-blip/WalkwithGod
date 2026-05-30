@@ -347,13 +347,17 @@ const adminCode = "walkwithgod";
 
 const state = {
   focuses: [...defaultFocuses, ...loadAddedFocuses()],
-  activeId: "",
+  activeId: localStorage.getItem("walkWithGodActiveFocus") || "",
   activeDayIndex: Number(localStorage.getItem("walkWithGodActiveDay") || 0),
   completed: loadCompleted(),
   adminUnlocked: sessionStorage.getItem("walkWithGodAdminUnlocked") === "true",
   mode: localStorage.getItem("walkWithGodMode") || "solo",
   notes: JSON.parse(localStorage.getItem("walkWithGodNotes") || "{}"),
+  checkins: JSON.parse(localStorage.getItem("walkWithGodCheckins") || "{}"),
+  favorites: JSON.parse(localStorage.getItem("walkWithGodFavorites") || "[]"),
   community: JSON.parse(localStorage.getItem("walkWithGodCommunity") || "[]"),
+  prayerRequests: [],
+  deferredInstallPrompt: null,
   reminder: JSON.parse(localStorage.getItem("walkWithGodReminder") || '{"time":"07:00","message":"Spend uninterrupted time with God today.","channels":{"push":true,"email":false,"sms":false},"email":"","phone":""}'),
   user: null,
   supportMessages: [],
@@ -363,6 +367,13 @@ const state = {
 
 const themeList = document.querySelector("#themeList");
 const serverWarning = document.querySelector("#serverWarning");
+const todayTitle = document.querySelector("#todayTitle");
+const todayCopy = document.querySelector("#todayCopy");
+const streakCount = document.querySelector("#streakCount");
+const favoriteCount = document.querySelector("#favoriteCount");
+const continueTodayButton = document.querySelector("#continueTodayButton");
+const quickCompleteButton = document.querySelector("#quickCompleteButton");
+const todayStatus = document.querySelector("#todayStatus");
 const accountStatus = document.querySelector("#accountStatus");
 const supportMessageList = document.querySelector("#supportMessageList");
 const accountActions = document.querySelector("#accountActions");
@@ -377,6 +388,8 @@ const logoutButton = document.querySelector("#logoutButton");
 const submitAuthButton = document.querySelector("#submitAuthButton");
 const cancelAuthButton = document.querySelector("#cancelAuthButton");
 const authMessage = document.querySelector("#authMessage");
+const onboardingPanel = document.querySelector("#onboardingPanel");
+const onboardingOptions = document.querySelector("#onboardingOptions");
 const readerEmpty = document.querySelector("#readerEmpty");
 const readerContent = document.querySelector("#readerContent");
 const activeCategoryLabel = document.querySelector("#activeCategoryLabel");
@@ -390,14 +403,20 @@ const dayList = document.querySelector("#dayList");
 const dayLabel = document.querySelector("#dayLabel");
 const dayTitle = document.querySelector("#dayTitle");
 const scriptureText = document.querySelector("#scriptureText");
+const favoriteVerseButton = document.querySelector("#favoriteVerseButton");
 const daySummary = document.querySelector("#daySummary");
 const activeTimeText = document.querySelector("#activeTimeText");
 const applicationText = document.querySelector("#applicationText");
 const deedText = document.querySelector("#deedText");
 const implementation = document.querySelector("#implementationText");
 const noteInput = document.querySelector("#noteInput");
+const stoodOutInput = document.querySelector("#stoodOutInput");
+const invitationInput = document.querySelector("#invitationInput");
+const blessInput = document.querySelector("#blessInput");
 const saveNoteButton = document.querySelector("#saveNoteButton");
 const noteStatus = document.querySelector("#noteStatus");
+const favoriteVersesList = document.querySelector("#favoriteVersesList");
+const completionContainer = document.querySelector("#completionContainer");
 const completeButton = document.querySelector("#completeButton");
 const nextButton = document.querySelector("#nextButton");
 const reminderForm = document.querySelector("#reminderForm");
@@ -418,6 +437,13 @@ const communityForm = document.querySelector("#communityForm");
 const communityInput = document.querySelector("#communityInput");
 const communityStatus = document.querySelector("#communityStatus");
 const communityFeed = document.querySelector("#communityFeed");
+const prayerForm = document.querySelector("#prayerForm");
+const prayerInput = document.querySelector("#prayerInput");
+const anonymousPrayer = document.querySelector("#anonymousPrayer");
+const prayerStatus = document.querySelector("#prayerStatus");
+const prayerFeed = document.querySelector("#prayerFeed");
+const installAppButton = document.querySelector("#installAppButton");
+const installStatus = document.querySelector("#installStatus");
 const feedbackForm = document.querySelector("#feedbackForm");
 const feedbackType = document.querySelector("#feedbackType");
 const feedbackText = document.querySelector("#feedbackText");
@@ -465,6 +491,14 @@ function dayKey() {
 
 function saveNotes() {
   localStorage.setItem("walkWithGodNotes", JSON.stringify(state.notes));
+}
+
+function saveCheckins() {
+  localStorage.setItem("walkWithGodCheckins", JSON.stringify(state.checkins));
+}
+
+function saveFavorites() {
+  localStorage.setItem("walkWithGodFavorites", JSON.stringify(state.favorites));
 }
 
 function saveCommunity() {
@@ -521,6 +555,7 @@ async function loadServerState() {
     saveReminder();
   }
   await loadCommunity();
+  await loadPrayerRequests();
   await loadSupportMessages();
   if (state.user?.role === "admin") await loadAdminDashboard();
 }
@@ -533,6 +568,15 @@ async function loadCommunity() {
     state.community = result.posts || [];
   } catch {
     state.community = JSON.parse(localStorage.getItem("walkWithGodCommunity") || "[]");
+  }
+}
+
+async function loadPrayerRequests() {
+  try {
+    const result = await apiFetch("/api/prayer-requests");
+    state.prayerRequests = result.requests || [];
+  } catch {
+    state.prayerRequests = [];
   }
 }
 
@@ -565,6 +609,7 @@ function renderAccount() {
     reminderSettingsPanel.hidden = true;
     logoutButton.hidden = true;
   }
+  onboardingPanel.hidden = Boolean(state.activeId) || !state.user;
   supportMessageList.innerHTML = state.supportMessages.length
     ? state.supportMessages
         .slice(-3)
@@ -572,6 +617,93 @@ function renderAccount() {
         .map((message) => `<article class="support-message"><strong>Admin message</strong><p>${escapeHtml(message.text)}</p></article>`)
         .join("")
     : "";
+}
+
+function nextOpenDay(focus) {
+  const completed = completedSet(focus.id);
+  const openIndex = focus.days.findIndex((day, index) => !completed.has(index));
+  return openIndex === -1 ? focus.days.length - 1 : openIndex;
+}
+
+function streakDays() {
+  const dates = Object.values(state.completed)
+    .flatMap((set) => [...set].map(() => "local"))
+    .length;
+  const saved = JSON.parse(localStorage.getItem("walkWithGodCompletionDates") || "[]");
+  if (!saved.length && dates) return 1;
+  const unique = [...new Set(saved)].sort().reverse();
+  let streak = 0;
+  const cursor = new Date();
+  for (const date of unique) {
+    const stamp = cursor.toISOString().slice(0, 10);
+    if (date === stamp) {
+      streak += 1;
+      cursor.setDate(cursor.getDate() - 1);
+    } else if (streak === 0) {
+      cursor.setDate(cursor.getDate() - 1);
+      if (date === cursor.toISOString().slice(0, 10)) streak += 1;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function rememberCompletionDate() {
+  const today = new Date().toISOString().slice(0, 10);
+  const saved = JSON.parse(localStorage.getItem("walkWithGodCompletionDates") || "[]");
+  if (!saved.includes(today)) {
+    saved.push(today);
+    localStorage.setItem("walkWithGodCompletionDates", JSON.stringify(saved.slice(-120)));
+  }
+}
+
+function renderToday() {
+  const focus = activeFocus() || state.focuses[0];
+  const dayIndex = nextOpenDay(focus);
+  const day = focus.days[dayIndex];
+  todayTitle.textContent = `${day[0]} of ${focus.title}`;
+  todayCopy.textContent = `${day[1]} - ${day[2]}. ${completedSet(focus.id).has(dayIndex) ? "Welcome back. Continue where you left off or choose another focus." : "Your next step is ready."}`;
+  streakCount.textContent = String(streakDays());
+  favoriteCount.textContent = String(state.favorites.length);
+  quickCompleteButton.disabled = !focus || completedSet(focus.id).has(dayIndex);
+}
+
+function currentFavoriteId() {
+  return `${state.activeId}:${state.activeDayIndex}`;
+}
+
+function renderFavorites() {
+  const favoriteId = currentFavoriteId();
+  const isFavorite = state.favorites.some((item) => item.id === favoriteId);
+  favoriteVerseButton.textContent = isFavorite ? "Favorite Saved" : "Save Favorite Verse";
+  favoriteVerseButton.classList.toggle("is-saved", isFavorite);
+  favoriteVersesList.innerHTML = state.favorites.length
+    ? state.favorites
+        .slice(-5)
+        .reverse()
+        .map((item) => `<article class="favorite-item"><strong>${escapeHtml(item.reference)}</strong><p>${escapeHtml(item.title)} from ${escapeHtml(item.focusTitle)}</p></article>`)
+        .join("")
+    : '<p class="empty-feed">Saved verses will appear here.</p>';
+}
+
+function renderCompletion(focus, isFocusComplete) {
+  if (!isFocusComplete) return "";
+  return `
+    <div class="completion-card">
+      <p class="block-label">Focus Complete</p>
+      <h3>${escapeHtml(focus.title)} completed</h3>
+      <p>Lord, help this focus become lived faith. Let Your word keep shaping my attention, choices, relationships, and obedience. Amen.</p>
+      <a class="secondary-link" href="#themes">Choose Next Focus</a>
+    </div>
+  `;
+}
+
+function reactionCounts(reactions = []) {
+  return reactions.reduce((counts, reaction) => {
+    counts[reaction.type] = (counts[reaction.type] || 0) + 1;
+    return counts;
+  }, {});
 }
 
 function escapeHtml(value) {
@@ -698,15 +830,37 @@ function renderCommunity() {
   const entries = (focus ? state.community.filter((entry) => entry.focusId === focus.id) : state.community).slice(-8).reverse();
   communityFeed.innerHTML = entries.length
     ? entries
-        .map((entry) => `
+        .map((entry) => {
+          const counts = reactionCounts(entry.reactions || []);
+          return `
           <article class="community-entry">
             <strong>${escapeHtml(entry.userName || "Community member")} - ${escapeHtml(entry.dayLabel)} - ${escapeHtml(entry.dayTitle)}</strong>
             <p>${escapeHtml(entry.text)}</p>
-            <button class="report-button" type="button" data-post-id="${escapeHtml(entry.id || "")}">Report</button>
+            <div class="reaction-row">
+              <button class="reaction-button" type="button" data-post-id="${escapeHtml(entry.id || "")}" data-reaction="praying">Praying ${counts.praying || 0}</button>
+              <button class="reaction-button" type="button" data-post-id="${escapeHtml(entry.id || "")}" data-reaction="encouraged">Encouraged ${counts.encouraged || 0}</button>
+              <button class="reaction-button" type="button" data-post-id="${escapeHtml(entry.id || "")}" data-reaction="amen">Amen ${counts.amen || 0}</button>
+              <button class="report-button" type="button" data-post-id="${escapeHtml(entry.id || "")}">Report</button>
+            </div>
+          </article>
+        `;
+        })
+        .join("")
+    : '<p class="empty-feed">No community check-ins for this focus yet.</p>';
+}
+
+function renderPrayerRequests() {
+  prayerFeed.innerHTML = state.prayerRequests.length
+    ? state.prayerRequests
+        .map((request) => `
+          <article class="prayer-entry">
+            <strong>${escapeHtml(request.userName || "Community member")}</strong>
+            <p>${escapeHtml(request.text)}</p>
+            <button class="reaction-button prayed-button" type="button" data-prayer-id="${escapeHtml(request.id)}">I prayed (${request.prayedBy?.length || 0})</button>
           </article>
         `)
         .join("")
-    : '<p class="empty-feed">No community check-ins for this focus yet.</p>';
+    : '<p class="empty-feed">No shared prayer requests yet.</p>';
 }
 
 function renderAdmin() {
@@ -792,10 +946,12 @@ function render() {
   readerEmpty.hidden = Boolean(focus);
   readerContent.hidden = !focus;
   renderAccount();
+  renderToday();
   renderFocusList();
   renderReminder();
   renderMode();
   renderCommunity();
+  renderPrayerRequests();
   renderAdmin();
   if (!focus) {
     progressFill.style.width = "0%";
@@ -826,16 +982,24 @@ function render() {
   deedText.textContent = extras.deed;
   implementation.textContent = implementationText;
   noteInput.value = state.notes[dayKey()] || "";
+  const checkin = state.checkins[dayKey()] || {};
+  stoodOutInput.value = checkin.stoodOut || "";
+  invitationInput.value = checkin.invitation || "";
+  blessInput.value = checkin.bless || "";
   noteStatus.textContent = "";
   completeButton.textContent = isDayComplete ? "Day Complete" : "Mark Day Complete";
   completeButton.classList.toggle("is-complete", isDayComplete);
   nextButton.disabled = state.activeDayIndex === focus.days.length - 1;
+  completionContainer.innerHTML = renderCompletion(focus, isFocusComplete);
 
   renderFocusList();
   renderDayList(focus);
+  renderFavorites();
+  renderToday();
   renderReminder();
   renderMode();
   renderCommunity();
+  renderPrayerRequests();
   renderAdmin();
   saveActivePosition();
 }
@@ -858,6 +1022,7 @@ dayList.addEventListener("click", (event) => {
 completeButton.addEventListener("click", () => {
   const focus = activeFocus();
   completedSet(focus.id).add(state.activeDayIndex);
+  rememberCompletionDate();
   saveCompleted();
   if (state.user) {
     apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ focusId: focus.id, dayIndex: state.activeDayIndex }) }).catch((error) => {
@@ -867,10 +1032,55 @@ completeButton.addEventListener("click", () => {
   render();
 });
 
+continueTodayButton.addEventListener("click", () => {
+  const focus = activeFocus() || state.focuses[0];
+  state.activeId = focus.id;
+  state.activeDayIndex = nextOpenDay(focus);
+  document.querySelector("#themes").scrollIntoView({ behavior: "smooth" });
+  loadCommunity().finally(render);
+});
+
+quickCompleteButton.addEventListener("click", () => {
+  const focus = activeFocus() || state.focuses[0];
+  state.activeId = focus.id;
+  state.activeDayIndex = nextOpenDay(focus);
+  completedSet(focus.id).add(state.activeDayIndex);
+  rememberCompletionDate();
+  saveCompleted();
+  if (state.user) {
+    apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ focusId: focus.id, dayIndex: state.activeDayIndex }) }).catch((error) => {
+      todayStatus.textContent = error.message;
+    });
+  }
+  todayStatus.textContent = "Completed for today. Welcome back whenever you are ready for the next step.";
+  render();
+});
+
+favoriteVerseButton.addEventListener("click", () => {
+  const focus = activeFocus();
+  if (!focus) return;
+  const day = focus.days[state.activeDayIndex];
+  const id = currentFavoriteId();
+  if (state.favorites.some((item) => item.id === id)) {
+    state.favorites = state.favorites.filter((item) => item.id !== id);
+  } else {
+    state.favorites.push({ id, focusTitle: focus.title, title: day[1], reference: day[2], savedAt: new Date().toISOString() });
+  }
+  saveFavorites();
+  renderFavorites();
+  renderToday();
+});
+
 saveNoteButton.addEventListener("click", () => {
   const focus = activeFocus();
   state.notes[dayKey()] = noteInput.value.trim();
+  state.checkins[dayKey()] = {
+    stoodOut: stoodOutInput.value.trim(),
+    invitation: invitationInput.value.trim(),
+    bless: blessInput.value.trim()
+  };
   saveNotes();
+  saveCheckins();
   if (!state.user) {
     noteStatus.textContent = "Note saved on this device. Sign in to sync it.";
     return;
@@ -1002,6 +1212,54 @@ communityForm.addEventListener("submit", (event) => {
     });
 });
 
+prayerForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const text = prayerInput.value.trim();
+  if (!text) {
+    prayerStatus.textContent = "Write a short prayer request first.";
+    return;
+  }
+  if (!state.user) {
+    prayerStatus.textContent = "Sign in to share a prayer request.";
+    return;
+  }
+  apiFetch("/api/prayer-requests", {
+    method: "POST",
+    body: JSON.stringify({ text, isAnonymous: anonymousPrayer.checked })
+  })
+    .then(async () => {
+      prayerInput.value = "";
+      anonymousPrayer.checked = false;
+      prayerStatus.textContent = "Prayer request shared.";
+      await loadPrayerRequests();
+      renderPrayerRequests();
+    })
+    .catch((error) => {
+      prayerStatus.textContent = error.message;
+    });
+});
+
+prayerFeed.addEventListener("click", (event) => {
+  const button = event.target.closest(".prayed-button");
+  if (!button) return;
+  if (!state.user) {
+    prayerStatus.textContent = "Sign in to mark that you prayed.";
+    return;
+  }
+  apiFetch("/api/prayer-requests/prayed", {
+    method: "POST",
+    body: JSON.stringify({ id: button.dataset.prayerId })
+  })
+    .then(async () => {
+      prayerStatus.textContent = "Marked as prayed.";
+      await loadPrayerRequests();
+      renderPrayerRequests();
+    })
+    .catch((error) => {
+      prayerStatus.textContent = error.message;
+    });
+});
+
 function openAuthForm(mode) {
   state.authMode = mode;
   authForm.hidden = false;
@@ -1013,6 +1271,15 @@ function openAuthForm(mode) {
 
 showSignupButton.addEventListener("click", () => openAuthForm("signup"));
 showLoginButton.addEventListener("click", () => openAuthForm("login"));
+onboardingOptions.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-suggest-focus]");
+  if (!button) return;
+  state.activeId = button.dataset.suggestFocus;
+  state.activeDayIndex = 0;
+  onboardingPanel.hidden = true;
+  document.querySelector("#themes").scrollIntoView({ behavior: "smooth" });
+  loadCommunity().finally(render);
+});
 showReminderSettingsButton.addEventListener("click", () => {
   reminderSettingsPanel.hidden = !reminderSettingsPanel.hidden;
   if (!reminderSettingsPanel.hidden) {
@@ -1026,6 +1293,25 @@ cancelAuthButton.addEventListener("click", () => {
 });
 
 communityFeed.addEventListener("click", (event) => {
+  const reactionButton = event.target.closest(".reaction-button[data-reaction]");
+  if (reactionButton) {
+    if (!state.user) {
+      communityStatus.textContent = "Sign in to react to a community post.";
+      return;
+    }
+    apiFetch("/api/community/react", {
+      method: "POST",
+      body: JSON.stringify({ postId: reactionButton.dataset.postId, type: reactionButton.dataset.reaction })
+    })
+      .then(async () => {
+        await loadCommunity();
+        renderCommunity();
+      })
+      .catch((error) => {
+        communityStatus.textContent = error.message;
+      });
+    return;
+  }
   const button = event.target.closest(".report-button");
   if (!button) return;
   if (!state.user) {
@@ -1260,6 +1546,25 @@ adminReportList.addEventListener("click", (event) => {
   }
 });
 
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  state.deferredInstallPrompt = event;
+  installAppButton.hidden = false;
+  installStatus.textContent = "You can install Walk With God on this device.";
+});
+
+installAppButton.addEventListener("click", async () => {
+  if (!state.deferredInstallPrompt) {
+    installStatus.textContent = "Use your browser menu to add this app to your home screen.";
+    return;
+  }
+  state.deferredInstallPrompt.prompt();
+  const choice = await state.deferredInstallPrompt.userChoice;
+  installStatus.textContent = choice.outcome === "accepted" ? "App install started." : "Install dismissed. You can come back anytime.";
+  state.deferredInstallPrompt = null;
+  installAppButton.hidden = true;
+});
+
 async function init() {
   if (window.location.protocol === "file:") {
     serverWarning.hidden = false;
@@ -1271,6 +1576,7 @@ async function init() {
       await loadServerState();
     } else {
       await loadCommunity();
+      await loadPrayerRequests();
     }
   } catch {
     state.user = null;

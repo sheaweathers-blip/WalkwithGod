@@ -6,7 +6,7 @@
     <title>Walk With God</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#1f4b3b" />
-    <link rel="stylesheet" href="styles.css?v=20260529-nature" />
+    <link rel="stylesheet" href="styles.css?v=20260530-engage" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -28,6 +28,25 @@
             <a class="secondary-link" href="#account">Account</a>
             <a class="secondary-link" href="#admin">Admin</a>
           </div>
+        </div>
+      </section>
+
+      <section class="daily today-section" id="today">
+        <div class="today-card">
+          <div>
+            <p class="eyebrow">Today</p>
+            <h2 id="todayTitle">Begin today's walk</h2>
+            <p class="section-copy" id="todayCopy">Choose a focus to see your next Scripture, active time, and deed of the day.</p>
+          </div>
+          <div class="today-stats">
+            <div><strong id="streakCount">0</strong><span>day rhythm</span></div>
+            <div><strong id="favoriteCount">0</strong><span>favorite verses</span></div>
+          </div>
+          <div class="reflection-actions">
+            <button class="copy-button" id="continueTodayButton" type="button">Continue Today</button>
+            <button class="quiet-button" id="quickCompleteButton" type="button">Mark Complete</button>
+          </div>
+          <p class="copy-status" id="todayStatus" role="status" aria-live="polite"></p>
         </div>
       </section>
 
@@ -70,6 +89,17 @@
             </div>
             <p class="copy-status" id="authMessage" role="status" aria-live="polite"></p>
           </form>
+
+          <div class="onboarding-panel" id="onboardingPanel" hidden>
+            <p class="eyebrow">First Step</p>
+            <h3>What kind of focus would help right now?</h3>
+            <div class="onboarding-options" id="onboardingOptions">
+              <button class="quiet-button" type="button" data-suggest-focus="prayer-and-listening">Prayer</button>
+              <button class="quiet-button" type="button" data-suggest-focus="hardship-and-suffering">Hardship</button>
+              <button class="quiet-button" type="button" data-suggest-focus="holy-spirit">Holy Spirit</button>
+              <button class="quiet-button" type="button" data-suggest-focus="biblical-marriage">Marriage</button>
+            </div>
+          </div>
 
           <div class="settings-panel" id="reminderSettingsPanel" hidden>
             <div class="settings-panel-heading">
@@ -167,6 +197,7 @@
               <p class="block-label" id="dayLabel">Day 1</p>
               <h3 id="dayTitle">Creation of light</h3>
               <p class="scripture-reference" id="scriptureText">Genesis 1:1-5</p>
+              <button class="favorite-button" id="favoriteVerseButton" type="button">Save Favorite Verse</button>
               <p id="daySummary"></p>
               <div class="daily-rhythm-grid">
                 <div class="rhythm-card">
@@ -187,9 +218,28 @@
                 <p id="implementationText"></p>
                 <label class="notes-label" for="noteInput">Private notes</label>
                 <textarea id="noteInput" placeholder="What did you notice, pray, practice, or need to return to?"></textarea>
+                <div class="guided-checkin">
+                  <label>
+                    What stood out?
+                    <input id="stoodOutInput" placeholder="A word, verse, conviction, or comfort" />
+                  </label>
+                  <label>
+                    What is God inviting me to do?
+                    <input id="invitationInput" placeholder="One faithful next step" />
+                  </label>
+                  <label>
+                    Who can I bless today?
+                    <input id="blessInput" placeholder="A name or situation" />
+                  </label>
+                </div>
                 <button class="quiet-button" id="saveNoteButton" type="button">Save Note</button>
                 <p class="copy-status" id="noteStatus" role="status" aria-live="polite"></p>
               </div>
+              <div class="favorites-panel">
+                <p class="block-label">Favorite Verses</p>
+                <div id="favoriteVersesList"></div>
+              </div>
+              <div id="completionContainer"></div>
               <div class="reader-actions">
                 <button class="complete-button" id="completeButton" type="button">Mark Day Complete</button>
                 <button class="quiet-button" id="nextButton" type="button">Next Day</button>
@@ -224,6 +274,36 @@
         </form>
 
         <div class="community-feed" id="communityFeed" aria-label="Community check-ins"></div>
+
+        <div class="prayer-board">
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Prayer Requests</p>
+            <h3>Pray with the community</h3>
+          </div>
+          <form class="prayer-form" id="prayerForm">
+            <label>
+              Prayer request
+              <textarea id="prayerInput" placeholder="Share a prayer request with the community."></textarea>
+            </label>
+            <label class="inline-check">
+              <input id="anonymousPrayer" type="checkbox" />
+              Share anonymously
+            </label>
+            <button class="copy-button" type="submit">Share Prayer Request</button>
+            <p class="copy-status" id="prayerStatus" role="status" aria-live="polite"></p>
+          </form>
+          <div class="prayer-feed" id="prayerFeed"></div>
+        </div>
+      </section>
+
+      <section class="daily install-section" id="install">
+        <div class="section-heading">
+          <p class="eyebrow">Keep It Close</p>
+          <h2>Add Walk With God to your phone</h2>
+          <p class="section-copy">Install the app shortcut for quicker daily access when your reminder arrives.</p>
+        </div>
+        <button class="copy-button" id="installAppButton" type="button" hidden>Install App</button>
+        <p class="copy-status" id="installStatus" role="status" aria-live="polite"></p>
       </section>
 
       <section class="daily" id="feedback">

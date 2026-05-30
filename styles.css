@@ -4,6 +4,9 @@
   --paper: #fbfaf5;
   --panel: #ffffff;
   --green: #1f4b3b;
+  --deep-green: #123629;
+  --trail: #8f6d33;
+  --clay: #a85f3d;
   --green-soft: #dce9dd;
   --gold: #b28a3a;
   --blue: #486b82;
@@ -92,7 +95,7 @@ button:disabled {
   overflow: hidden;
   isolation: isolate;
   background:
-    linear-gradient(90deg, rgba(251, 250, 245, 0.92), rgba(251, 250, 245, 0.18)),
+    linear-gradient(90deg, rgba(246, 243, 229, 0.96), rgba(246, 243, 229, 0.2)),
     url("/assets/daily-devotion.png?v=20260529") center / cover no-repeat,
     var(--nature-sunrise);
 }
@@ -119,8 +122,8 @@ button:disabled {
 
 .hero-scrim {
   background:
-    linear-gradient(90deg, rgba(251, 250, 245, 0.95) 0%, rgba(251, 250, 245, 0.82) 34%, rgba(251, 250, 245, 0.22) 72%),
-    linear-gradient(0deg, rgba(251, 250, 245, 0.94) 0%, rgba(251, 250, 245, 0) 42%);
+    linear-gradient(90deg, rgba(246, 243, 229, 0.98) 0%, rgba(238, 235, 218, 0.84) 36%, rgba(238, 235, 218, 0.18) 72%),
+    linear-gradient(0deg, rgba(31, 75, 59, 0.18) 0%, rgba(251, 250, 245, 0) 46%);
   z-index: -1;
 }
 
@@ -538,6 +541,79 @@ button:hover {
   background: var(--nature-leaf);
 }
 
+.guided-checkin {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.guided-checkin label {
+  display: grid;
+  gap: 8px;
+}
+
+.guided-checkin input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.favorite-button {
+  min-height: 38px;
+  margin-bottom: 14px;
+  padding: 0 13px;
+  border: 1px solid rgba(178, 138, 58, 0.42);
+  border-radius: 8px;
+  color: var(--deep-green);
+  background: rgba(255, 248, 226, 0.9);
+  font-weight: 850;
+}
+
+.favorite-button.is-saved {
+  color: #fff;
+  background: var(--trail);
+}
+
+.favorites-panel,
+.completion-card,
+.prayer-board {
+  position: relative;
+  overflow: hidden;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(31, 75, 59, 0.18);
+  border-radius: 8px;
+  background: var(--nature-warm);
+}
+
+.favorite-item,
+.prayer-entry {
+  padding: 12px;
+  border: 1px solid rgba(31, 75, 59, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.favorite-item + .favorite-item,
+.prayer-entry + .prayer-entry {
+  margin-top: 10px;
+}
+
+.completion-card {
+  background:
+    radial-gradient(circle at 86% 14%, rgba(178, 138, 58, 0.3), transparent 30%),
+    linear-gradient(135deg, rgba(242, 235, 210, 0.96), rgba(218, 235, 218, 0.96));
+}
+
+.completion-card h3 {
+  margin-bottom: 8px;
+  color: var(--deep-green);
+}
+
 .daily-rhythm-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -679,6 +755,8 @@ select:focus {
 
 .copy-button {
   border-color: var(--green);
+  background:
+    linear-gradient(135deg, var(--deep-green), var(--green));
 }
 
 .quiet-button {
@@ -697,6 +775,70 @@ select:focus {
   max-width: 1240px;
   margin: 0 auto 54px;
   padding: clamp(22px, 4vw, 34px);
+}
+
+.today-section {
+  margin-top: -26px;
+  position: relative;
+  z-index: 2;
+}
+
+.today-card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: clamp(20px, 4vw, 34px);
+  border: 1px solid rgba(31, 75, 59, 0.22);
+  border-radius: 8px;
+  background:
+    linear-gradient(115deg, rgba(255, 252, 238, 0.94), rgba(220, 236, 216, 0.9)),
+    radial-gradient(circle at 92% 12%, rgba(168, 95, 61, 0.22), transparent 26%);
+  box-shadow: var(--shadow);
+}
+
+.today-card::before,
+.completion-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(150deg, transparent 0 48%, rgba(143, 109, 51, 0.16) 48% 50%, transparent 50% 100%),
+    radial-gradient(ellipse at 8% 100%, rgba(31, 75, 59, 0.16), transparent 34%);
+}
+
+.today-card > *,
+.completion-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.today-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.today-stats div {
+  min-height: 92px;
+  padding: 14px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.today-stats strong {
+  display: block;
+  color: var(--deep-green);
+  font-size: 2rem;
+}
+
+.today-stats span {
+  color: var(--muted);
+  font-weight: 850;
 }
 
 .account-card {
@@ -856,6 +998,24 @@ select:focus {
   background: var(--nature-warm);
 }
 
+.reaction-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.reaction-button {
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(31, 75, 59, 0.18);
+  border-radius: 999px;
+  color: var(--deep-green);
+  background: rgba(255, 255, 255, 0.78);
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
 .community-entry strong {
   display: block;
   color: var(--green);
@@ -884,6 +1044,68 @@ select:focus {
   display: grid;
   gap: 14px;
   margin-top: 22px;
+}
+
+.prayer-board {
+  background: var(--nature-water);
+}
+
+.compact-heading h3 {
+  color: var(--deep-green);
+}
+
+.prayer-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.prayer-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.inline-check {
+  display: inline-flex !important;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px !important;
+}
+
+.inline-check input {
+  width: auto;
+}
+
+.prayer-feed {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.prayer-entry strong {
+  color: var(--green);
+}
+
+.prayer-entry p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.onboarding-panel {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(31, 75, 59, 0.18);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(178, 138, 58, 0.22), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 238, 0.94), rgba(226, 238, 223, 0.94));
+}
+
+.onboarding-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .feedback-form label {
@@ -1072,10 +1294,16 @@ select:focus {
   .practice-grid,
   .day-layout,
   .form-grid,
+  .today-card,
+  .guided-checkin,
   .daily-rhythm-grid,
   .admin-grid,
   .admin-summary {
     grid-template-columns: 1fr;
+  }
+
+  .today-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .progress-copy {
