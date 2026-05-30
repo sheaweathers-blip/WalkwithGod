@@ -775,6 +775,92 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+function deedForDay(focus, day, dayNumber) {
+  const title = day[1].toLowerCase();
+  const focusTitle = focus.title.toLowerCase();
+  const reference = day[2].toLowerCase();
+  const specificRules = [
+    ["light", "Bring light into one conversation today through honesty, encouragement, or a short prayer with someone."],
+    ["sky", "Step outside for two quiet minutes, look up, and thank God for His order before your next task."],
+    ["vegetation", "Prepare or share something nourishing today as a reminder that God provides through creation."],
+    ["image", "Choose one person to intentionally honor today as someone made in God's image."],
+    ["rests", "Set aside one small nonessential task and receive that time as worshipful rest."],
+    ["sin", "Confess one specific sin or hidden compromise to God and take one concrete step away from it."],
+    ["cain", "Interrupt resentment quickly today by praying blessing over someone you are tempted to compare yourself with."],
+    ["noah", "Obey one clear instruction from God today before you feel fully ready."],
+    ["covenant", "Remember one promise of God and speak it out loud before making a decision."],
+    ["redeemer", "Write one sentence of hope and send it to someone who needs to remember God is near."],
+    ["repent", "Turn from one avoidant habit today and replace it with a small act of obedience."],
+    ["gate", "Before entering a room, meeting, or conversation, ask Jesus to lead how you enter it."],
+    ["speak out", "Tell one person something specific God has done for you."],
+    ["coming king", "Make one choice today as if Christ's kingdom is more real than today's pressure."],
+    ["no other gods", "Name one thing competing for first place in your heart and fast from it for one hour today."],
+    ["no idols", "Put away or pause one comfort, app, purchase, or habit that has been pulling your attention from God."],
+    ["god's name", "Use your words to honor God today: no careless complaint, gossip, or empty spiritual language."],
+    ["sabbath", "Practice a 10-minute Sabbath pause with no multitasking, no phone, and no productivity goal."],
+    ["honor parents", "Show honor through one action: call, pray, help, forgive, or speak respectfully."],
+    ["do not murder", "Refuse contempt today; repair one harsh word, angry silence, or dismissive attitude."],
+    ["do not commit adultery", "Guard covenant faithfulness by removing one source of temptation or giving one intentional act of love."],
+    ["do not steal", "Give back, give credit, or give generously in one place where you could have taken for yourself."],
+    ["false witness", "Speak one truthful, healing sentence today where exaggeration or silence would be easier."],
+    ["covet", "Practice contentment by thanking God for three specific gifts already in your life."],
+    ["hagar", "Notice someone who may feel unseen and offer them dignity, attention, or prayer."],
+    ["ruth", "Practice loyal love through one steady act of presence or help."],
+    ["hannah", "Pray honestly about one ache before trying to fix or explain it."],
+    ["esther", "Take one courageous step that faithfulness requires in this season."],
+    ["mary", "Say yes to God in one small place where obedience feels inconvenient."],
+    ["deborah", "Use your influence today to strengthen, guide, or encourage someone toward obedience."],
+    ["prophet", "Respond to God's word with one act of truth-telling, repentance, justice, or hope."],
+    ["justice", "Do one quiet act of fairness or advocacy for someone with less power than you."],
+    ["mercy", "Choose mercy in one moment where criticism would come naturally."],
+    ["marriage", "Offer your spouse, or a close loved one, one specific act of listening, service, repair, or affection."],
+    ["forgive", "Release one debt you have been rehearsing and pray for the person by name."],
+    ["gentle words", "Answer one tense moment with a softer tone than the moment demands."],
+    ["hardship", "Name your burden to God, then ask one trusted person for prayer or support."],
+    ["anxiety", "Trade five minutes of worry for five minutes of slow prayer and breathing."],
+    ["lament", "Write a two-sentence lament: what hurts, and what you are choosing to trust about God."],
+    ["jesus wept", "Be present with someone's pain today without rushing to explain it away."],
+    ["divorce", "Choose one healing action today: wise counsel, a boundary, prayer, rest, or asking for help."],
+    ["body", "Honor God with your body through water, movement, rest, or a nourishing meal."],
+    ["renewed mind", "Replace one repeated anxious or harsh thought with a verse-based truth."],
+    ["food", "Pause before one meal or drink and receive it with unhurried gratitude."],
+    ["sleep", "Protect your rest tonight by ending one screen or task earlier than usual."],
+    ["prayer", "Set a timer for five quiet minutes after praying, leaving room to listen before moving on."],
+    ["be still", "Practice two minutes of stillness with your hands open before God."],
+    ["intercede", "Pray for three people by name: one close, one difficult, and one in need."],
+    ["confess", "Confess one specific thing and receive God's forgiveness without self-punishment."],
+    ["love", "Choose one inconvenient act of love for someone who cannot repay you."],
+    ["joy", "Name one reason for joy and share it with someone before the day ends."],
+    ["peace", "Become a peacemaker in one small place: lower the temperature, listen, or apologize."],
+    ["patience", "Practice patience by waiting without complaining in one ordinary delay."],
+    ["kindness", "Do one hidden kindness for someone in your home, work, church, or neighborhood."],
+    ["goodness", "Resist one harmful shortcut and choose what is good even if it costs more."],
+    ["faithfulness", "Complete one responsibility today as worship, even if no one notices."],
+    ["gentleness", "Use gentle strength with someone who is tired, defensive, or discouraged."],
+    ["self-control", "Say no to one impulse so you can say yes to the Spirit."],
+    ["serve", "Serve one person in a practical way today without needing attention or credit."],
+    ["mission", "Start one spiritual conversation with humility, curiosity, and grace."],
+    ["holy spirit", "Pause before one decision today and ask the Holy Spirit to lead your words, desires, and next step."],
+    ["helper", "Ask the Holy Spirit for help before beginning something you normally do in your own strength."],
+    ["spirit teaches", "Read the verse once more slowly and write down one phrase the Spirit brings to your attention."],
+    ["walk by the spirit", "Before reacting today, stop and ask whether this response keeps in step with the Spirit."],
+    ["gifts", "Use one gift God has given you for someone else's good today."],
+    ["weakness", "Bring one weakness to God without hiding it, then take the next faithful step with Him."]
+  ];
+  const matched = specificRules.find(([keyword]) => title.includes(keyword) || focusTitle.includes(keyword) || reference.includes(keyword));
+  if (matched) return matched[1];
+  const rotating = [
+    "Turn today's verse into one sentence of prayer, then act on the first faithful step that comes to mind.",
+    "Choose one person connected to today's passage and bless them through a word, prayer, or practical help.",
+    "Let today's Scripture shape one ordinary action: how you speak, spend, pause, work, or respond.",
+    "Write the verse reference somewhere visible and return to it before your next major decision.",
+    "Practice the opposite of the sin, fear, or pressure this passage exposes.",
+    "Share one sentence from today's focus with someone who would be encouraged by it.",
+    "Take a short walk or quiet pause and ask God how this passage should become lived obedience today."
+  ];
+  return rotating[(dayNumber - 1) % rotating.length];
+}
+
 function getDayExtras(focus, day) {
   const title = day[1].toLowerCase();
   const focusTitle = focus.title.toLowerCase();
@@ -791,30 +877,10 @@ function getDayExtras(focus, day) {
     `How does this reading move me toward worship, repentance, gratitude, or service?`,
     `What should I carry from this time with God into the next conversation or responsibility?`
   ];
-  let deed = "Offer one quiet act of obedience today that reflects this passage.";
-  if (title.includes("light")) deed = "Bring light into one conversation today through honesty, encouragement, or prayer.";
-  if (title.includes("sky") || title.includes("waters")) deed = "Step outside, look up, and thank God for His order before beginning your next task.";
-  if (title.includes("vegetation") || title.includes("land")) deed = "Care for something physical today: a meal, a plant, a room, or a responsibility God has given you.";
-  if (title.includes("human") || title.includes("image") || title.includes("man") || title.includes("woman")) deed = "Honor one person today as someone made in God's image.";
-  if (title.includes("rests")) deed = "Practice a holy pause: stop one nonessential thing for a few minutes and receive rest from God.";
-  if (title.includes("sin") || focusTitle.includes("fall")) deed = "Confess one specific sin or broken pattern to God and take one step away from it.";
-  if (focusTitle.includes("redemption")) deed = "Encourage someone with a word of hope rooted in God's rescue and mercy.";
-  if (focusTitle.includes("consummation")) deed = "Make one choice today that reflects hope in God's coming kingdom.";
-  if (focusTitle.includes("commandments")) deed = "Choose one concrete act of obedience today that honors this commandment in your thoughts, words, or actions.";
-  if (focusTitle.includes("women")) deed = "Name one faithful quality from this woman's story and practice it in one relationship today.";
-  if (focusTitle.includes("prophets")) deed = "Respond to God's word with one courageous act of truth, repentance, justice, or hope today.";
-  if (focusTitle.includes("marriage")) deed = "Offer one humble act of love, listening, service, or repair in your closest relationship today.";
-  if (focusTitle.includes("hardship")) deed = "Bring one burden honestly to God, then take one small faithful step instead of carrying it alone.";
-  if (focusTitle.includes("divorce")) deed = "Choose one healing action today: prayer, wise counsel, a boundary, forgiveness, rest, or asking for help.";
-  if (focusTitle.includes("health")) deed = "Honor God with one whole-person choice today: rest, movement, nourishment, prayer, or reaching out for support.";
-  if (focusTitle.includes("prayer")) deed = "Set a timer for five quiet minutes after praying, leaving room to listen before moving on.";
-  if (focusTitle.includes("fruit")) deed = "Practice this fruit of the Spirit in one specific interaction before the day ends.";
-  if (focusTitle.includes("serving")) deed = "Serve one person in a practical way today without needing attention or credit.";
-  if (focusTitle.includes("holy spirit")) deed = "Pause before one decision today and ask the Holy Spirit to lead your words, desires, and next step.";
   return {
     active: "Set aside 10-15 uninterrupted minutes. Read the passage slowly, sit with the verse, pray honestly, and listen before writing or moving on.",
     application: applicationQuestions[(dayNumber - 1) % applicationQuestions.length],
-    deed
+    deed: deedForDay(focus, day, dayNumber)
   };
 }
 
