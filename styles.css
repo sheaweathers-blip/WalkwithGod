@@ -920,6 +920,45 @@ select:focus {
   line-height: 1.5;
 }
 
+.locked-section {
+  background:
+    radial-gradient(circle at 88% 14%, rgba(178, 138, 58, 0.28), transparent 30%),
+    linear-gradient(135deg, rgba(255, 252, 238, 0.96), rgba(221, 237, 229, 0.94));
+}
+
+.locked-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.locked-benefits-grid article {
+  padding: 16px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.locked-benefits-grid strong {
+  color: var(--deep-green);
+}
+
+.locked-benefits-grid p,
+.premium-note {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.premium-note {
+  margin: 18px 0 0;
+  font-weight: 750;
+}
+
+.locked-actions {
+  margin-top: 18px;
+}
+
 .admin-unlock-form,
 .auth-form,
 .add-focus-form,
@@ -1336,6 +1375,7 @@ select:focus {
   .form-grid,
   .today-card,
   .guided-checkin,
+  .locked-benefits-grid,
   .daily-rhythm-grid,
   .admin-grid,
   .admin-summary {

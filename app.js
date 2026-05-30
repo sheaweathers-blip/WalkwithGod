@@ -369,6 +369,15 @@ const themeList = document.querySelector("#themeList");
 const breatheInText = document.querySelector("#breatheInText");
 const breatheOutText = document.querySelector("#breatheOutText");
 const serverWarning = document.querySelector("#serverWarning");
+const lockedBenefits = document.querySelector("#lockedBenefits");
+const gatedSections = [
+  document.querySelector("#today"),
+  document.querySelector("#themes"),
+  document.querySelector("#community"),
+  document.querySelector("#install"),
+  document.querySelector("#feedback"),
+  document.querySelector("#admin")
+];
 const todayTitle = document.querySelector("#todayTitle");
 const todayCopy = document.querySelector("#todayCopy");
 const streakCount = document.querySelector("#streakCount");
@@ -381,6 +390,8 @@ const supportMessageList = document.querySelector("#supportMessageList");
 const accountActions = document.querySelector("#accountActions");
 const showSignupButton = document.querySelector("#showSignupButton");
 const showLoginButton = document.querySelector("#showLoginButton");
+const lockedSignupButton = document.querySelector("#lockedSignupButton");
+const lockedLoginButton = document.querySelector("#lockedLoginButton");
 const showReminderSettingsButton = document.querySelector("#showReminderSettingsButton");
 const authForm = document.querySelector("#authForm");
 const authName = document.querySelector("#authName");
@@ -619,6 +630,14 @@ function renderAccount() {
         .map((message) => `<article class="support-message"><strong>Admin message</strong><p>${escapeHtml(message.text)}</p></article>`)
         .join("")
     : "";
+}
+
+function renderAccessGate() {
+  const isSignedIn = Boolean(state.user);
+  lockedBenefits.hidden = isSignedIn;
+  for (const section of gatedSections) {
+    if (section) section.hidden = !isSignedIn;
+  }
 }
 
 function nextOpenDay(focus) {
@@ -976,9 +995,13 @@ async function loadAdminDashboard() {
 
 function render() {
   const focus = activeFocus();
+  renderAccessGate();
+  renderAccount();
+  if (!state.user) {
+    return;
+  }
   readerEmpty.hidden = Boolean(focus);
   readerContent.hidden = !focus;
-  renderAccount();
   renderToday();
   renderFocusList();
   renderPrayerBreath();
@@ -1306,6 +1329,14 @@ function openAuthForm(mode) {
 
 showSignupButton.addEventListener("click", () => openAuthForm("signup"));
 showLoginButton.addEventListener("click", () => openAuthForm("login"));
+lockedSignupButton.addEventListener("click", () => {
+  document.querySelector("#account").scrollIntoView({ behavior: "smooth" });
+  openAuthForm("signup");
+});
+lockedLoginButton.addEventListener("click", () => {
+  document.querySelector("#account").scrollIntoView({ behavior: "smooth" });
+  openAuthForm("login");
+});
 onboardingOptions.addEventListener("click", (event) => {
   const button = event.target.closest("[data-suggest-focus]");
   if (!button) return;
@@ -1584,21 +1615,40 @@ adminReportList.addEventListener("click", (event) => {
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   state.deferredInstallPrompt = event;
-  installAppButton.hidden = false;
   installStatus.textContent = "You can install Walk With God on this device.";
 });
 
+function installInstructions() {
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isIos = /iphone|ipad|ipod/.test(userAgent);
+  const isAndroid = /android/.test(userAgent);
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+  if (isStandalone) return "Walk With God is already installed on this device.";
+  if (isIos) return "On iPhone or iPad: tap Share, then choose Add to Home Screen.";
+  if (isAndroid) return "On Android: open the browser menu, then choose Install app or Add to Home screen.";
+  return "In Chrome or Edge: use the install icon in the address bar, or open the browser menu and choose Install app.";
+}
+
 installAppButton.addEventListener("click", async () => {
   if (!state.deferredInstallPrompt) {
-    installStatus.textContent = "Use your browser menu to add this app to your home screen.";
+    installStatus.textContent = installInstructions();
     return;
   }
   state.deferredInstallPrompt.prompt();
   const choice = await state.deferredInstallPrompt.userChoice;
   installStatus.textContent = choice.outcome === "accepted" ? "App install started." : "Install dismissed. You can come back anytime.";
   state.deferredInstallPrompt = null;
-  installAppButton.hidden = true;
 });
+
+async function registerAppShell() {
+  if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
+  try {
+    await navigator.serviceWorker.register("/service-worker.js");
+    if (!state.deferredInstallPrompt) installStatus.textContent = installInstructions();
+  } catch {
+    installStatus.textContent = "App install will be available after the site finishes loading securely.";
+  }
+}
 
 async function init() {
   if (window.location.protocol === "file:") {
@@ -1616,6 +1666,7 @@ async function init() {
   } catch {
     state.user = null;
   }
+  await registerAppShell();
   render();
 }
 
