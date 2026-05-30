@@ -989,6 +989,7 @@ function renderCommunity() {
     ? entries
         .map((entry) => {
           const counts = reactionCounts(entry.reactions || []);
+          const comments = entry.comments || [];
           return `
           <article class="community-entry">
             <strong>${escapeHtml(entry.userName || "Community member")} - ${escapeHtml(entry.dayLabel)} - ${escapeHtml(entry.dayTitle)}</strong>
@@ -999,6 +1000,24 @@ function renderCommunity() {
               <button class="reaction-button" type="button" data-post-id="${escapeHtml(entry.id || "")}" data-reaction="amen">Amen ${counts.amen || 0}</button>
               <button class="report-button" type="button" data-post-id="${escapeHtml(entry.id || "")}">Report</button>
             </div>
+            <div class="comment-list">
+              ${
+                comments.length
+                  ? comments
+                      .map((comment) => `
+                        <div class="community-comment">
+                          <strong>${escapeHtml(comment.userName || "Community member")}</strong>
+                          <p>${escapeHtml(comment.text)}</p>
+                        </div>
+                      `)
+                      .join("")
+                  : '<p class="empty-comments">No comments yet.</p>'
+              }
+            </div>
+            <form class="comment-form" data-post-id="${escapeHtml(entry.id || "")}">
+              <input name="comment" placeholder="Write a short encouragement..." />
+              <button class="quiet-button" type="submit">Comment</button>
+            </form>
           </article>
         `;
         })
@@ -1505,6 +1524,35 @@ communityFeed.addEventListener("click", (event) => {
   })
     .then(() => {
       communityStatus.textContent = "Report sent to the admin team.";
+    })
+    .catch((error) => {
+      communityStatus.textContent = error.message;
+    });
+});
+
+communityFeed.addEventListener("submit", (event) => {
+  const form = event.target.closest(".comment-form");
+  if (!form) return;
+  event.preventDefault();
+  if (!state.user) {
+    communityStatus.textContent = "Sign in to comment on a community post.";
+    return;
+  }
+  const input = form.querySelector('input[name="comment"]');
+  const text = input.value.trim();
+  if (!text) {
+    communityStatus.textContent = "Write a short comment first.";
+    return;
+  }
+  apiFetch("/api/community/comment", {
+    method: "POST",
+    body: JSON.stringify({ postId: form.dataset.postId, text })
+  })
+    .then(async () => {
+      input.value = "";
+      communityStatus.textContent = "Comment shared.";
+      await loadCommunity();
+      renderCommunity();
     })
     .catch((error) => {
       communityStatus.textContent = error.message;

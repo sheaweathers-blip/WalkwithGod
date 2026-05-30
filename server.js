@@ -69,7 +69,8 @@ function defaultDb() {
     reports: [],
     supportMessages: [],
     prayerRequests: [],
-    reactions: []
+    reactions: [],
+    comments: []
   };
 }
 
@@ -403,6 +404,8 @@ async function handleApi(request, response) {
   }
 
   if (request.method === "GET" && url.pathname === "/api/community") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
     const focusId = normalizeText(url.searchParams.get("focusId"), 100);
     const posts = db.posts
       .filter((post) => !post.hiddenAt)
@@ -411,7 +414,13 @@ async function handleApi(request, response) {
       .map((post) => ({
         ...post,
         userName: db.users.find((user) => user.id === post.userId)?.name || "Community member",
-        reactions: db.reactions.filter((reaction) => reaction.postId === post.id)
+        reactions: db.reactions.filter((reaction) => reaction.postId === post.id),
+        comments: db.comments
+          .filter((comment) => comment.postId === post.id && !comment.hiddenAt)
+          .map((comment) => ({
+            ...comment,
+            userName: db.users.find((user) => user.id === comment.userId)?.name || "Community member"
+          }))
       }));
     return json(response, 200, { posts });
   }
@@ -451,7 +460,29 @@ async function handleApi(request, response) {
     return json(response, 200, { reactions: db.reactions.filter((reaction) => reaction.postId === postId) });
   }
 
+  if (request.method === "POST" && url.pathname === "/api/community/comment") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const body = await readBody(request);
+    const postId = normalizeText(body.postId, 120);
+    const text = normalizeText(body.text, 800);
+    if (!db.posts.some((post) => post.id === postId && !post.hiddenAt)) return json(response, 404, { error: "Community post not found." });
+    if (!text) return json(response, 400, { error: "Comment text is required." });
+    const comment = {
+      id: crypto.randomUUID(),
+      postId,
+      userId: user.id,
+      text,
+      createdAt: new Date().toISOString()
+    };
+    db.comments.push(comment);
+    await writeDb(db);
+    return json(response, 201, { comment: { ...comment, userName: user.name } });
+  }
+
   if (request.method === "GET" && url.pathname === "/api/prayer-requests") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
     const requests = db.prayerRequests
       .filter((requestItem) => !requestItem.hiddenAt)
       .slice(-40)

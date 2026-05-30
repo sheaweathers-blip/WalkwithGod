@@ -1121,6 +1121,48 @@ select:focus {
   font-weight: 850;
 }
 
+.comment-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(31, 75, 59, 0.12);
+}
+
+.community-comment {
+  padding: 10px 12px;
+  border: 1px solid rgba(31, 75, 59, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.community-comment strong {
+  color: var(--deep-green);
+  font-size: 0.84rem;
+}
+
+.community-comment p,
+.empty-comments {
+  margin: 4px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.comment-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.comment-form input {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
 .community-entry strong {
   display: block;
   color: var(--green);
@@ -1403,6 +1445,7 @@ select:focus {
   .guided-checkin,
   .locked-benefits-grid,
   .note-library-item,
+  .comment-form,
   .daily-rhythm-grid,
   .admin-grid,
   .admin-summary {
