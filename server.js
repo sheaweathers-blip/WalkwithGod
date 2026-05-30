@@ -301,7 +301,8 @@ async function sendSms(to, payload) {
     const details = await response.text();
     return { ok: false, error: `Twilio returned ${response.status}: ${details.slice(0, 500)}` };
   }
-  return { ok: true };
+  const data = await response.json();
+  return { ok: true, sid: data.sid, status: data.status };
 }
 
 async function sendReminderForUser(db, reminder, payload) {

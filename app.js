@@ -680,7 +680,11 @@ testPushButton.addEventListener("click", async () => {
     saveReminder();
     await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
     const result = await apiFetch("/api/push/test", { method: "POST", body: JSON.stringify({}) });
-    const channelResults = (result.results || []).map((item) => `${item.channel}: ${item.ok ? "sent" : item.error || "failed"}`);
+    const channelResults = (result.results || []).map((item) => {
+      if (!item.ok) return `${item.channel}: ${item.error || "failed"}`;
+      const details = [item.status, item.sid].filter(Boolean).join(" ");
+      return `${item.channel}: ${details || "sent"}`;
+    });
     reminderStatus.textContent = channelResults.length
       ? channelResults.join(" | ")
       : "No reminder channel was selected for this test.";
