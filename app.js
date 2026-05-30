@@ -718,6 +718,19 @@ function escapeHtml(value) {
 function getDayExtras(focus, day) {
   const title = day[1].toLowerCase();
   const focusTitle = focus.title.toLowerCase();
+  const dayNumber = Number((day[0].match(/\d+/) || [1])[0]);
+  const applicationQuestions = [
+    `What does ${day[1]} reveal about God's character, and how can I respond to Him today?`,
+    `Where is this passage asking me to slow down, surrender, or listen more carefully?`,
+    `What attitude, habit, or fear does this Scripture invite me to bring honestly before God?`,
+    `How can I practice this truth in one ordinary moment before the day ends?`,
+    `Who might be affected if I lived out ${day[1]} with humility and courage today?`,
+    `What is one specific step of obedience this passage makes clear for me?`,
+    `Where do I need God's help to believe, receive, or live this truth instead of only reading it?`,
+    `What would change in my words, schedule, or relationships if I trusted this passage today?`,
+    `How does this reading move me toward worship, repentance, gratitude, or service?`,
+    `What should I carry from this time with God into the next conversation or responsibility?`
+  ];
   let deed = "Offer one quiet act of obedience today that reflects this passage.";
   if (title.includes("light")) deed = "Bring light into one conversation today through honesty, encouragement, or prayer.";
   if (title.includes("sky") || title.includes("waters")) deed = "Step outside, look up, and thank God for His order before beginning your next task.";
@@ -740,7 +753,7 @@ function getDayExtras(focus, day) {
   if (focusTitle.includes("holy spirit")) deed = "Pause before one decision today and ask the Holy Spirit to lead your words, desires, and next step.";
   return {
     active: "Set aside 10-15 uninterrupted minutes. Read the passage slowly, sit with the verse, pray honestly, and listen before writing or moving on.",
-    application: `Where does ${day[1]} invite me to trust, repent, obey, serve, or worship today?`,
+    application: applicationQuestions[(dayNumber - 1) % applicationQuestions.length],
     deed
   };
 }
