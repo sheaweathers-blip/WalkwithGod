@@ -386,6 +386,8 @@ const continueTodayButton = document.querySelector("#continueTodayButton");
 const quickCompleteButton = document.querySelector("#quickCompleteButton");
 const todayStatus = document.querySelector("#todayStatus");
 const accountStatus = document.querySelector("#accountStatus");
+const accountHeading = document.querySelector("#accountHeading");
+const accountCopy = document.querySelector("#accountCopy");
 const supportMessageList = document.querySelector("#supportMessageList");
 const accountActions = document.querySelector("#accountActions");
 const showSignupButton = document.querySelector("#showSignupButton");
@@ -606,6 +608,8 @@ async function loadSupportMessages() {
 
 function renderAccount() {
   if (state.user) {
+    accountHeading.textContent = "Your account";
+    accountCopy.textContent = "Manage reminders, sign out, and review any admin support messages.";
     accountStatus.textContent = `Signed in as ${state.user.name} (${state.user.role}).`;
     authForm.hidden = true;
     showSignupButton.hidden = true;
@@ -613,6 +617,8 @@ function renderAccount() {
     showReminderSettingsButton.hidden = false;
     logoutButton.hidden = false;
   } else {
+    accountHeading.textContent = "Start with a free account";
+    accountCopy.textContent = "Create an account or log in to open your daily focuses, prayer requests, community, notes, progress, and reminders.";
     accountStatus.textContent = "Choose one option below to begin.";
     showSignupButton.hidden = false;
     showLoginButton.hidden = false;
