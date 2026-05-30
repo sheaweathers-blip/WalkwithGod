@@ -669,7 +669,10 @@ testPushButton.addEventListener("click", async () => {
   try {
     if (!state.user) throw new Error("Sign in before testing push notifications.");
     const result = await apiFetch("/api/push/test", { method: "POST", body: JSON.stringify({}) });
-    reminderStatus.textContent = result.pushReady ? "Test push sent." : "Install web-push on the server to send test pushes.";
+    const channelResults = (result.results || []).map((item) => `${item.channel}: ${item.ok ? "sent" : item.error || "failed"}`);
+    reminderStatus.textContent = channelResults.length
+      ? channelResults.join(" | ")
+      : "No reminder channel was selected for this test.";
   } catch (error) {
     reminderStatus.textContent = error.message;
   }

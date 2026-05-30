@@ -298,7 +298,8 @@ async function sendSms(to, payload) {
     body: form
   });
   if (!response.ok) {
-    return { ok: false, error: `Twilio returned ${response.status}.` };
+    const details = await response.text();
+    return { ok: false, error: `Twilio returned ${response.status}: ${details.slice(0, 500)}` };
   }
   return { ok: true };
 }
@@ -736,7 +737,6 @@ function serveStatic(request, response) {
 }
 
 function reminderScheduler() {
-  if (!webPush) return;
   setInterval(async () => {
     const db = await readDb();
     const now = new Date();
