@@ -1,6 +1,6 @@
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open("walk-with-god-v2").then((cache) =>
+    caches.open("walk-with-god-v3").then((cache) =>
       cache.addAll([
         "/",
         "/index.html",
@@ -20,7 +20,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v2").map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v3").map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -30,11 +30,16 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
+        if (!response || !response.ok) return response;
         const copy = response.clone();
-        caches.open("walk-with-god-v2").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
+        caches.open("walk-with-god-v3").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
         return response;
       })
-      .catch(() => caches.match(event.request).then((cached) => cached || caches.match("/index.html")))
+      .catch(() => caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+        if (event.request.destination === "document") return caches.match("/index.html");
+        return Response.error();
+      }))
   );
 });
 
