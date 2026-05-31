@@ -105,9 +105,31 @@ button:disabled {
 
 .hero-fallback {
   background:
-    linear-gradient(90deg, rgba(212, 232, 202, 0.96), rgba(212, 232, 202, 0.24)),
-    radial-gradient(circle at 76% 22%, rgba(198, 150, 67, 0.36), transparent 18%),
-    linear-gradient(160deg, #cfe4c8 0%, #edf1d8 48%, #c5dccd 100%);
+    linear-gradient(90deg, rgba(212, 232, 202, 0.97), rgba(212, 232, 202, 0.38)),
+    radial-gradient(circle at 74% 20%, rgba(226, 178, 76, 0.48), transparent 16%),
+    linear-gradient(160deg, #b9d9ad 0%, #dbeccf 42%, #9fc49f 100%);
+}
+
+.hero-fallback::before,
+.hero-fallback::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-fallback::before {
+  background:
+    radial-gradient(ellipse at 72% 72%, rgba(27, 84, 52, 0.52) 0 24%, transparent 25%),
+    radial-gradient(ellipse at 36% 76%, rgba(44, 102, 64, 0.48) 0 30%, transparent 31%),
+    radial-gradient(ellipse at 10% 86%, rgba(31, 75, 59, 0.42) 0 34%, transparent 35%);
+}
+
+.hero-fallback::after {
+  background:
+    radial-gradient(ellipse at 52% 110%, transparent 0 22%, rgba(238, 201, 128, 0.95) 23% 29%, transparent 30%),
+    linear-gradient(112deg, transparent 0 50%, rgba(238, 201, 128, 0.78) 51% 55%, transparent 56% 100%);
 }
 
 .hero-image,
@@ -156,33 +178,6 @@ button:disabled {
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.brand-logo-shell.logo-fallback {
-  position: relative;
-}
-
-.brand-logo-shell.logo-fallback::before,
-.brand-logo-shell.logo-fallback::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.brand-logo-shell.logo-fallback::before {
-  background:
-    linear-gradient(90deg, transparent 47%, rgba(255, 252, 226, 0.96) 47% 53%, transparent 53%),
-    linear-gradient(0deg, transparent 33%, rgba(255, 252, 226, 0.96) 33% 40%, transparent 40%);
-  clip-path: inset(18% 36% 42% 36%);
-}
-
-.brand-logo-shell.logo-fallback::after {
-  background:
-    radial-gradient(ellipse at 50% 104%, transparent 0 20%, rgba(237, 190, 78, 0.95) 21% 27%, transparent 28%),
-    linear-gradient(128deg, transparent 0 46%, rgba(237, 190, 78, 0.96) 47% 54%, transparent 55% 100%),
-    radial-gradient(ellipse at 25% 82%, rgba(120, 157, 86, 0.88), transparent 28%),
-    radial-gradient(ellipse at 78% 82%, rgba(120, 157, 86, 0.88), transparent 28%);
 }
 
 .eyebrow {
