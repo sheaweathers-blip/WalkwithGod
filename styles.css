@@ -144,9 +144,8 @@ button:disabled {
   overflow: hidden;
   box-shadow: 0 18px 46px rgba(18, 54, 41, 0.24);
   background:
-    radial-gradient(circle at 50% 34%, rgba(255, 244, 190, 0.95) 0 11%, rgba(255, 218, 126, 0.38) 12% 25%, transparent 26%),
-    radial-gradient(ellipse at 50% 73%, rgba(20, 68, 49, 0.92) 0 34%, transparent 35%),
-    linear-gradient(150deg, #123629 0%, #1f4b3b 58%, #8f6d33 100%);
+    radial-gradient(circle at 50% 34%, rgba(255, 240, 172, 0.34), transparent 24%),
+    linear-gradient(145deg, #123629, #1f4b3b);
 }
 
 .brand-logo {
@@ -170,21 +169,17 @@ button:disabled {
 
 .brand-logo-shell.logo-fallback::before {
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 55%, rgba(235, 188, 83, 0.95) 56% 61%, transparent 62%),
-    linear-gradient(90deg, transparent 47%, rgba(255, 252, 226, 0.98) 47% 53%, transparent 53%),
-    linear-gradient(0deg, transparent 33%, rgba(255, 252, 226, 0.98) 33% 40%, transparent 40%),
-    radial-gradient(ellipse at 48% 91%, rgba(255, 229, 145, 0.95) 0 7%, transparent 8%);
+    linear-gradient(90deg, transparent 47%, rgba(255, 252, 226, 0.96) 47% 53%, transparent 53%),
+    linear-gradient(0deg, transparent 33%, rgba(255, 252, 226, 0.96) 33% 40%, transparent 40%);
+  clip-path: inset(18% 36% 42% 36%);
 }
 
 .brand-logo-shell.logo-fallback::after {
   background:
-    radial-gradient(ellipse at 28% 66%, rgba(80, 122, 69, 0.9) 0 20%, transparent 21%),
-    radial-gradient(ellipse at 72% 67%, rgba(55, 105, 65, 0.88) 0 24%, transparent 25%),
-    radial-gradient(ellipse at 20% 77%, rgba(130, 158, 71, 0.9) 0 14%, transparent 15%),
-    radial-gradient(ellipse at 83% 78%, rgba(130, 158, 71, 0.9) 0 16%, transparent 17%),
-    linear-gradient(124deg, transparent 35%, rgba(255, 229, 145, 0.9) 36% 40%, transparent 41%),
-    linear-gradient(70deg, transparent 42%, rgba(255, 238, 173, 0.95) 43% 48%, transparent 49%),
-    radial-gradient(circle at 78% 62%, rgba(236, 185, 67, 0.95) 0 8%, transparent 9%);
+    radial-gradient(ellipse at 50% 104%, transparent 0 20%, rgba(237, 190, 78, 0.95) 21% 27%, transparent 28%),
+    linear-gradient(128deg, transparent 0 46%, rgba(237, 190, 78, 0.96) 47% 54%, transparent 55% 100%),
+    radial-gradient(ellipse at 25% 82%, rgba(120, 157, 86, 0.88), transparent 28%),
+    radial-gradient(ellipse at 78% 82%, rgba(120, 157, 86, 0.88), transparent 28%);
 }
 
 .eyebrow {
