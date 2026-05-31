@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=20260531-image-cleanup" />
+    <link rel="stylesheet" href="styles.css?v=20260531-premium-foundation" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -353,6 +353,18 @@
         </div>
       </section>
 
+      <section class="daily premium-section" id="premium" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Premium Coming Soon</p>
+          <h2>Deeper ways to walk with God</h2>
+          <p class="section-copy">
+            A preview of future paid experiences like virtual Bible classes, God-focused movement, breathwork prayer, and deeper guided studies.
+          </p>
+        </div>
+        <div class="premium-grid" id="premiumGrid"></div>
+        <p class="copy-status" id="premiumStatus" role="status" aria-live="polite"></p>
+      </section>
+
       <section class="daily install-section" id="install" hidden>
         <div class="section-heading">
           <p class="eyebrow">Keep It Close</p>
@@ -443,6 +455,46 @@
             <button class="quiet-button" type="button" id="clearAddedFocuses">Clear Added Focuses</button>
           </div>
           <p class="copy-status" id="addFocusStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <form class="premium-content-form" id="premiumContentForm" hidden>
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Premium</p>
+            <h3>Add future premium content</h3>
+          </div>
+          <div class="form-grid">
+            <label>
+              Content type
+              <select id="premiumContentType">
+                <option value="Bible Class">Bible Class</option>
+                <option value="Movement With God">Movement With God</option>
+                <option value="Breathwork Prayer">Breathwork Prayer</option>
+                <option value="Premium Study">Premium Study</option>
+              </select>
+            </label>
+            <label>
+              Length
+              <input id="premiumContentLength" placeholder="Example: 20 minutes or 4 lessons" />
+            </label>
+          </div>
+          <label>
+            Title
+            <input id="premiumContentTitle" placeholder="Example: Gentle Morning Prayer Flow" required />
+          </label>
+          <label>
+            Scripture
+            <input id="premiumContentScripture" placeholder="Example: Psalm 23:3" />
+          </label>
+          <label>
+            Description
+            <textarea id="premiumContentDescription" placeholder="Describe what this class, movement session, breathwork, or study will help users practice." required></textarea>
+          </label>
+          <label>
+            Optional link
+            <input id="premiumContentUrl" placeholder="Future video, class, or resource link" />
+          </label>
+          <button class="copy-button" type="submit">Add Premium Preview</button>
+          <p class="copy-status" id="premiumContentStatus" role="status" aria-live="polite"></p>
         </form>
 
         <div class="admin-dashboard" id="adminDashboard" hidden>

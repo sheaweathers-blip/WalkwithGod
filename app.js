@@ -403,6 +403,8 @@ const state = {
   favorites: JSON.parse(localStorage.getItem("walkWithGodFavorites") || "[]"),
   community: JSON.parse(localStorage.getItem("walkWithGodCommunity") || "[]"),
   prayerRequests: [],
+  premiumContent: [],
+  isPremium: false,
   deferredInstallPrompt: null,
   reminder: JSON.parse(localStorage.getItem("walkWithGodReminder") || '{"time":"07:00","message":"Spend uninterrupted time with God today.","channels":{"push":true,"email":false,"sms":false},"email":"","phone":""}'),
   user: null,
@@ -421,6 +423,7 @@ const gatedSections = [
   document.querySelector("#themes"),
   document.querySelector("#notesLibrary"),
   document.querySelector("#community"),
+  document.querySelector("#premium"),
   document.querySelector("#install"),
   document.querySelector("#mobileAppNav"),
   document.querySelector("#feedback"),
@@ -505,6 +508,8 @@ const prayerInput = document.querySelector("#prayerInput");
 const anonymousPrayer = document.querySelector("#anonymousPrayer");
 const prayerStatus = document.querySelector("#prayerStatus");
 const prayerFeed = document.querySelector("#prayerFeed");
+const premiumGrid = document.querySelector("#premiumGrid");
+const premiumStatus = document.querySelector("#premiumStatus");
 const installAppButton = document.querySelector("#installAppButton");
 const installStatus = document.querySelector("#installStatus");
 const feedbackForm = document.querySelector("#feedbackForm");
@@ -518,6 +523,14 @@ const lockAdminButton = document.querySelector("#lockAdminButton");
 const addFocusForm = document.querySelector("#addFocusForm");
 const addFocusStatus = document.querySelector("#addFocusStatus");
 const clearAddedFocuses = document.querySelector("#clearAddedFocuses");
+const premiumContentForm = document.querySelector("#premiumContentForm");
+const premiumContentType = document.querySelector("#premiumContentType");
+const premiumContentTitle = document.querySelector("#premiumContentTitle");
+const premiumContentLength = document.querySelector("#premiumContentLength");
+const premiumContentScripture = document.querySelector("#premiumContentScripture");
+const premiumContentDescription = document.querySelector("#premiumContentDescription");
+const premiumContentUrl = document.querySelector("#premiumContentUrl");
+const premiumContentStatus = document.querySelector("#premiumContentStatus");
 const adminDashboard = document.querySelector("#adminDashboard");
 const adminSummary = document.querySelector("#adminSummary");
 const adminUserList = document.querySelector("#adminUserList");
@@ -600,13 +613,16 @@ function applyServerNotes(notes) {
 
 async function loadServerState() {
   if (!state.user) return;
-  const [progressResult, notesResult, reminderResult] = await Promise.all([
+  const [progressResult, notesResult, reminderResult, premiumResult] = await Promise.all([
     apiFetch("/api/progress"),
     apiFetch("/api/notes"),
-    apiFetch("/api/reminder")
+    apiFetch("/api/reminder"),
+    apiFetch("/api/premium-content")
   ]);
   applyServerProgress(progressResult.progress);
   applyServerNotes(notesResult.notes);
+  state.premiumContent = premiumResult.content || [];
+  state.isPremium = Boolean(premiumResult.isPremium);
   if (reminderResult.reminder) {
     state.reminder = {
       time: reminderResult.reminder.time,
@@ -640,6 +656,22 @@ async function loadPrayerRequests() {
     state.prayerRequests = result.requests || [];
   } catch {
     state.prayerRequests = [];
+  }
+}
+
+async function loadPremiumContent() {
+  if (!state.user) {
+    state.premiumContent = [];
+    state.isPremium = false;
+    return;
+  }
+  try {
+    const result = await apiFetch("/api/premium-content");
+    state.premiumContent = result.content || [];
+    state.isPremium = Boolean(result.isPremium);
+  } catch {
+    state.premiumContent = [];
+    state.isPremium = false;
   }
 }
 
@@ -1139,9 +1171,53 @@ function renderPrayerRequests() {
     : '<p class="empty-feed">No shared prayer requests yet.</p>';
 }
 
+function premiumTypeClass(type) {
+  const normalized = String(type || "").toLowerCase();
+  if (normalized.includes("movement")) return "movement";
+  if (normalized.includes("breath")) return "breath";
+  if (normalized.includes("study")) return "study";
+  return "class";
+}
+
+function renderPremium() {
+  if (!premiumGrid) return;
+  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  premiumStatus.textContent = isUnlocked
+    ? "Premium preview is unlocked for this account."
+    : "These are future premium options. Your daily focuses, notes, prayer requests, reminders, and community stay free.";
+  premiumGrid.innerHTML = state.premiumContent.length
+    ? state.premiumContent
+        .map((item) => {
+          const locked = item.locked && !isUnlocked;
+          const typeClass = premiumTypeClass(item.type);
+          return `
+            <article class="premium-card premium-${typeClass}">
+              <div class="premium-card-top">
+                <span>${escapeHtml(item.type || "Premium")}</span>
+                <strong>${locked ? "Locked" : "Preview"}</strong>
+              </div>
+              <h3>${escapeHtml(item.title)}</h3>
+              <p>${escapeHtml(item.description)}</p>
+              <div class="premium-meta">
+                ${item.length ? `<span>${escapeHtml(item.length)}</span>` : ""}
+                ${item.scripture ? `<span>${escapeHtml(item.scripture)}</span>` : ""}
+              </div>
+              ${
+                item.url && !locked
+                  ? `<a class="secondary-link" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">Open Resource</a>`
+                  : `<button class="quiet-button" type="button" disabled>${locked ? "Premium Coming Soon" : "Admin Preview"}</button>`
+              }
+            </article>
+          `;
+        })
+        .join("")
+    : '<p class="empty-feed">Premium previews will appear here.</p>';
+}
+
 function renderAdmin() {
   const canAdmin = state.user?.role === "admin" && state.adminUnlocked;
   addFocusForm.hidden = !canAdmin;
+  premiumContentForm.hidden = !canAdmin;
   adminDashboard.hidden = !canAdmin;
   lockAdminButton.hidden = !state.adminUnlocked;
   if (state.adminUnlocked && state.user?.role !== "admin") {
@@ -1158,6 +1234,7 @@ function renderAdminDashboard(data = null) {
     <div><strong>${data.summary.communityPosts}</strong><span>Posts</span></div>
     <div><strong>${data.summary.openFeedback}</strong><span>Open feedback</span></div>
     <div><strong>${data.summary.openReports}</strong><span>Open reports</span></div>
+    <div><strong>${data.summary.premiumContent || 0}</strong><span>Premium previews</span></div>
   `;
 
   adminUserList.innerHTML = data.users.length
@@ -1233,6 +1310,7 @@ function render() {
   renderMode();
   renderCommunity();
   renderPrayerRequests();
+  renderPremium();
   renderNotesLibrary();
   renderAdmin();
   if (!focus) {
@@ -1284,6 +1362,7 @@ function render() {
   renderMode();
   renderCommunity();
   renderPrayerRequests();
+  renderPremium();
   renderNotesLibrary();
   renderAdmin();
   saveActivePosition();
@@ -1708,6 +1787,8 @@ logoutButton.addEventListener("click", async () => {
     // Continue signing out locally.
   }
   state.user = null;
+  state.premiumContent = [];
+  state.isPremium = false;
   authForm.hidden = true;
   authMessage.textContent = "Signed out.";
   render();
@@ -1765,6 +1846,35 @@ addFocusForm.addEventListener("submit", (event) => {
   addFocusForm.reset();
   addFocusStatus.textContent = `${title} added with ${days.length} days.`;
   render();
+});
+
+premiumContentForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!state.adminUnlocked) {
+    premiumContentStatus.textContent = "Unlock admin before adding premium content.";
+    return;
+  }
+  apiFetch("/api/admin/premium-content", {
+    method: "POST",
+    body: JSON.stringify({
+      type: premiumContentType.value,
+      title: premiumContentTitle.value.trim(),
+      length: premiumContentLength.value.trim(),
+      scripture: premiumContentScripture.value.trim(),
+      description: premiumContentDescription.value.trim(),
+      url: premiumContentUrl.value.trim()
+    })
+  })
+    .then(async () => {
+      premiumContentForm.reset();
+      premiumContentStatus.textContent = "Premium preview added.";
+      await loadPremiumContent();
+      await loadAdminDashboard();
+      renderPremium();
+    })
+    .catch((error) => {
+      premiumContentStatus.textContent = error.message;
+    });
 });
 
 clearAddedFocuses.addEventListener("click", () => {

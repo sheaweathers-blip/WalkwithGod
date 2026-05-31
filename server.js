@@ -70,14 +70,63 @@ function defaultDb() {
     supportMessages: [],
     prayerRequests: [],
     reactions: [],
-    comments: []
+    comments: [],
+    premiumContent: []
   };
+}
+
+function defaultPremiumContent() {
+  return [
+    {
+      id: "premium-bible-class-foundations",
+      type: "Bible Class",
+      title: "Foundations of Walking With God",
+      description: "A guided class path for learning how Scripture, prayer, obedience, and daily habits work together.",
+      length: "4 lessons",
+      scripture: "Micah 6:8",
+      access: "premium",
+      createdAt: "2026-05-31T00:00:00.000Z"
+    },
+    {
+      id: "premium-movement-prayer-walk",
+      type: "Movement With God",
+      title: "Prayer Walk Practice",
+      description: "A gentle outdoor walking session built around breath, gratitude, intercession, and listening prayer.",
+      length: "20 minutes",
+      scripture: "Psalm 23:3",
+      access: "premium",
+      createdAt: "2026-05-31T00:00:00.000Z"
+    },
+    {
+      id: "premium-breathwork-peace",
+      type: "Breathwork Prayer",
+      title: "Peace Before the Lord",
+      description: "A slow Scripture-based breathing practice for releasing hurry and returning your attention to God's presence.",
+      length: "12 minutes",
+      scripture: "John 14:27",
+      access: "premium",
+      createdAt: "2026-05-31T00:00:00.000Z"
+    },
+    {
+      id: "premium-study-temple",
+      type: "Premium Study",
+      title: "Honoring the Temple God Gave You",
+      description: "A deeper study on whole-person faith, body stewardship, rest, food, movement, and worship.",
+      length: "7 days",
+      scripture: "1 Corinthians 6:19-20",
+      access: "premium",
+      createdAt: "2026-05-31T00:00:00.000Z"
+    }
+  ];
 }
 
 function normalizeDb(db) {
   const normalized = { ...defaultDb(), ...(db || {}) };
   for (const key of Object.keys(defaultDb())) {
     if (!Array.isArray(normalized[key])) normalized[key] = [];
+  }
+  if (!normalized.premiumContent.length) {
+    normalized.premiumContent = defaultPremiumContent();
   }
   return normalized;
 }
@@ -182,7 +231,7 @@ function verifyPassword(password, user) {
 }
 
 function publicUser(user) {
-  return user ? { id: user.id, name: user.name, email: user.email, role: user.role } : null;
+  return user ? { id: user.id, name: user.name, email: user.email, role: user.role, subscriptionStatus: user.subscriptionStatus || "free" } : null;
 }
 
 function currentUser(request, db) {
@@ -372,6 +421,7 @@ async function handleApi(request, response) {
       name,
       email,
       role: db.users.length === 0 ? "admin" : "member",
+      subscriptionStatus: "free",
       salt: passwordParts.salt,
       passwordHash: passwordParts.hash,
       createdAt: new Date().toISOString()
@@ -669,6 +719,21 @@ async function handleApi(request, response) {
     });
   }
 
+  if (request.method === "GET" && url.pathname === "/api/premium-content") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const isPremium = user.role === "admin" || user.subscriptionStatus === "premium";
+    const content = db.premiumContent
+      .filter((item) => !item.archivedAt)
+      .slice()
+      .sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")))
+      .map((item) => ({
+        ...item,
+        locked: item.access === "premium" && !isPremium
+      }));
+    return json(response, 200, { content, isPremium });
+  }
+
   if (url.pathname.startsWith("/api/admin/")) {
     const admin = requireAdmin(request, response, db);
     if (!admin) return;
@@ -680,8 +745,37 @@ async function handleApi(request, response) {
         openFeedback: db.feedback.filter((item) => item.status === "open").length,
         openReports: db.reports.filter((item) => item.status === "open").length,
         reminders: db.reminders.length,
-        pushSubscriptions: db.pushSubscriptions.length
+        pushSubscriptions: db.pushSubscriptions.length,
+        premiumContent: db.premiumContent.filter((item) => !item.archivedAt).length
       });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/admin/premium-content") {
+      const body = await readBody(request);
+      const type = normalizeText(body.type, 80);
+      const title = normalizeText(body.title, 160);
+      const description = normalizeText(body.description, 1200);
+      const length = normalizeText(body.length, 80);
+      const scripture = normalizeText(body.scripture, 160);
+      const urlValue = normalizeText(body.url, 500);
+      if (!type || !title || !description) {
+        return json(response, 400, { error: "Premium type, title, and description are required." });
+      }
+      const content = {
+        id: crypto.randomUUID(),
+        type,
+        title,
+        description,
+        length,
+        scripture,
+        url: urlValue,
+        access: "premium",
+        createdBy: admin.id,
+        createdAt: new Date().toISOString()
+      };
+      db.premiumContent.push(content);
+      await writeDb(db);
+      return json(response, 201, { content });
     }
 
     if (request.method === "GET" && url.pathname === "/api/admin/users") {
