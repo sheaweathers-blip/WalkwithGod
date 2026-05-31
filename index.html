@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=20260530-engage" />
+    <link rel="stylesheet" href="styles.css?v=20260531-wellness" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -21,6 +21,7 @@
         <img class="hero-image" src="/assets/daily-devotion.png?v=20260529" alt="A person walking into the day carrying a Bible, journal, and supplies for serving others" onerror="this.hidden=true; this.parentElement.classList.add('hero-fallback');" />
         <div class="hero-scrim"></div>
         <div class="hero-content">
+          <img class="brand-logo" src="/assets/walk-with-god-logo.png?v=20260531" alt="Walk With God logo" />
           <p class="eyebrow">Daily Bible Focuses</p>
           <h1>Walk With God</h1>
           <p class="hero-copy">
@@ -236,11 +237,15 @@
               <p class="block-label" id="dayLabel">Day 1</p>
               <h3 id="dayTitle">Creation of light</h3>
               <p class="scripture-reference" id="scriptureText">Genesis 1:1-5</p>
+              <div class="verse-text-card" id="verseTextCard">
+                <p class="block-label">Full Passage</p>
+                <div id="verseText">Choose a day to load the passage.</div>
+              </div>
               <button class="favorite-button" id="favoriteVerseButton" type="button">Save Favorite Verse</button>
               <p id="daySummary"></p>
               <div class="daily-rhythm-grid">
                 <div class="rhythm-card">
-                  <p class="block-label">Uninterrupted Active Time With God</p>
+                  <p class="block-label">15-20 Minute Active Time With God</p>
                   <p id="activeTimeText"></p>
                 </div>
                 <div class="rhythm-card">
@@ -355,6 +360,13 @@
         <button class="copy-button" id="installAppButton" type="button">Install App</button>
         <p class="copy-status" id="installStatus" role="status" aria-live="polite"></p>
       </section>
+
+      <nav class="mobile-app-nav" id="mobileAppNav" aria-label="App sections" hidden>
+        <a href="#today">Today</a>
+        <a href="#themes">Focus</a>
+        <a href="#notesLibrary">Notes</a>
+        <a href="#community">Community</a>
+      </nav>
 
       <section class="daily" id="feedback" hidden>
         <div class="section-heading">

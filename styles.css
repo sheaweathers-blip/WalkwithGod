@@ -117,19 +117,32 @@ button:disabled {
 
 .hero-image {
   object-fit: cover;
-  z-index: -2;
+  z-index: 0;
 }
 
 .hero-scrim {
   background:
     linear-gradient(90deg, rgba(246, 243, 229, 0.98) 0%, rgba(238, 235, 218, 0.84) 36%, rgba(238, 235, 218, 0.18) 72%),
     linear-gradient(0deg, rgba(31, 75, 59, 0.18) 0%, rgba(251, 250, 245, 0) 46%);
-  z-index: -1;
+  z-index: 1;
 }
 
 .hero-content {
+  position: relative;
+  z-index: 2;
   max-width: 670px;
   padding-bottom: clamp(28px, 7vh, 72px);
+}
+
+.brand-logo {
+  width: clamp(88px, 12vw, 138px);
+  height: clamp(88px, 12vw, 138px);
+  object-fit: cover;
+  display: block;
+  margin-bottom: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 28px;
+  box-shadow: 0 18px 46px rgba(18, 54, 41, 0.24);
 }
 
 .eyebrow {
@@ -559,6 +572,45 @@ button:hover {
   margin: 10px 0 18px;
   color: var(--gold);
   font-weight: 850;
+}
+
+.verse-text-card {
+  max-width: 900px;
+  margin: 0 0 18px;
+  padding: 16px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+#verseText {
+  max-height: 260px;
+  overflow: auto;
+  padding-right: 8px;
+}
+
+.passage-block + .passage-block {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(31, 75, 59, 0.12);
+}
+
+.passage-block strong {
+  color: var(--deep-green);
+}
+
+.passage-block p,
+#verseText p {
+  margin: 8px 0 0;
+  color: #33423a;
+  line-height: 1.68;
+  white-space: pre-wrap;
+}
+
+#verseText small {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
 }
 
 .day-reader > p,
@@ -1163,6 +1215,10 @@ select:focus {
   background: rgba(255, 255, 255, 0.82);
 }
 
+.mobile-app-nav {
+  display: none;
+}
+
 .community-entry strong {
   display: block;
   color: var(--green);
@@ -1427,14 +1483,32 @@ select:focus {
 }
 
 @media (max-width: 860px) {
+  body {
+    padding-bottom: 76px;
+  }
+
   .hero {
-    min-height: 78vh;
+    min-height: 62vh;
     padding: 22px;
   }
 
   .hero-scrim {
     background:
       linear-gradient(0deg, rgba(251, 250, 245, 0.97) 0%, rgba(251, 250, 245, 0.82) 52%, rgba(251, 250, 245, 0.26) 100%);
+  }
+
+  h1 {
+    font-size: clamp(3rem, 18vw, 5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.55rem, 9vw, 2.45rem);
+  }
+
+  .brand-logo {
+    width: 86px;
+    height: 86px;
+    border-radius: 22px;
   }
 
   .workspace,
@@ -1454,6 +1528,71 @@ select:focus {
 
   .today-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .daily {
+    margin-bottom: 28px;
+    padding: 20px 16px;
+  }
+
+  .workspace {
+    padding: 22px 14px;
+  }
+
+  .reader-panel,
+  .library {
+    padding: 16px;
+  }
+
+  .day-list {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(180px, 72vw);
+    grid-template-columns: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: none;
+    padding: 0 0 8px;
+  }
+
+  .day-button {
+    min-height: 86px;
+  }
+
+  .day-reader {
+    padding: 20px 16px;
+  }
+
+  #verseText {
+    max-height: 220px;
+  }
+
+  .mobile-app-nav {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 8px;
+    border: 1px solid rgba(31, 75, 59, 0.16);
+    border-radius: 8px;
+    background: rgba(251, 250, 245, 0.96);
+    box-shadow: 0 14px 40px rgba(18, 54, 41, 0.18);
+    backdrop-filter: blur(10px);
+  }
+
+  .mobile-app-nav a {
+    display: grid;
+    place-items: center;
+    min-height: 40px;
+    border-radius: 7px;
+    color: var(--deep-green);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 900;
+    background: rgba(220, 233, 221, 0.72);
   }
 
   .progress-copy {

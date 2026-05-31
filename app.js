@@ -376,6 +376,7 @@ const gatedSections = [
   document.querySelector("#notesLibrary"),
   document.querySelector("#community"),
   document.querySelector("#install"),
+  document.querySelector("#mobileAppNav"),
   document.querySelector("#feedback"),
   document.querySelector("#admin")
 ];
@@ -417,6 +418,7 @@ const dayList = document.querySelector("#dayList");
 const dayLabel = document.querySelector("#dayLabel");
 const dayTitle = document.querySelector("#dayTitle");
 const scriptureText = document.querySelector("#scriptureText");
+const verseText = document.querySelector("#verseText");
 const favoriteVerseButton = document.querySelector("#favoriteVerseButton");
 const daySummary = document.querySelector("#daySummary");
 const activeTimeText = document.querySelector("#activeTimeText");
@@ -861,6 +863,45 @@ function deedForDay(focus, day, dayNumber) {
   return rotating[(dayNumber - 1) % rotating.length];
 }
 
+function passageParts(reference) {
+  return String(reference)
+    .replace(/\bRomans Romans\b/gi, "Romans")
+    .split(/\s+and\s+|;\s*/i)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+async function loadVerseText(reference) {
+  verseText.textContent = "Loading full passage...";
+  const parts = passageParts(reference);
+  try {
+    const passages = await Promise.all(
+      parts.map(async (part) => {
+        const response = await fetch(`https://bible-api.com/${encodeURIComponent(part)}?translation=web`);
+        if (!response.ok) throw new Error("Passage unavailable.");
+        const data = await response.json();
+        return {
+          reference: data.reference || part,
+          text: String(data.text || "").trim()
+        };
+      })
+    );
+    verseText.innerHTML = passages
+      .map((passage) => `
+        <article class="passage-block">
+          <strong>${escapeHtml(passage.reference)}</strong>
+          <p>${escapeHtml(passage.text)}</p>
+        </article>
+      `)
+      .join("");
+  } catch {
+    verseText.innerHTML = `
+      <p>Full passage text could not load right now. Use the reference above for your Bible reading.</p>
+      <small>Passages are loaded from the public-domain World English Bible when available.</small>
+    `;
+  }
+}
+
 function getDayExtras(focus, day) {
   const title = day[1].toLowerCase();
   const focusTitle = focus.title.toLowerCase();
@@ -878,7 +919,7 @@ function getDayExtras(focus, day) {
     `What should I carry from this time with God into the next conversation or responsibility?`
   ];
   return {
-    active: "Set aside 10-15 uninterrupted minutes. Read the passage slowly, sit with the verse, pray honestly, and listen before writing or moving on.",
+    active: "Set aside 15-20 uninterrupted minutes for active time with God. Walk, run, stretch, practice gentle yoga, swim, bike, or do another healthy movement you can do safely. Read the passage first, then use the activity for prayer, reflection, honest conversation with God, and caring for the body He gave you.",
     application: applicationQuestions[(dayNumber - 1) % applicationQuestions.length],
     deed: deedForDay(focus, day, dayNumber)
   };
@@ -1158,6 +1199,7 @@ function render() {
   dayLabel.textContent = day[0];
   dayTitle.textContent = day[1];
   scriptureText.textContent = day[2];
+  loadVerseText(day[2]);
   daySummary.textContent = day[3];
   activeTimeText.textContent = extras.active;
   applicationText.textContent = extras.application;
