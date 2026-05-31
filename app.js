@@ -339,6 +339,52 @@ const defaultFocuses = [
       ["Day 13", "Gifts for the Body", "1 Corinthians 12:4-11", "The Spirit gives gifts for the common good, not personal pride."],
       ["Day 14", "Help in Weakness", "Romans 8:26-27", "The Spirit helps in weakness and intercedes when words fail."]
     ]
+  },
+  {
+    id: "angels-in-the-bible",
+    label: "Theme 16",
+    mark: "A",
+    title: "Angels in the Bible",
+    description: "A 14-day focus on angels as God's servants and messengers, helping users worship God rather than the messengers He sends.",
+    days: [
+      ["Day 1", "Messengers of God", "Psalm 103:20-21", "Angels are mighty servants who do God's word and minister according to His will."],
+      ["Day 2", "Guarded on the Way", "Genesis 24:7", "Abraham trusts that God can send His angel ahead to guide the journey."],
+      ["Day 3", "Jacob's Ladder", "Genesis 28:10-17", "Jacob sees angels ascending and descending, and learns that God is present in that place."],
+      ["Day 4", "The Angel of the Lord Appears", "Exodus 3:1-6", "God meets Moses in the burning bush and calls him into holy attention."],
+      ["Day 5", "Protected in the Fire", "Daniel 3:24-28", "God sends help in the furnace and shows that His servants are not abandoned."],
+      ["Day 6", "Strength for Daniel", "Daniel 10:10-19", "A heavenly messenger strengthens Daniel and tells him not to fear."],
+      ["Day 7", "Gabriel and God's Timing", "Luke 1:11-20", "Gabriel announces God's promise to Zechariah after years of waiting."],
+      ["Day 8", "Gabriel and Mary's Yes", "Luke 1:26-38", "Gabriel brings news of Christ's birth, and Mary responds with surrendered faith."],
+      ["Day 9", "Angels Announce Good News", "Luke 2:8-14", "The birth of Jesus is announced with worship, joy, and glory to God."],
+      ["Day 10", "Ministering to Jesus", "Matthew 4:1-11", "After Jesus resists temptation, angels come and minister to Him."],
+      ["Day 11", "Strength in Gethsemane", "Luke 22:39-43", "In deep anguish, Jesus receives strengthening as He surrenders to the Father's will."],
+      ["Day 12", "The Empty Tomb", "Matthew 28:1-7", "An angel announces that Jesus is risen and sends the women to tell the disciples."],
+      ["Day 13", "Delivered from Prison", "Acts 12:6-11", "An angel leads Peter out of prison while the church is praying."],
+      ["Day 14", "Worship God Alone", "Revelation 22:8-9", "Even glorious heavenly messengers refuse worship and point all worship back to God."]
+    ]
+  },
+  {
+    id: "manifestation-in-the-bible",
+    label: "Theme 17",
+    mark: "MF",
+    title: "Manifestation in the Bible",
+    description: "A 14-day focus on biblical manifestation: God revealing His presence, glory, promises, character, and kingdom in ways that lead to faith, surrender, and obedience.",
+    days: [
+      ["Day 1", "God Reveals His Glory", "Exodus 33:18-23", "Moses asks to see God's glory, and God reveals His goodness while protecting him."],
+      ["Day 2", "The Glory Fills the Tabernacle", "Exodus 40:34-38", "God's presence fills the tabernacle and visibly leads His people."],
+      ["Day 3", "The Lord Provides", "Genesis 22:9-14", "God reveals Himself as provider in the place of surrender and obedience."],
+      ["Day 4", "Fire from Heaven", "1 Kings 18:36-39", "God manifests His power so the people will know that He is the Lord."],
+      ["Day 5", "A Still Small Voice", "1 Kings 19:11-13", "God reveals Himself to Elijah not only in power, but in a quiet voice."],
+      ["Day 6", "The Word Became Flesh", "John 1:14-18", "God's ultimate self-revelation is Jesus Christ, full of grace and truth."],
+      ["Day 7", "Manifested to Destroy Darkness", "1 John 3:8", "The Son of God is revealed to destroy the works of the devil."],
+      ["Day 8", "God's Love Manifested", "1 John 4:9-12", "God's love is made visible through the sending of His Son and through love among His people."],
+      ["Day 9", "Jesus Reveals the Father", "John 14:8-11", "To see Jesus is to see the Father; God's character is revealed in Christ."],
+      ["Day 10", "The Spirit Given", "Acts 2:1-4", "The Holy Spirit comes upon the believers and empowers them for witness."],
+      ["Day 11", "Christ in You", "Colossians 1:26-27", "The mystery now revealed is Christ in His people, the hope of glory."],
+      ["Day 12", "The Fruit Made Visible", "Galatians 5:22-25", "The Spirit's work becomes visible through transformed character."],
+      ["Day 13", "Your Light Before Others", "Matthew 5:14-16", "God's people live visibly so others may glorify the Father."],
+      ["Day 14", "The Revealing of Jesus Christ", "Revelation 1:1-8", "Scripture points toward the final revealing of Jesus, the Alpha and Omega."]
+    ]
   }
 ];
 
@@ -847,7 +893,20 @@ function deedForDay(focus, day, dayNumber) {
     ["spirit teaches", "Read the verse once more slowly and write down one phrase the Spirit brings to your attention."],
     ["walk by the spirit", "Before reacting today, stop and ask whether this response keeps in step with the Spirit."],
     ["gifts", "Use one gift God has given you for someone else's good today."],
-    ["weakness", "Bring one weakness to God without hiding it, then take the next faithful step with Him."]
+    ["weakness", "Bring one weakness to God without hiding it, then take the next faithful step with Him."],
+    ["angels", "Let this passage turn your attention to God: thank Him for unseen care, then serve someone quietly today."],
+    ["messengers", "Carry one message of encouragement, truth, or peace to someone who needs it today."],
+    ["guarded", "Pray before your next transition today, asking God to guide your steps and guard your heart."],
+    ["gabriel", "Receive God's timing with humility today by surrendering one delayed hope back to Him."],
+    ["empty tomb", "Share one sentence of resurrection hope with someone who feels discouraged."],
+    ["worship god alone", "Remove one distraction from your worship today and give God your full attention for five minutes."],
+    ["manifestation", "Ask God to reveal His character through your obedience today, then take one visible step of faith."],
+    ["glory", "Pause outdoors or near a window and name one way God's goodness is visible around you."],
+    ["provides", "Trust God with one need by praying specifically and taking the next responsible step."],
+    ["still small voice", "Choose quiet over noise for five minutes and listen for what God may be bringing to your attention."],
+    ["word became flesh", "Make God's love tangible today through one embodied act of presence, service, or kindness."],
+    ["christ in you", "Before your next interaction, remember Christ lives in you and let that shape your tone."],
+    ["light before others", "Do one good work quietly and intentionally so your life points back to the Father."]
   ];
   const matched = specificRules.find(([keyword]) => title.includes(keyword) || focusTitle.includes(keyword) || reference.includes(keyword));
   if (matched) return matched[1];
