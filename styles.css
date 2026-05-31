@@ -1,37 +1,39 @@
 :root {
   --ink: #17201b;
   --muted: #61716a;
-  --paper: #fbfaf5;
+  --paper: #edf5eb;
   --panel: #ffffff;
   --green: #1f4b3b;
   --deep-green: #123629;
   --trail: #8f6d33;
   --clay: #a85f3d;
   --green-soft: #dce9dd;
+  --moss: #6f915f;
+  --sage: #c8dcc2;
   --gold: #b28a3a;
   --blue: #486b82;
   --line: #d9ded4;
   --shadow: 0 22px 65px rgba(23, 32, 27, 0.14);
   --nature-leaf:
-    radial-gradient(circle at 10% 12%, rgba(87, 130, 89, 0.32), transparent 28%),
-    radial-gradient(circle at 88% 18%, rgba(178, 138, 58, 0.26), transparent 25%),
-    linear-gradient(135deg, rgba(252, 250, 238, 0.95), rgba(224, 239, 219, 0.96));
+    radial-gradient(circle at 10% 12%, rgba(87, 130, 89, 0.44), transparent 28%),
+    radial-gradient(circle at 88% 18%, rgba(178, 138, 58, 0.24), transparent 25%),
+    linear-gradient(135deg, rgba(240, 248, 235, 0.97), rgba(205, 226, 199, 0.97));
   --nature-sky:
-    radial-gradient(circle at 14% 10%, rgba(72, 107, 130, 0.3), transparent 28%),
-    radial-gradient(circle at 92% 84%, rgba(189, 159, 83, 0.24), transparent 28%),
-    linear-gradient(145deg, rgba(246, 250, 246, 0.95), rgba(221, 237, 234, 0.97));
+    radial-gradient(circle at 14% 10%, rgba(72, 107, 130, 0.26), transparent 28%),
+    radial-gradient(circle at 92% 84%, rgba(111, 145, 95, 0.32), transparent 30%),
+    linear-gradient(145deg, rgba(238, 247, 238, 0.96), rgba(205, 226, 213, 0.98));
   --nature-warm:
     radial-gradient(circle at 80% 12%, rgba(178, 138, 58, 0.32), transparent 28%),
     radial-gradient(circle at 8% 90%, rgba(69, 116, 92, 0.24), transparent 30%),
-    linear-gradient(135deg, rgba(255, 250, 235, 0.96), rgba(241, 231, 204, 0.96));
+    linear-gradient(135deg, rgba(250, 247, 226, 0.96), rgba(219, 230, 196, 0.96));
   --nature-water:
-    radial-gradient(circle at 82% 12%, rgba(72, 107, 130, 0.28), transparent 28%),
-    radial-gradient(circle at 10% 90%, rgba(72, 132, 108, 0.25), transparent 30%),
-    linear-gradient(145deg, rgba(244, 249, 246, 0.96), rgba(219, 235, 230, 0.97));
+    radial-gradient(circle at 82% 12%, rgba(72, 107, 130, 0.25), transparent 28%),
+    radial-gradient(circle at 10% 90%, rgba(83, 137, 98, 0.34), transparent 30%),
+    linear-gradient(145deg, rgba(236, 247, 239, 0.97), rgba(202, 225, 211, 0.98));
   --nature-sunrise:
     radial-gradient(circle at 86% 16%, rgba(198, 150, 67, 0.34), transparent 30%),
     radial-gradient(circle at 12% 88%, rgba(72, 107, 130, 0.18), transparent 30%),
-    linear-gradient(135deg, rgba(255, 248, 229, 0.97), rgba(231, 237, 218, 0.96));
+    linear-gradient(135deg, rgba(250, 246, 220, 0.97), rgba(208, 226, 198, 0.96));
 }
 
 * {
@@ -47,9 +49,10 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at 8% 4%, rgba(178, 138, 58, 0.18), transparent 28%),
-    radial-gradient(circle at 94% 12%, rgba(72, 107, 130, 0.18), transparent 26%),
-    linear-gradient(180deg, #fbfaf5 0%, #edf4ec 54%, #fbfaf5 100%);
+    radial-gradient(circle at 8% 4%, rgba(111, 145, 95, 0.34), transparent 30%),
+    radial-gradient(circle at 94% 12%, rgba(72, 132, 108, 0.24), transparent 28%),
+    radial-gradient(circle at 18% 88%, rgba(31, 75, 59, 0.16), transparent 32%),
+    linear-gradient(180deg, #eaf4e7 0%, #d9ead5 48%, #eef6e9 100%);
 }
 
 .server-warning {
@@ -95,16 +98,16 @@ button:disabled {
   overflow: hidden;
   isolation: isolate;
   background:
-    linear-gradient(90deg, rgba(246, 243, 229, 0.96), rgba(246, 243, 229, 0.2)),
+    linear-gradient(90deg, rgba(232, 243, 226, 0.97), rgba(232, 243, 226, 0.34)),
     url("/assets/daily-devotion.png?v=20260529") center / cover no-repeat,
     var(--nature-sunrise);
 }
 
 .hero-fallback {
   background:
-    linear-gradient(90deg, rgba(251, 250, 245, 0.95), rgba(251, 250, 245, 0.22)),
-    radial-gradient(circle at 76% 22%, rgba(198, 150, 67, 0.4), transparent 18%),
-    linear-gradient(160deg, #dfeedd 0%, #f5edd2 48%, #d8e6e7 100%);
+    linear-gradient(90deg, rgba(229, 242, 222, 0.96), rgba(229, 242, 222, 0.24)),
+    radial-gradient(circle at 76% 22%, rgba(198, 150, 67, 0.36), transparent 18%),
+    linear-gradient(160deg, #cfe4c8 0%, #edf1d8 48%, #c5dccd 100%);
 }
 
 .hero-image,
@@ -122,7 +125,7 @@ button:disabled {
 
 .hero-scrim {
   background:
-    linear-gradient(90deg, rgba(246, 243, 229, 0.98) 0%, rgba(238, 235, 218, 0.84) 36%, rgba(238, 235, 218, 0.18) 72%),
+    linear-gradient(90deg, rgba(232, 243, 226, 0.98) 0%, rgba(221, 237, 213, 0.84) 36%, rgba(221, 237, 213, 0.22) 72%),
     linear-gradient(0deg, rgba(31, 75, 59, 0.18) 0%, rgba(251, 250, 245, 0) 46%);
   z-index: 1;
 }
@@ -300,7 +303,7 @@ button:hover {
   position: relative;
   overflow: hidden;
   background: var(--nature-leaf);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(31, 75, 59, 0.18);
   border-radius: 8px;
   box-shadow: var(--shadow);
 }
@@ -1003,11 +1006,11 @@ select:focus {
 .account-card {
   margin-top: 22px;
   padding: 18px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(31, 75, 59, 0.18);
   border-radius: 8px;
   position: relative;
   overflow: hidden;
-  background: var(--nature-sky);
+  background: var(--nature-leaf);
 }
 
 .account-card p:first-child {
