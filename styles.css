@@ -1,7 +1,7 @@
 :root {
   --ink: #17201b;
   --muted: #61716a;
-  --paper: #edf5eb;
+  --paper: #dbead3;
   --panel: #ffffff;
   --green: #1f4b3b;
   --deep-green: #123629;
@@ -49,10 +49,10 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at 8% 4%, rgba(111, 145, 95, 0.34), transparent 30%),
-    radial-gradient(circle at 94% 12%, rgba(72, 132, 108, 0.24), transparent 28%),
-    radial-gradient(circle at 18% 88%, rgba(31, 75, 59, 0.16), transparent 32%),
-    linear-gradient(180deg, #eaf4e7 0%, #d9ead5 48%, #eef6e9 100%);
+    radial-gradient(circle at 8% 4%, rgba(31, 75, 59, 0.28), transparent 32%),
+    radial-gradient(circle at 92% 10%, rgba(83, 137, 98, 0.42), transparent 30%),
+    radial-gradient(circle at 18% 88%, rgba(31, 75, 59, 0.24), transparent 34%),
+    linear-gradient(180deg, #d6e8cf 0%, #c7dfbd 44%, #e3f0dc 100%);
 }
 
 .server-warning {
@@ -98,14 +98,14 @@ button:disabled {
   overflow: hidden;
   isolation: isolate;
   background:
-    linear-gradient(90deg, rgba(232, 243, 226, 0.97), rgba(232, 243, 226, 0.34)),
+    linear-gradient(90deg, rgba(217, 234, 207, 0.97), rgba(217, 234, 207, 0.32)),
     url("/assets/daily-devotion.png?v=20260529") center / cover no-repeat,
     var(--nature-sunrise);
 }
 
 .hero-fallback {
   background:
-    linear-gradient(90deg, rgba(229, 242, 222, 0.96), rgba(229, 242, 222, 0.24)),
+    linear-gradient(90deg, rgba(212, 232, 202, 0.96), rgba(212, 232, 202, 0.24)),
     radial-gradient(circle at 76% 22%, rgba(198, 150, 67, 0.36), transparent 18%),
     linear-gradient(160deg, #cfe4c8 0%, #edf1d8 48%, #c5dccd 100%);
 }
@@ -125,8 +125,8 @@ button:disabled {
 
 .hero-scrim {
   background:
-    linear-gradient(90deg, rgba(232, 243, 226, 0.98) 0%, rgba(221, 237, 213, 0.84) 36%, rgba(221, 237, 213, 0.22) 72%),
-    linear-gradient(0deg, rgba(31, 75, 59, 0.18) 0%, rgba(251, 250, 245, 0) 46%);
+    linear-gradient(90deg, rgba(214, 235, 203, 0.98) 0%, rgba(199, 224, 189, 0.88) 36%, rgba(199, 224, 189, 0.28) 72%),
+    linear-gradient(0deg, rgba(31, 75, 59, 0.24) 0%, rgba(251, 250, 245, 0) 46%);
   z-index: 1;
 }
 
