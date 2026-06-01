@@ -403,6 +403,7 @@ const state = {
   favorites: JSON.parse(localStorage.getItem("walkWithGodFavorites") || "[]"),
   community: JSON.parse(localStorage.getItem("walkWithGodCommunity") || "[]"),
   prayerRequests: [],
+  prayerBoardOpen: localStorage.getItem("walkWithGodPrayerBoardOpen") === "true",
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
@@ -504,6 +505,8 @@ const communityInput = document.querySelector("#communityInput");
 const communityStatus = document.querySelector("#communityStatus");
 const communityFeed = document.querySelector("#communityFeed");
 const prayerForm = document.querySelector("#prayerForm");
+const prayerBoard = document.querySelector("#prayerBoard");
+const togglePrayerBoardButton = document.querySelector("#togglePrayerBoardButton");
 const prayerInput = document.querySelector("#prayerInput");
 const anonymousPrayer = document.querySelector("#anonymousPrayer");
 const prayerStatus = document.querySelector("#prayerStatus");
@@ -1158,6 +1161,8 @@ function renderCommunity() {
 }
 
 function renderPrayerRequests() {
+  prayerBoard.hidden = !state.prayerBoardOpen;
+  togglePrayerBoardButton.textContent = state.prayerBoardOpen ? "Hide Prayer Requests" : "View Prayer Requests";
   prayerFeed.innerHTML = state.prayerRequests.length
     ? state.prayerRequests
         .map((request) => `
@@ -1556,6 +1561,12 @@ communityModeButton.addEventListener("click", () => {
   state.mode = "community";
   localStorage.setItem("walkWithGodMode", state.mode);
   renderMode();
+});
+
+togglePrayerBoardButton.addEventListener("click", () => {
+  state.prayerBoardOpen = !state.prayerBoardOpen;
+  localStorage.setItem("walkWithGodPrayerBoardOpen", String(state.prayerBoardOpen));
+  renderPrayerRequests();
 });
 
 communityForm.addEventListener("submit", (event) => {
