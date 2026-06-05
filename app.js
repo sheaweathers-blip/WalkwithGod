@@ -540,6 +540,9 @@ const state = {
   activeBibleStudyIndex: Number(localStorage.getItem("walkWithGodBibleStudyIndex") || 0),
   activeWalkingIndex: Number(localStorage.getItem("walkWithGodWalkingIndex") || 0),
   premiumPanels: JSON.parse(localStorage.getItem("walkWithGodPremiumPanels") || "{}"),
+  currentPassageReference: "",
+  currentPassageText: "",
+  isReadingPassage: false,
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
@@ -609,6 +612,8 @@ const dayLabel = document.querySelector("#dayLabel");
 const dayTitle = document.querySelector("#dayTitle");
 const scriptureText = document.querySelector("#scriptureText");
 const verseText = document.querySelector("#verseText");
+const readPassageButton = document.querySelector("#readPassageButton");
+const readPassageStatus = document.querySelector("#readPassageStatus");
 const favoriteVerseButton = document.querySelector("#favoriteVerseButton");
 const daySummary = document.querySelector("#daySummary");
 const activeTimeText = document.querySelector("#activeTimeText");
@@ -1162,6 +1167,9 @@ function passageParts(reference) {
 
 async function loadVerseText(reference) {
   verseText.textContent = "Loading full passage...";
+  state.currentPassageReference = reference;
+  state.currentPassageText = "";
+  updateReadPassageButton();
   const parts = passageParts(reference);
   try {
     const passages = await Promise.all(
@@ -1175,6 +1183,7 @@ async function loadVerseText(reference) {
         };
       })
     );
+    state.currentPassageText = passages.map((passage) => `${passage.reference}. ${passage.text}`).join("\n\n");
     verseText.innerHTML = passages
       .map((passage) => `
         <article class="passage-block">
@@ -1184,11 +1193,68 @@ async function loadVerseText(reference) {
       `)
       .join("");
   } catch {
+    state.currentPassageText = "";
     verseText.innerHTML = `
       <p>Full passage text could not load right now. Use the reference above for your Bible reading.</p>
       <small>Passages are loaded from the public-domain World English Bible when available.</small>
     `;
   }
+  updateReadPassageButton();
+}
+
+function speechSupported() {
+  return "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+}
+
+function updateReadPassageButton() {
+  if (!readPassageButton) return;
+  readPassageButton.textContent = state.isReadingPassage ? "Stop Reading" : "Read Passage Aloud";
+  readPassageButton.disabled = !state.currentPassageText || !speechSupported();
+  if (!speechSupported()) {
+    readPassageStatus.textContent = "Reading aloud is not supported on this browser.";
+  } else if (!state.currentPassageText && !state.isReadingPassage) {
+    readPassageStatus.textContent = "Passage will be available to read aloud after it loads.";
+  }
+}
+
+function stopPassageAudio(message = "") {
+  if (speechSupported()) window.speechSynthesis.cancel();
+  state.isReadingPassage = false;
+  if (readPassageStatus) readPassageStatus.textContent = message;
+  updateReadPassageButton();
+}
+
+function readPassageAloud() {
+  if (!speechSupported()) {
+    readPassageStatus.textContent = "Reading aloud is not supported on this browser.";
+    return;
+  }
+  if (state.isReadingPassage) {
+    stopPassageAudio("Reading stopped.");
+    return;
+  }
+  if (!state.currentPassageText) {
+    readPassageStatus.textContent = "Wait for the full passage to load first.";
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(state.currentPassageText);
+  utterance.rate = 0.9;
+  utterance.pitch = 1;
+  utterance.onend = () => {
+    state.isReadingPassage = false;
+    readPassageStatus.textContent = "Finished reading passage.";
+    updateReadPassageButton();
+  };
+  utterance.onerror = () => {
+    state.isReadingPassage = false;
+    readPassageStatus.textContent = "Reading aloud stopped.";
+    updateReadPassageButton();
+  };
+  state.isReadingPassage = true;
+  readPassageStatus.textContent = "Reading passage aloud.";
+  updateReadPassageButton();
+  window.speechSynthesis.speak(utterance);
 }
 
 function getDayExtras(focus, day) {
@@ -1684,7 +1750,12 @@ function render() {
   dayLabel.textContent = day[0];
   dayTitle.textContent = day[1];
   scriptureText.textContent = day[2];
-  loadVerseText(day[2]);
+  if (state.currentPassageReference !== day[2]) {
+    stopPassageAudio();
+    loadVerseText(day[2]);
+  } else {
+    updateReadPassageButton();
+  }
   daySummary.textContent = day[3];
   activeTimeText.textContent = extras.active;
   applicationText.textContent = extras.application;
@@ -1782,6 +1853,10 @@ if (walkingList) {
     localStorage.setItem("walkWithGodWalkingIndex", String(state.activeWalkingIndex));
     renderWalking();
   });
+}
+
+if (readPassageButton) {
+  readPassageButton.addEventListener("click", readPassageAloud);
 }
 
 document.addEventListener("click", (event) => {

@@ -618,6 +618,29 @@ button:hover {
   background: rgba(255, 255, 255, 0.72);
 }
 
+.passage-card-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.read-passage-button {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid rgba(31, 75, 59, 0.2);
+  border-radius: 8px;
+  color: var(--deep-green);
+  background: rgba(255, 255, 255, 0.82);
+  font-weight: 900;
+}
+
+.read-passage-button:disabled {
+  opacity: 0.55;
+}
+
 #verseText {
   max-height: 260px;
   overflow: auto;

@@ -240,8 +240,12 @@
               <h3 id="dayTitle">Creation of light</h3>
               <p class="scripture-reference" id="scriptureText">Genesis 1:1-5</p>
               <div class="verse-text-card" id="verseTextCard">
-                <p class="block-label">Full Passage</p>
+                <div class="passage-card-heading">
+                  <p class="block-label">Full Passage</p>
+                  <button class="read-passage-button" id="readPassageButton" type="button">Read Passage Aloud</button>
+                </div>
                 <div id="verseText">Choose a day to load the passage.</div>
+                <p class="copy-status" id="readPassageStatus" role="status" aria-live="polite"></p>
               </div>
               <button class="favorite-button" id="favoriteVerseButton" type="button">Save Favorite Verse</button>
               <p id="daySummary"></p>
@@ -725,6 +729,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260604-premium-expanders"></script>
+    <script src="app.js?v=20260604-read-passage"></script>
   </body>
 </html>
