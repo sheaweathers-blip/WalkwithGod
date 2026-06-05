@@ -365,8 +365,11 @@
             A preview of future paid experiences like virtual Bible classes, God-focused movement, breathwork prayer, and deeper guided studies.
           </p>
         </div>
-        <div class="premium-grid" id="premiumGrid"></div>
-        <p class="copy-status" id="premiumStatus" role="status" aria-live="polite"></p>
+        <button class="premium-expand-button" type="button" data-premium-toggle="premiumOverview">Open Premium Preview</button>
+        <div class="premium-panel-content" id="premiumOverviewPanel" hidden>
+          <div class="premium-grid" id="premiumGrid"></div>
+          <p class="copy-status" id="premiumStatus" role="status" aria-live="polite"></p>
+        </div>
       </section>
 
       <section class="daily breathwork-section" id="breathwork" hidden>
@@ -377,8 +380,10 @@
             A future premium video and audio series for calm, focus, emotional wellness, and prayer. Move gently, breathe comfortably, and stop if you feel lightheaded.
           </p>
         </div>
-        <div class="premium-lock-note" id="breathworkLockNote"></div>
-        <div class="breathwork-layout">
+        <button class="premium-expand-button" type="button" data-premium-toggle="breathwork">Open Breathwork Prayer</button>
+        <div class="premium-panel-content" id="breathworkPanel" hidden>
+          <div class="premium-lock-note" id="breathworkLockNote"></div>
+          <div class="breathwork-layout">
           <div class="breathwork-list" id="breathworkList" aria-label="Breathwork routines"></div>
           <article class="breathwork-reader">
             <p class="block-label" id="breathworkDayLabel">Day 1</p>
@@ -408,6 +413,7 @@
               </div>
             </div>
           </article>
+          </div>
         </div>
       </section>
 
@@ -419,8 +425,10 @@
             A future premium video series for gentle stretching, strength, mobility, rest, prayer, and Scripture meditation. Move slowly, honor your limits, and skip anything that does not feel safe for your body.
           </p>
         </div>
-        <div class="premium-lock-note" id="yogaLockNote"></div>
-        <div class="yoga-layout">
+        <button class="premium-expand-button" type="button" data-premium-toggle="faithYoga">Open Faith-Led Yoga</button>
+        <div class="premium-panel-content" id="faithYogaPanel" hidden>
+          <div class="premium-lock-note" id="yogaLockNote"></div>
+          <div class="yoga-layout">
           <div class="yoga-list" id="yogaList" aria-label="Faith-led yoga sessions"></div>
           <article class="yoga-reader">
             <p class="block-label" id="yogaSessionLabel">Session 1</p>
@@ -450,6 +458,7 @@
               </div>
             </div>
           </article>
+          </div>
         </div>
       </section>
 
@@ -461,8 +470,10 @@
             A future premium class library for deeper Bible study, guided teaching, reflection, discussion, and practical discipleship.
           </p>
         </div>
-        <div class="premium-lock-note" id="bibleStudyLockNote"></div>
-        <div class="bible-study-layout">
+        <button class="premium-expand-button" type="button" data-premium-toggle="bibleStudy">Open Bible Study</button>
+        <div class="premium-panel-content" id="bibleStudyPanel" hidden>
+          <div class="premium-lock-note" id="bibleStudyLockNote"></div>
+          <div class="bible-study-layout">
           <div class="bible-study-list" id="bibleStudyList" aria-label="Premium Bible study sessions"></div>
           <article class="bible-study-reader">
             <p class="block-label" id="bibleStudySessionLabel">Study 1</p>
@@ -492,6 +503,7 @@
               </div>
             </div>
           </article>
+          </div>
         </div>
       </section>
 
@@ -503,8 +515,10 @@
             A future premium walking library with Scripture-led movement, prayer prompts, reflection, and gentle pacing for daily devotion in motion.
           </p>
         </div>
-        <div class="premium-lock-note" id="walkingLockNote"></div>
-        <div class="walking-layout">
+        <button class="premium-expand-button" type="button" data-premium-toggle="walking">Open Walking Sessions</button>
+        <div class="premium-panel-content" id="walkingPanel" hidden>
+          <div class="premium-lock-note" id="walkingLockNote"></div>
+          <div class="walking-layout">
           <div class="walking-list" id="walkingList" aria-label="Premium walking sessions"></div>
           <article class="walking-reader">
             <p class="block-label" id="walkingSessionLabel">Walk 1</p>
@@ -534,6 +548,7 @@
               </div>
             </div>
           </article>
+          </div>
         </div>
       </section>
 
@@ -710,6 +725,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260604-premium-walking"></script>
+    <script src="app.js?v=20260604-premium-expanders"></script>
   </body>
 </html>

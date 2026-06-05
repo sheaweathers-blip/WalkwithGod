@@ -1072,6 +1072,29 @@ select:focus {
   font-weight: 750;
 }
 
+.premium-expand-button {
+  min-height: 46px;
+  margin-top: 20px;
+  padding: 0 16px;
+  border: 1px solid rgba(31, 75, 59, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  background:
+    linear-gradient(135deg, var(--deep-green), var(--green));
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(18, 54, 41, 0.14);
+}
+
+.premium-expand-button[aria-expanded="true"] {
+  color: var(--deep-green);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(226, 238, 223, 0.92));
+}
+
+.premium-panel-content {
+  margin-top: 14px;
+}
+
 .premium-section {
   background:
     radial-gradient(circle at 92% 8%, rgba(178, 138, 58, 0.24), transparent 26%),

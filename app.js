@@ -539,6 +539,7 @@ const state = {
   activeYogaIndex: Number(localStorage.getItem("walkWithGodYogaIndex") || 0),
   activeBibleStudyIndex: Number(localStorage.getItem("walkWithGodBibleStudyIndex") || 0),
   activeWalkingIndex: Number(localStorage.getItem("walkWithGodWalkingIndex") || 0),
+  premiumPanels: JSON.parse(localStorage.getItem("walkWithGodPremiumPanels") || "{}"),
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
@@ -731,6 +732,13 @@ const adminResetPasswordButton = document.querySelector("#adminResetPasswordButt
 const adminSupportStatus = document.querySelector("#adminSupportStatus");
 const adminFeedbackList = document.querySelector("#adminFeedbackList");
 const adminReportList = document.querySelector("#adminReportList");
+const premiumPanelLabels = {
+  premiumOverview: "Premium Preview",
+  breathwork: "Breathwork Prayer",
+  faithYoga: "Faith-Led Yoga",
+  bibleStudy: "Bible Study",
+  walking: "Walking Sessions"
+};
 
 function loadAddedFocuses() {
   return JSON.parse(localStorage.getItem("walkWithGodAddedFocuses") || "[]");
@@ -1365,6 +1373,23 @@ function renderPrayerRequests() {
     : '<p class="empty-feed">No shared prayer requests yet.</p>';
 }
 
+function savePremiumPanels() {
+  localStorage.setItem("walkWithGodPremiumPanels", JSON.stringify(state.premiumPanels));
+}
+
+function renderPremiumPanels() {
+  document.querySelectorAll("[data-premium-toggle]").forEach((button) => {
+    const panelId = button.dataset.premiumToggle;
+    const panel = document.querySelector(`#${panelId}Panel`);
+    const isOpen = Boolean(state.premiumPanels[panelId]);
+    const label = premiumPanelLabels[panelId] || "Premium Section";
+    if (panel) panel.hidden = !isOpen;
+    button.textContent = `${isOpen ? "Hide" : "Open"} ${label}`;
+    button.setAttribute("aria-expanded", String(isOpen));
+    if (panel) button.setAttribute("aria-controls", panel.id);
+  });
+}
+
 function premiumTypeClass(type) {
   const normalized = String(type || "").toLowerCase();
   if (normalized.includes("movement")) return "movement";
@@ -1616,6 +1641,7 @@ function render() {
   const focus = activeFocus();
   renderAccessGate();
   renderAccount();
+  renderPremiumPanels();
   if (!state.user) {
     return;
   }
@@ -1757,6 +1783,15 @@ if (walkingList) {
     renderWalking();
   });
 }
+
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-premium-toggle]");
+  if (!button) return;
+  const panelId = button.dataset.premiumToggle;
+  state.premiumPanels[panelId] = !state.premiumPanels[panelId];
+  savePremiumPanels();
+  renderPremiumPanels();
+});
 
 completeButton.addEventListener("click", () => {
   const focus = activeFocus();
