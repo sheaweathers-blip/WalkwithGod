@@ -469,6 +469,32 @@ const premiumYogaSessions = [
   voice,
   prayer
 }));
+const premiumBibleStudySessions = [
+  ["Study 1", "How to Read Scripture With God", "35 minutes", "Teaching + reflection", "2 Timothy 3:16-17", "Learn a simple pattern for reading Scripture with reverence, attention, context, and obedience.", "1. Scripture is God-breathed and formative. 2. Read for context before personal application. 3. Notice repeated words, commands, promises, warnings, and revelation of God's character. 4. End with one faithful response.", "What does this passage reveal about God? What is the difference between reading for information and reading for transformation?", "Read Psalm 1 slowly three times and write one observation, one question, and one response.", "Lord, open my eyes to Your word and shape my life through it."],
+  ["Study 2", "The Story of Scripture", "40 minutes", "Big-picture teaching", "Luke 24:27", "Understand Scripture as one unified story of creation, fall, redemption, and restoration centered on Christ.", "1. Creation reveals God's good design. 2. The fall explains brokenness and sin. 3. Redemption unfolds through covenant and culminates in Jesus. 4. Restoration points to God's kingdom fulfilled.", "Where do I most often forget the larger story? How does seeing Jesus at the center change how I read the Bible?", "Map one Bible passage into creation, fall, redemption, or restoration.", "Jesus, teach me to see Your presence and purpose throughout Scripture."],
+  ["Study 3", "Covenant and Promise", "35 minutes", "Teaching + worksheet", "Genesis 12:1-3", "Explore how God's covenants reveal His faithfulness and move His redemptive plan forward.", "1. Covenant is relationship with promise and responsibility. 2. Abraham receives promise and blessing. 3. Israel carries covenant identity. 4. Jesus fulfills the covenant hope.", "What promises of God do I need to remember? What responsibilities come with belonging to Him?", "Compare Genesis 12:1-3 and Galatians 3:13-14. Write what carries forward.", "Faithful God, help me trust Your promises and live as one who belongs to You."],
+  ["Study 4", "Prayer That Becomes Relationship", "35 minutes", "Teaching + guided practice", "Matthew 6:9-13", "Study prayer as worship, dependence, confession, request, surrender, and daily relationship.", "1. Jesus teaches us to begin with the Father. 2. Prayer reorders desire around God's kingdom. 3. Daily bread teaches dependence. 4. Forgiveness and deliverance shape holy living.", "Which part of the Lord's Prayer do I rush past? How can prayer become more than asking for outcomes?", "Pray the Lord's Prayer slowly, pausing after every phrase to personalize it.", "Father, teach me to pray with trust, honesty, and surrender."],
+  ["Study 5", "Hearing and Obeying God", "40 minutes", "Teaching + discernment", "John 10:27", "Learn biblical ways to listen for God's leading through Scripture, the Spirit, wisdom, counsel, and obedience.", "1. God's voice will not contradict Scripture. 2. Listening is formed by relationship. 3. Wisdom often comes through counsel and fruit. 4. Obedience clarifies what we already know.", "What has God already made clear that I have not acted on? What voices compete with His voice?", "Write one decision you are praying over and test it through Scripture, wisdom, counsel, and fruit.", "Good Shepherd, help me hear Your voice and follow with courage."],
+  ["Study 6", "The Fruit of the Spirit", "35 minutes", "Character study", "Galatians 5:22-25", "Study spiritual growth as Spirit-formed character rather than self-improvement alone.", "1. Fruit grows from abiding and walking by the Spirit. 2. The fruit is relational and visible. 3. Growth often appears in ordinary pressure. 4. We keep in step with the Spirit through surrender and practice.", "Which fruit feels most needed in this season? Where is pressure revealing what still needs formation?", "Choose one fruit and practice it intentionally in one relationship today.", "Holy Spirit, form the character of Christ in me."],
+  ["Study 7", "Spiritual Warfare Without Fear", "40 minutes", "Teaching + prayer", "Ephesians 6:10-18", "Understand spiritual warfare biblically through standing firm, truth, righteousness, faith, Scripture, and prayer.", "1. Our strength is in the Lord. 2. The armor is rooted in gospel realities. 3. Standing firm is active faithfulness. 4. Prayer keeps us alert and dependent.", "Where am I tempted to fight with fear, control, or anger instead of spiritual wisdom? Which piece of armor do I need today?", "Pray through each piece of armor and name one practical way to stand firm.", "Lord, strengthen me to stand firm in truth, faith, and prayer."],
+  ["Study 8", "Women of Faith and Courage", "45 minutes", "Character study", "Hebrews 11:11", "Study biblical women who model courage, wisdom, prayer, leadership, loyalty, and surrendered faith.", "1. Sarah wrestles with promise and waiting. 2. Deborah leads with wisdom. 3. Ruth practices covenant loyalty. 4. Mary responds with surrendered obedience. 5. The women at the tomb witness resurrection hope.", "Which woman resonates with my season? What kind of courage does faith require from me?", "Choose one woman from Scripture and write what her story teaches about God.", "Lord, grow courageous and surrendered faith in me."],
+  ["Study 9", "Marriage, Covenant, and Love", "40 minutes", "Relational study", "Ephesians 5:1-2", "Study marriage and close relationships through covenant love, service, humility, forgiveness, and Christlike sacrifice.", "1. Biblical love begins with Christ's love. 2. Covenant is deeper than convenience. 3. Humility and service reshape conflict. 4. Forgiveness and repair are practiced, not assumed.", "Where do I need to practice humility or repair? How does Christ's love challenge my normal reactions?", "Do one relationship-building action: listen, apologize, encourage, serve, or pray together.", "Jesus, teach me to love with humility, truth, and faithfulness."],
+  ["Study 10", "Suffering, Lament, and Hope", "45 minutes", "Teaching + reflection", "Psalm 13:1-6", "Learn how Scripture gives language for pain without losing trust in God.", "1. Lament brings pain to God honestly. 2. Faith does not require pretending. 3. Biblical hope remembers God's steadfast love. 4. Community helps carry grief and hardship.", "What pain have I avoided bringing honestly to God? What truth about God can I cling to without denying the hurt?", "Write a short lament: complaint, request, trust, and praise.", "God of mercy, meet me in pain and teach me hope that is honest."],
+  ["Study 11", "Body, Temple, and Worship", "35 minutes", "Wellness theology", "1 Corinthians 6:19-20", "Study the body as God's creation and temple, connecting movement, rest, nourishment, and worship.", "1. The body is not an enemy to faith. 2. God created embodied worship. 3. Stewardship is not shame or obsession. 4. Rest, movement, and care can become devotion.", "Where do I need to reject shame around my body? What would faithful care look like this week?", "Choose one body-care practice as worship: water, sleep, movement, nourishing food, or rest.", "Creator God, help me honor the body You made with wisdom and gratitude."],
+  ["Study 12", "Sharing Faith With Grace", "40 minutes", "Mission practice", "1 Peter 3:15-16", "Learn to share faith through gentleness, respect, testimony, curiosity, and Spirit-led courage.", "1. Witness begins with hope in Christ. 2. Gentleness and respect matter. 3. Testimony tells what God has done. 4. Questions can open faithful conversation. 5. Love is the posture of mission.", "Who might God be inviting me to love and listen to? What part of my story points to God's grace?", "Write a three-sentence testimony: before, encounter with God, and what changed.", "Lord, help me speak of You with courage, gentleness, and love."]
+].map(([session, title, duration, format, scripture, aim, outline, questions, practice, prayer], index) => ({
+  id: `bible-study-${index + 1}`,
+  session,
+  title,
+  duration,
+  format,
+  scripture,
+  aim,
+  outline,
+  questions,
+  practice,
+  prayer
+}));
 
 const state = {
   focuses: [...defaultFocuses, ...loadAddedFocuses()],
@@ -485,6 +511,7 @@ const state = {
   prayerBoardOpen: localStorage.getItem("walkWithGodPrayerBoardOpen") === "true",
   activeBreathworkIndex: Number(localStorage.getItem("walkWithGodBreathworkIndex") || 0),
   activeYogaIndex: Number(localStorage.getItem("walkWithGodYogaIndex") || 0),
+  activeBibleStudyIndex: Number(localStorage.getItem("walkWithGodBibleStudyIndex") || 0),
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
@@ -508,6 +535,7 @@ const gatedSections = [
   document.querySelector("#premium"),
   document.querySelector("#breathwork"),
   document.querySelector("#faithYoga"),
+  document.querySelector("#premiumBibleStudy"),
   document.querySelector("#install"),
   document.querySelector("#mobileAppNav"),
   document.querySelector("#feedback"),
@@ -620,6 +648,18 @@ const yogaFlow = document.querySelector("#yogaFlow");
 const yogaVisual = document.querySelector("#yogaVisual");
 const yogaVoice = document.querySelector("#yogaVoice");
 const yogaPrayer = document.querySelector("#yogaPrayer");
+const bibleStudyLockNote = document.querySelector("#bibleStudyLockNote");
+const bibleStudyList = document.querySelector("#bibleStudyList");
+const bibleStudySessionLabel = document.querySelector("#bibleStudySessionLabel");
+const bibleStudyTitle = document.querySelector("#bibleStudyTitle");
+const bibleStudyDuration = document.querySelector("#bibleStudyDuration");
+const bibleStudyFormat = document.querySelector("#bibleStudyFormat");
+const bibleStudyScripture = document.querySelector("#bibleStudyScripture");
+const bibleStudyAim = document.querySelector("#bibleStudyAim");
+const bibleStudyOutline = document.querySelector("#bibleStudyOutline");
+const bibleStudyQuestions = document.querySelector("#bibleStudyQuestions");
+const bibleStudyPractice = document.querySelector("#bibleStudyPractice");
+const bibleStudyPrayer = document.querySelector("#bibleStudyPrayer");
 const installAppButton = document.querySelector("#installAppButton");
 const installStatus = document.querySelector("#installStatus");
 const feedbackForm = document.querySelector("#feedbackForm");
@@ -1390,6 +1430,37 @@ function renderYoga() {
   yogaPrayer.textContent = isUnlocked ? session.prayer : "Closing prayer unlocks with the full premium session.";
 }
 
+function renderBibleStudy() {
+  if (!bibleStudyList) return;
+  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  state.activeBibleStudyIndex = Math.max(0, Math.min(state.activeBibleStudyIndex, premiumBibleStudySessions.length - 1));
+  const study = premiumBibleStudySessions[state.activeBibleStudyIndex];
+  bibleStudyLockNote.textContent = isUnlocked
+    ? "Admin preview is open. These in-depth sessions are ready to become future premium classes."
+    : "Premium coming soon. Free accounts can preview the study titles, while full outlines, questions, and assignments will unlock with a future premium plan.";
+  bibleStudyList.innerHTML = premiumBibleStudySessions
+    .map((item, index) => `
+      <button class="bible-study-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBibleStudyIndex}">
+        <span>${escapeHtml(item.session)}</span>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(item.duration)} - ${escapeHtml(item.format)}</small>
+      </button>
+    `)
+    .join("");
+  bibleStudySessionLabel.textContent = study.session;
+  bibleStudyTitle.textContent = study.title;
+  bibleStudyDuration.textContent = study.duration;
+  bibleStudyFormat.textContent = study.format;
+  bibleStudyScripture.textContent = study.scripture;
+  bibleStudyAim.textContent = `${study.aim} ${isUnlocked ? "Full premium class preview." : "Premium preview."}`;
+  bibleStudyOutline.innerHTML = isUnlocked
+    ? `<p>${escapeHtml(study.outline)}</p>`
+    : `<p>This teaching outline is part of the future premium Bible study class library.</p><small>Preview: ${escapeHtml(study.aim)}</small>`;
+  bibleStudyQuestions.textContent = isUnlocked ? study.questions : "Discussion questions unlock with the full premium study.";
+  bibleStudyPractice.textContent = isUnlocked ? study.practice : "Practice assignments unlock with the full premium study.";
+  bibleStudyPrayer.textContent = isUnlocked ? study.prayer : "Closing prayer unlocks with the full premium study.";
+}
+
 function renderAdmin() {
   const canAdmin = state.user?.role === "admin" && state.adminUnlocked;
   addFocusForm.hidden = !canAdmin;
@@ -1489,6 +1560,7 @@ function render() {
   renderPremium();
   renderBreathwork();
   renderYoga();
+  renderBibleStudy();
   renderNotesLibrary();
   renderAdmin();
   if (!focus) {
@@ -1543,6 +1615,7 @@ function render() {
   renderPremium();
   renderBreathwork();
   renderYoga();
+  renderBibleStudy();
   renderNotesLibrary();
   renderAdmin();
   saveActivePosition();
@@ -1589,6 +1662,16 @@ if (yogaList) {
     state.activeYogaIndex = Number(button.dataset.index);
     localStorage.setItem("walkWithGodYogaIndex", String(state.activeYogaIndex));
     renderYoga();
+  });
+}
+
+if (bibleStudyList) {
+  bibleStudyList.addEventListener("click", (event) => {
+    const button = event.target.closest(".bible-study-button");
+    if (!button) return;
+    state.activeBibleStudyIndex = Number(button.dataset.index);
+    localStorage.setItem("walkWithGodBibleStudyIndex", String(state.activeBibleStudyIndex));
+    renderBibleStudy();
   });
 }
 

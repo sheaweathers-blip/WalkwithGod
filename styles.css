@@ -1317,6 +1317,80 @@ select:focus {
   font-weight: 900;
 }
 
+.bible-study-section {
+  background:
+    radial-gradient(circle at 90% 12%, rgba(178, 138, 58, 0.28), transparent 30%),
+    radial-gradient(circle at 10% 88%, rgba(72, 107, 130, 0.22), transparent 32%),
+    linear-gradient(135deg, rgba(251, 247, 225, 0.97), rgba(221, 237, 226, 0.96));
+}
+
+.bible-study-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.55fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.bible-study-list {
+  display: grid;
+  gap: 9px;
+  max-height: 680px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.bible-study-button {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  min-height: 86px;
+  padding: 12px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.74);
+  text-align: left;
+}
+
+.bible-study-button[aria-pressed="true"] {
+  border-color: var(--green);
+  box-shadow: inset 0 0 0 1px var(--green);
+}
+
+.bible-study-button span,
+.bible-study-button strong {
+  color: var(--deep-green);
+}
+
+.bible-study-button small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.bible-study-reader {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background: var(--nature-sunrise);
+}
+
+.bible-study-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.bible-study-meta span {
+  padding: 7px 10px;
+  border: 1px solid rgba(31, 75, 59, 0.14);
+  border-radius: 999px;
+  color: var(--deep-green);
+  background: rgba(255, 255, 255, 0.72);
+  font-weight: 900;
+}
+
 .admin-unlock-form,
 .auth-form,
 .add-focus-form,
@@ -1811,6 +1885,7 @@ select:focus {
   .premium-grid,
   .breathwork-layout,
   .yoga-layout,
+  .bible-study-layout,
   .day-layout,
   .form-grid,
   .today-card,
