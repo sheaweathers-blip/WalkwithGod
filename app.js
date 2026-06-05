@@ -434,6 +434,41 @@ const premiumBreathworkRoutines = [
   voice,
   prayer
 }));
+const premiumYogaSessions = [
+  ["Session 1", "Begin in Stillness", "20 minutes", "Gentle flow", "Psalm 46:10", "Settle your body and attention before God before moving into the day.", "Opening seated breath prayer, neck and shoulder release, cat-cow, child's pose, low lunge, forward fold, gentle twist, supported rest.", "Soft morning light, mat near a window, calm greenery", "Quiet and reverent, with simple cues and Scripture woven between movements.", "Lord, quiet my striving and help my body and soul become still before You."],
+  ["Session 2", "Morning Mercy Flow", "18 minutes", "Slow energizing flow", "Lamentations 3:22-23", "Receive the new morning as mercy and move with gratitude.", "Seated breath, sun-breath arms, tabletop mobility, low lunge, half split, mountain pose, standing side stretch, slow chair pose, restful forward fold.", "Sunrise, warm natural light, open space", "Hopeful and gentle, energizing without becoming rushed.", "Thank You for new mercy today. Help me walk in it with humility and joy."],
+  ["Session 3", "Strength Renewed", "25 minutes", "Strength and balance", "Isaiah 40:31", "Build steady strength while remembering that renewal comes from waiting on the Lord.", "Grounding breath, mountain pose, chair pose, warrior one, warrior two, tree pose, bridge pose, reclined hamstring stretch, rest.", "Mountain ridge, strong trees, natural earth tones", "Encouraging, steady, reminding users to modify as needed.", "Renew my strength, Lord, and teach me to depend on You rather than force."],
+  ["Session 4", "Peace for Anxiety", "22 minutes", "Calming restorative", "Philippians 4:6-7", "Release anxious tension through slow breath, supported shapes, and prayer.", "Hand-on-heart breathing, seated fold, supported child's pose, low supported lunge, legs up the wall or calves on chair, long rest.", "Soft blankets, gentle rain, peaceful room", "Very slow, low voice, with permission to pause and rest.", "God of peace, guard my heart and mind in Christ Jesus."],
+  ["Session 5", "Open Hands Surrender", "20 minutes", "Gentle mobility", "1 Peter 5:7", "Practice surrender through open-handed movement and longer exhales.", "Seated open hands breath, shoulder rolls, cat-cow, thread the needle, low lunge with open palms, forward fold, supported rest.", "Hands open on mat, soft green background", "Tender and pastoral, emphasizing release without pressure.", "Father, I cast my cares on You because You care for me."],
+  ["Session 6", "Gratitude Flow", "20 minutes", "Gentle standing flow", "Psalm 107:1", "Let movement become thanksgiving for the body, breath, and day God has given.", "Breath prayer, standing side stretch, slow sun-breaths, warrior two, peaceful warrior, wide fold, seated twist, rest.", "Garden, golden light, simple natural mat", "Warm, grateful, slightly brighter energy.", "Thank You, Lord, for Your steadfast love and for this body You created."],
+  ["Session 7", "Rest for the Weary", "30 minutes", "Restorative", "Matthew 11:28", "Receive rest without earning it, performing for it, or apologizing for needing it.", "Supported child's pose, reclined butterfly, gentle twist, supported bridge, legs on chair, extended stillness with prayer.", "Dusk, candles or soft lamp, cozy blankets", "Slow and sleepy, with long silent spaces.", "Jesus, I come to You weary and receive the rest You freely offer."],
+  ["Session 8", "Rooted in Love", "24 minutes", "Grounding flow", "Ephesians 3:17-19", "Move from a place of being rooted and loved by God.", "Seated grounding, wide-knee child's pose, cat-cow, low lunge, warrior two, triangle modification, seated forward fold, rest.", "Forest path, roots, moss, deep greens", "Grounded and reassuring.", "Root me deeply in Your love so I do not move from fear today."],
+  ["Session 9", "Gentle Joy", "18 minutes", "Mood-lifting gentle flow", "Nehemiah 8:10", "Practice lightness, joy, and gratitude through accessible movement.", "Breath with smile, shoulder release, easy side bends, low lunge, gentle backbend, seated twist, happy baby or knees to chest, rest.", "Bright natural room, flowers, soft sunrise", "Kind, uplifting, not overly energetic.", "Let Your joy strengthen me from the inside out."],
+  ["Session 10", "Patience Practice", "20 minutes", "Slow hold flow", "Galatians 5:22-23", "Use slow holds to practice patience, self-control, and Spirit-led steadiness.", "Slow breath, tabletop, low lunge holds, warrior two hold, supported balance, seated fold, long exhale rest.", "Quiet studio, slow-moving clouds", "Patient pacing, reminding users that discomfort should not become pain.", "Holy Spirit, grow patience and self-control in me."],
+  ["Session 11", "Hope After Hardship", "25 minutes", "Gentle resilience flow", "Romans 15:13", "Make room for hope while honoring tenderness, grief, or fatigue.", "Grounding breath, supported child's pose, low lunge, gentle heart opener, seated twist, bridge or supported bridge, rest.", "Dawn after rain, open road, hopeful nature", "Compassionate and hope-filled.", "God of hope, fill me with peace as I trust You."],
+  ["Session 12", "Prayer Walk Cooldown", "15 minutes", "Post-walk stretch", "Micah 6:8", "Pair walking with God and simple stretches for hips, calves, back, and breath.", "Standing calf stretch, quad stretch option, forward fold, low lunge, seated hamstring stretch, reclined twist, closing prayer.", "Outdoor trail, shoes by mat, trees", "Active and practical, like a peaceful cooldown.", "Teach me to walk humbly with You in every ordinary step."],
+  ["Session 13", "Body as Temple", "22 minutes", "Mobility and care", "1 Corinthians 6:19-20", "Care for the body as a gift from God, without shame or comparison.", "Seated breath, wrist and ankle mobility, cat-cow, low lunge, gentle squat option, bridge, reclined stretch, rest.", "Natural light, water bottle, calm wellness setting", "Encouraging and body-kind, avoiding appearance-focused language.", "Help me honor this body as Your creation and care for it with wisdom."],
+  ["Session 14", "Evening Release", "25 minutes", "Bedtime restorative", "Psalm 4:8", "Release the day and prepare for peaceful sleep in God's care.", "Slow breathing, seated fold, reclined butterfly, knees to chest, gentle twist, legs on pillow, extended rest.", "Evening light, soft blanket, peaceful bedroom", "Soft bedtime tone, minimal instruction, longer silence.", "In peace I lie down and sleep, for You alone make me dwell in safety."],
+  ["Session 15", "Courage to Begin", "20 minutes", "Energizing beginner flow", "Joshua 1:9", "Invite courage for a new task, season, or act of obedience.", "Mountain pose, breath arms, chair, low lunge, warrior one, standing fold, seated stretch, prayer rest.", "Open doorway, sunrise, strong natural colors", "Confident and warm, with clear beginner modifications.", "Make me strong and courageous because You are with me."],
+  ["Session 16", "Forgiveness and Freedom", "24 minutes", "Heart and hip release", "Ephesians 4:32", "Gently explore release while remembering forgiveness is a Spirit-led process.", "Breath prayer, supported heart opener, low lunge, pigeon modification or figure four, seated twist, long rest.", "Open field, unclenched hands, soft wind", "Gentle, non-forcing, with language of wisdom and boundaries.", "Lead me toward freedom, mercy, and healing at Your pace."],
+  ["Session 17", "Peaceful Strength", "25 minutes", "Balanced strength flow", "2 Timothy 1:7", "Practice strength without fear, hurry, or striving.", "Grounding breath, chair, warrior two, side angle modification, plank option, child's pose, bridge, rest.", "Strong greens, quiet studio, mountain imagery", "Steady and empowering, with permission to lower intensity.", "God, You have given me power, love, and a sound mind."],
+  ["Session 18", "Listen and Follow", "20 minutes", "Slow intuitive flow", "John 10:27", "Practice listening to God and noticing what your body needs today.", "Seated listening prayer, gentle neck release, cat-cow, choose child's pose or lunge, seated fold, stillness.", "Quiet path, open Bible nearby, natural light", "Reflective, spacious, inviting users to pause and choose wisely.", "Good Shepherd, help me hear Your voice and follow."],
+  ["Session 19", "Grief and Comfort", "28 minutes", "Restorative comfort", "Psalm 34:18", "Create a gentle place for sadness, grief, or heaviness in God's nearness.", "Supported child's pose, reclined side rest, hand-on-heart breathing, gentle twist, legs supported, long prayer rest.", "Soft rain, blanket, muted greens", "Tender and slow, with no pressure to feel better quickly.", "Stay near to the brokenhearted, Lord, and comfort me with Your presence."],
+  ["Session 20", "Faithful Finish", "20 minutes", "Gentle closing flow", "Hebrews 12:1-2", "Release distractions and finish the day or week with eyes fixed on Jesus.", "Breath prayer, standing fold, low lunge, warrior two, seated twist, forward fold, final rest.", "Trail finish line, sunset, peaceful road", "Steady, hopeful, reflective.", "Help me lay aside what weighs me down and keep my eyes on Jesus."],
+  ["Session 21", "Renewed Commitment", "30 minutes", "Full gentle practice", "Romans 12:1", "Offer your whole self to God through prayerful movement, breath, gratitude, and rest.", "Opening prayer, seated breath, cat-cow, low lunge, warrior flow, balance, bridge, reclined twist, extended rest and dedication prayer.", "Beautiful natural studio, greenery, warm sunrise", "Premium finale tone: reverent, encouraging, complete.", "Lord, I offer my body, mind, time, and choices to You as worship."]
+].map(([session, title, duration, style, scripture, intention, flow, visual, voice, prayer], index) => ({
+  id: `faith-yoga-${index + 1}`,
+  session,
+  title,
+  duration,
+  style,
+  scripture,
+  intention,
+  flow,
+  visual,
+  voice,
+  prayer
+}));
 
 const state = {
   focuses: [...defaultFocuses, ...loadAddedFocuses()],
@@ -449,6 +484,7 @@ const state = {
   prayerRequests: [],
   prayerBoardOpen: localStorage.getItem("walkWithGodPrayerBoardOpen") === "true",
   activeBreathworkIndex: Number(localStorage.getItem("walkWithGodBreathworkIndex") || 0),
+  activeYogaIndex: Number(localStorage.getItem("walkWithGodYogaIndex") || 0),
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
@@ -471,6 +507,7 @@ const gatedSections = [
   document.querySelector("#community"),
   document.querySelector("#premium"),
   document.querySelector("#breathwork"),
+  document.querySelector("#faithYoga"),
   document.querySelector("#install"),
   document.querySelector("#mobileAppNav"),
   document.querySelector("#feedback"),
@@ -571,6 +608,18 @@ const breathworkScript = document.querySelector("#breathworkScript");
 const breathworkVisual = document.querySelector("#breathworkVisual");
 const breathworkVoice = document.querySelector("#breathworkVoice");
 const breathworkPrayer = document.querySelector("#breathworkPrayer");
+const yogaLockNote = document.querySelector("#yogaLockNote");
+const yogaList = document.querySelector("#yogaList");
+const yogaSessionLabel = document.querySelector("#yogaSessionLabel");
+const yogaTitle = document.querySelector("#yogaTitle");
+const yogaDuration = document.querySelector("#yogaDuration");
+const yogaStyle = document.querySelector("#yogaStyle");
+const yogaScripture = document.querySelector("#yogaScripture");
+const yogaIntention = document.querySelector("#yogaIntention");
+const yogaFlow = document.querySelector("#yogaFlow");
+const yogaVisual = document.querySelector("#yogaVisual");
+const yogaVoice = document.querySelector("#yogaVoice");
+const yogaPrayer = document.querySelector("#yogaPrayer");
 const installAppButton = document.querySelector("#installAppButton");
 const installStatus = document.querySelector("#installStatus");
 const feedbackForm = document.querySelector("#feedbackForm");
@@ -1310,6 +1359,37 @@ function renderBreathwork() {
   breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Closing prayer unlocks with the full premium routine.";
 }
 
+function renderYoga() {
+  if (!yogaList) return;
+  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  state.activeYogaIndex = Math.max(0, Math.min(state.activeYogaIndex, premiumYogaSessions.length - 1));
+  const session = premiumYogaSessions[state.activeYogaIndex];
+  yogaLockNote.textContent = isUnlocked
+    ? "Admin preview is open. These faith-led yoga sessions are ready to become future premium videos."
+    : "Premium coming soon. Free accounts can preview the session titles, while full flows and prayers will unlock with a future premium plan.";
+  yogaList.innerHTML = premiumYogaSessions
+    .map((item, index) => `
+      <button class="yoga-button" type="button" data-index="${index}" aria-pressed="${index === state.activeYogaIndex}">
+        <span>${escapeHtml(item.session)}</span>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(item.duration)} - ${escapeHtml(item.style)}</small>
+      </button>
+    `)
+    .join("");
+  yogaSessionLabel.textContent = session.session;
+  yogaTitle.textContent = session.title;
+  yogaDuration.textContent = session.duration;
+  yogaStyle.textContent = session.style;
+  yogaScripture.textContent = session.scripture;
+  yogaIntention.textContent = `${session.intention} ${isUnlocked ? "Modify any pose and rest whenever needed." : "Premium preview."}`;
+  yogaFlow.innerHTML = isUnlocked
+    ? `<p>${escapeHtml(session.flow)}</p>`
+    : `<p>This movement flow is part of the future premium faith-led yoga library.</p><small>Preview: ${escapeHtml(session.style)} around ${escapeHtml(session.scripture)}.</small>`;
+  yogaVisual.textContent = isUnlocked ? session.visual : "Visual direction unlocks with the premium production plan.";
+  yogaVoice.textContent = isUnlocked ? session.voice : "Voiceover direction unlocks with the full premium session.";
+  yogaPrayer.textContent = isUnlocked ? session.prayer : "Closing prayer unlocks with the full premium session.";
+}
+
 function renderAdmin() {
   const canAdmin = state.user?.role === "admin" && state.adminUnlocked;
   addFocusForm.hidden = !canAdmin;
@@ -1408,6 +1488,7 @@ function render() {
   renderPrayerRequests();
   renderPremium();
   renderBreathwork();
+  renderYoga();
   renderNotesLibrary();
   renderAdmin();
   if (!focus) {
@@ -1461,6 +1542,7 @@ function render() {
   renderPrayerRequests();
   renderPremium();
   renderBreathwork();
+  renderYoga();
   renderNotesLibrary();
   renderAdmin();
   saveActivePosition();
@@ -1497,6 +1579,16 @@ if (breathworkList) {
     state.activeBreathworkIndex = Number(button.dataset.index);
     localStorage.setItem("walkWithGodBreathworkIndex", String(state.activeBreathworkIndex));
     renderBreathwork();
+  });
+}
+
+if (yogaList) {
+  yogaList.addEventListener("click", (event) => {
+    const button = event.target.closest(".yoga-button");
+    if (!button) return;
+    state.activeYogaIndex = Number(button.dataset.index);
+    localStorage.setItem("walkWithGodYogaIndex", String(state.activeYogaIndex));
+    renderYoga();
   });
 }
 
