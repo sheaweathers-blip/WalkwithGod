@@ -5,7 +5,7 @@ self.addEventListener("install", (event) => {
         "/",
         "/index.html",
         "/styles.css?v=20260531-premium-foundation",
-        "/app.js",
+        "/app.js?v=20260601-login-fix",
         "/manifest.json",
         "/assets/daily-devotion.png",
         "/assets/walk-with-god-logo.png",

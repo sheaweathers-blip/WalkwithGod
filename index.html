@@ -35,25 +35,6 @@
         </div>
       </section>
 
-      <section class="daily today-section" id="today" hidden>
-        <div class="today-card">
-          <div>
-            <p class="eyebrow">Today</p>
-            <h2 id="todayTitle">Begin today's walk</h2>
-            <p class="section-copy" id="todayCopy">Choose a focus to see your next Scripture, active time, and deed of the day.</p>
-          </div>
-          <div class="today-stats">
-            <div><strong id="streakCount">0</strong><span>day rhythm</span></div>
-            <div><strong id="favoriteCount">0</strong><span>favorite verses</span></div>
-          </div>
-          <div class="reflection-actions">
-            <button class="copy-button" id="continueTodayButton" type="button">Continue Today</button>
-            <button class="quiet-button" id="quickCompleteButton" type="button">Mark Complete</button>
-          </div>
-          <p class="copy-status" id="todayStatus" role="status" aria-live="polite"></p>
-        </div>
-      </section>
-
       <section class="daily account-section" id="account">
         <div class="section-heading">
           <p class="eyebrow">Account</p>
@@ -152,6 +133,25 @@
               <p class="copy-status" id="reminderStatus" role="status" aria-live="polite"></p>
             </form>
           </div>
+        </div>
+      </section>
+
+      <section class="daily today-section" id="today" hidden>
+        <div class="today-card">
+          <div>
+            <p class="eyebrow">Today</p>
+            <h2 id="todayTitle">Begin today's walk</h2>
+            <p class="section-copy" id="todayCopy">Choose a focus to see your next Scripture, active time, and deed of the day.</p>
+          </div>
+          <div class="today-stats">
+            <div><strong id="streakCount">0</strong><span>day rhythm</span></div>
+            <div><strong id="favoriteCount">0</strong><span>favorite verses</span></div>
+          </div>
+          <div class="reflection-actions">
+            <button class="copy-button" id="continueTodayButton" type="button">Continue Today</button>
+            <button class="quiet-button" id="quickCompleteButton" type="button">Mark Complete</button>
+          </div>
+          <p class="copy-status" id="todayStatus" role="status" aria-live="polite"></p>
         </div>
       </section>
 
@@ -332,7 +332,11 @@
 
         <div class="community-feed" id="communityFeed" aria-label="Community check-ins"></div>
 
-        <div class="prayer-board">
+        <div class="reflection-actions prayer-board-actions">
+          <button class="quiet-button" id="togglePrayerBoardButton" type="button">View Prayer Requests</button>
+        </div>
+
+        <div class="prayer-board" id="prayerBoard" hidden>
           <div class="section-heading compact-heading">
             <p class="eyebrow">Prayer Requests</p>
             <h3>Pray with the community</h3>
@@ -538,6 +542,6 @@
       </section>
     </main>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=20260601-login-fix"></script>
   </body>
 </html>

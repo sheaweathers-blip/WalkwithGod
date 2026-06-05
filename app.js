@@ -1161,8 +1161,10 @@ function renderCommunity() {
 }
 
 function renderPrayerRequests() {
-  prayerBoard.hidden = !state.prayerBoardOpen;
-  togglePrayerBoardButton.textContent = state.prayerBoardOpen ? "Hide Prayer Requests" : "View Prayer Requests";
+  if (prayerBoard) prayerBoard.hidden = !state.prayerBoardOpen;
+  if (togglePrayerBoardButton) {
+    togglePrayerBoardButton.textContent = state.prayerBoardOpen ? "Hide Prayer Requests" : "View Prayer Requests";
+  }
   prayerFeed.innerHTML = state.prayerRequests.length
     ? state.prayerRequests
         .map((request) => `
@@ -1222,7 +1224,7 @@ function renderPremium() {
 function renderAdmin() {
   const canAdmin = state.user?.role === "admin" && state.adminUnlocked;
   addFocusForm.hidden = !canAdmin;
-  premiumContentForm.hidden = !canAdmin;
+  if (premiumContentForm) premiumContentForm.hidden = !canAdmin;
   adminDashboard.hidden = !canAdmin;
   lockAdminButton.hidden = !state.adminUnlocked;
   if (state.adminUnlocked && state.user?.role !== "admin") {
@@ -1563,11 +1565,13 @@ communityModeButton.addEventListener("click", () => {
   renderMode();
 });
 
-togglePrayerBoardButton.addEventListener("click", () => {
-  state.prayerBoardOpen = !state.prayerBoardOpen;
-  localStorage.setItem("walkWithGodPrayerBoardOpen", String(state.prayerBoardOpen));
-  renderPrayerRequests();
-});
+if (togglePrayerBoardButton) {
+  togglePrayerBoardButton.addEventListener("click", () => {
+    state.prayerBoardOpen = !state.prayerBoardOpen;
+    localStorage.setItem("walkWithGodPrayerBoardOpen", String(state.prayerBoardOpen));
+    renderPrayerRequests();
+  });
+}
 
 communityForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -1859,34 +1863,36 @@ addFocusForm.addEventListener("submit", (event) => {
   render();
 });
 
-premiumContentForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!state.adminUnlocked) {
-    premiumContentStatus.textContent = "Unlock admin before adding premium content.";
-    return;
-  }
-  apiFetch("/api/admin/premium-content", {
-    method: "POST",
-    body: JSON.stringify({
-      type: premiumContentType.value,
-      title: premiumContentTitle.value.trim(),
-      length: premiumContentLength.value.trim(),
-      scripture: premiumContentScripture.value.trim(),
-      description: premiumContentDescription.value.trim(),
-      url: premiumContentUrl.value.trim()
+if (premiumContentForm) {
+  premiumContentForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!state.adminUnlocked) {
+      premiumContentStatus.textContent = "Unlock admin before adding premium content.";
+      return;
+    }
+    apiFetch("/api/admin/premium-content", {
+      method: "POST",
+      body: JSON.stringify({
+        type: premiumContentType.value,
+        title: premiumContentTitle.value.trim(),
+        length: premiumContentLength.value.trim(),
+        scripture: premiumContentScripture.value.trim(),
+        description: premiumContentDescription.value.trim(),
+        url: premiumContentUrl.value.trim()
+      })
     })
-  })
-    .then(async () => {
-      premiumContentForm.reset();
-      premiumContentStatus.textContent = "Premium preview added.";
-      await loadPremiumContent();
-      await loadAdminDashboard();
-      renderPremium();
-    })
-    .catch((error) => {
-      premiumContentStatus.textContent = error.message;
-    });
-});
+      .then(async () => {
+        premiumContentForm.reset();
+        premiumContentStatus.textContent = "Premium preview added.";
+        await loadPremiumContent();
+        await loadAdminDashboard();
+        renderPremium();
+      })
+      .catch((error) => {
+        premiumContentStatus.textContent = error.message;
+      });
+  });
+}
 
 clearAddedFocuses.addEventListener("click", () => {
   if (!state.adminUnlocked) {
