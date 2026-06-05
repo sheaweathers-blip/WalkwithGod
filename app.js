@@ -495,6 +495,32 @@ const premiumBibleStudySessions = [
   practice,
   prayer
 }));
+const premiumWalkingSessions = [
+  ["Walk 1", "Begin the Day With God", "15 minutes", "Easy pace", "Psalm 143:8", "Start the day by giving your attention, plans, and pace to God.", "Minute 1-3: walk slowly and notice your breath. Minute 4-8: pray through your day by name. Minute 9-12: ask God to show you one faithful priority. Minute 13-15: walk in gratitude and commit your steps to Him.", "What needs to be surrendered before the day begins? Who needs prayer before I see them today?", "Sunrise path, neighborhood sidewalk, soft instrumental music", "Lord, let me hear Your steadfast love this morning and show me the way I should go."],
+  ["Walk 2", "Cast Your Cares", "20 minutes", "Slow steady pace", "1 Peter 5:7", "Use your walk to release worry into God's care instead of carrying it alone.", "First 5 minutes: name your worries honestly. Next 10 minutes: with each exhale, imagine handing one care to God. Final 5 minutes: thank Him for caring for you personally.", "What care keeps returning to my mind? What would trusting God with it look like today?", "Tree-lined trail, cloudy sky clearing, gentle ambient sound", "Father, I cast these cares on You because You care for me."],
+  ["Walk 3", "Gratitude Walk", "15 minutes", "Comfortable pace", "Psalm 107:1", "Train your attention toward God's gifts through embodied thanksgiving.", "Walk and name one gift every few steps: breath, body, shelter, friendship, mercy, forgiveness, provision, beauty. End by thanking God for one gift you usually overlook.", "What ordinary gift has become too familiar? How can gratitude reshape my attitude today?", "Garden path, flowers, warm daylight", "Thank You, Lord, for Your steadfast love and daily goodness."],
+  ["Walk 4", "Prayer for Others", "25 minutes", "Easy to moderate pace", "1 Timothy 2:1", "Turn movement into intercession for family, friends, community, and the world.", "First 5 minutes: pray for those closest to you. Next 5: pray for someone struggling. Next 5: pray for leaders and community. Next 5: pray for someone difficult. Final 5: ask God how you can be part of His answer.", "Who needs prayer, encouragement, or practical help today? Who is hard for me to pray for?", "Neighborhood walk, city park, wide community shots", "Lord, make me faithful in prayer and generous in love."],
+  ["Walk 5", "Peace in the Middle", "20 minutes", "Gentle pace", "Philippians 4:6-7", "Bring anxiety to God and let His peace guard your heart while you move.", "Walk slowly. Inhale: God is near. Exhale: I release fear. Pause midway if possible and pray honestly about what feels unsettled. Resume with slower steps and open hands.", "What request do I need to bring to God with thanksgiving? Where do I need peace to guard me?", "Quiet path near water, soft blue-green tones", "God of peace, guard my heart and mind in Christ Jesus."],
+  ["Walk 6", "Wisdom Walk", "20 minutes", "Thoughtful pace", "James 1:5", "Seek God's wisdom for a choice, conversation, or next step.", "First third: describe the decision to God. Second third: ask for wisdom and listen quietly. Final third: name the next faithful step, even if the full answer is not clear.", "What decision needs wisdom rather than impulse? What counsel or Scripture should I seek before acting?", "Forked trail, open Bible before walking, calm focus music", "Generous God, give me wisdom and help me receive it with humility."],
+  ["Walk 7", "Forgiveness Walk", "25 minutes", "Slow pace", "Ephesians 4:32", "Begin releasing resentment while asking God for wisdom, boundaries, and mercy.", "Walk slowly and name the hurt without minimizing it. Ask God what forgiveness requires and what it does not require. End by praying for healing, wisdom, and freedom.", "What am I still rehearsing? What boundary, confession, or prayer might help me move toward freedom?", "Open field, path forward, soft wind", "Jesus, lead me toward forgiveness, healing, and wise freedom."],
+  ["Walk 8", "Strength Renewed", "30 minutes", "Moderate pace", "Isaiah 40:31", "Let a longer walk remind you that endurance comes from waiting on the Lord.", "Begin easy for 5 minutes. Walk steady for 20 minutes while repeating: My strength is renewed in You. Cool down for 5 minutes with gratitude for what your body can do today.", "Where have I confused forcing with faithfulness? How can I wait on God while still taking faithful steps?", "Long trail, mountain or open sky, steady rhythm", "Lord, renew my strength as I wait on You."],
+  ["Walk 9", "Walk Humbly", "20 minutes", "Easy pace", "Micah 6:8", "Practice justice, mercy, and humility while walking with God.", "Divide the walk into three parts: justice, mercy, humility. Ask God where each one needs to become visible in your life today.", "Where can I act justly? Who needs mercy from me? What would humility look like in my next conversation?", "Simple neighborhood walk, real-life ordinary setting", "Teach me to do justice, love mercy, and walk humbly with You."],
+  ["Walk 10", "Evening Examen Walk", "15 minutes", "Slow reflective pace", "Psalm 139:23-24", "Review the day with God before rest.", "Walk slowly and review the day: gratitude, tension, sin, grace, and tomorrow. Ask God to search your heart without shame and lead you in His way.", "Where did I notice God today? What do I need to confess, release, or carry into tomorrow with wisdom?", "Sunset path, quiet street, evening light", "Search me, Lord, and lead me in the way everlasting."],
+  ["Walk 11", "Hope After Hardship", "20 minutes", "Gentle pace", "Romans 15:13", "Make space for hope without pretending hardship is easy.", "Walk gently. Name what hurts, then name what remains true about God. Let each step be a small act of hope.", "What pain needs honesty? What promise or truth helps me take the next step?", "Dawn after rain, open path", "God of hope, fill me with peace as I trust You."],
+  ["Walk 12", "Celebration Walk", "30 minutes", "Joyful comfortable pace", "Psalm 150:6", "Celebrate God's faithfulness and mark progress with embodied praise.", "Walk at a comfortable pace. Recall answered prayers, completed steps, growth, and grace. End with praise, either spoken quietly or written afterward.", "What has God brought me through? What growth should I celebrate instead of rushing past?", "Bright trail, sunlight through trees, joyful but peaceful music", "Let everything in me praise You, Lord. Thank You for walking with me."]
+].map(([session, title, duration, pace, scripture, intention, guide, prompts, visual, prayer], index) => ({
+  id: `walking-${index + 1}`,
+  session,
+  title,
+  duration,
+  pace,
+  scripture,
+  intention,
+  guide,
+  prompts,
+  visual,
+  prayer
+}));
 
 const state = {
   focuses: [...defaultFocuses, ...loadAddedFocuses()],
@@ -512,6 +538,7 @@ const state = {
   activeBreathworkIndex: Number(localStorage.getItem("walkWithGodBreathworkIndex") || 0),
   activeYogaIndex: Number(localStorage.getItem("walkWithGodYogaIndex") || 0),
   activeBibleStudyIndex: Number(localStorage.getItem("walkWithGodBibleStudyIndex") || 0),
+  activeWalkingIndex: Number(localStorage.getItem("walkWithGodWalkingIndex") || 0),
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
@@ -536,6 +563,7 @@ const gatedSections = [
   document.querySelector("#breathwork"),
   document.querySelector("#faithYoga"),
   document.querySelector("#premiumBibleStudy"),
+  document.querySelector("#premiumWalking"),
   document.querySelector("#install"),
   document.querySelector("#mobileAppNav"),
   document.querySelector("#feedback"),
@@ -660,6 +688,18 @@ const bibleStudyOutline = document.querySelector("#bibleStudyOutline");
 const bibleStudyQuestions = document.querySelector("#bibleStudyQuestions");
 const bibleStudyPractice = document.querySelector("#bibleStudyPractice");
 const bibleStudyPrayer = document.querySelector("#bibleStudyPrayer");
+const walkingLockNote = document.querySelector("#walkingLockNote");
+const walkingList = document.querySelector("#walkingList");
+const walkingSessionLabel = document.querySelector("#walkingSessionLabel");
+const walkingTitle = document.querySelector("#walkingTitle");
+const walkingDuration = document.querySelector("#walkingDuration");
+const walkingPace = document.querySelector("#walkingPace");
+const walkingScripture = document.querySelector("#walkingScripture");
+const walkingIntention = document.querySelector("#walkingIntention");
+const walkingGuide = document.querySelector("#walkingGuide");
+const walkingPrompts = document.querySelector("#walkingPrompts");
+const walkingVisual = document.querySelector("#walkingVisual");
+const walkingPrayer = document.querySelector("#walkingPrayer");
 const installAppButton = document.querySelector("#installAppButton");
 const installStatus = document.querySelector("#installStatus");
 const feedbackForm = document.querySelector("#feedbackForm");
@@ -1461,6 +1501,37 @@ function renderBibleStudy() {
   bibleStudyPrayer.textContent = isUnlocked ? study.prayer : "Closing prayer unlocks with the full premium study.";
 }
 
+function renderWalking() {
+  if (!walkingList) return;
+  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  state.activeWalkingIndex = Math.max(0, Math.min(state.activeWalkingIndex, premiumWalkingSessions.length - 1));
+  const walk = premiumWalkingSessions[state.activeWalkingIndex];
+  walkingLockNote.textContent = isUnlocked
+    ? "Admin preview is open. These guided walks are ready to become future premium audio or video sessions."
+    : "Premium coming soon. Free accounts can preview the walking session titles, while full guides and prayer prompts will unlock with a future premium plan.";
+  walkingList.innerHTML = premiumWalkingSessions
+    .map((item, index) => `
+      <button class="walking-button" type="button" data-index="${index}" aria-pressed="${index === state.activeWalkingIndex}">
+        <span>${escapeHtml(item.session)}</span>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(item.duration)} - ${escapeHtml(item.pace)}</small>
+      </button>
+    `)
+    .join("");
+  walkingSessionLabel.textContent = walk.session;
+  walkingTitle.textContent = walk.title;
+  walkingDuration.textContent = walk.duration;
+  walkingPace.textContent = walk.pace;
+  walkingScripture.textContent = walk.scripture;
+  walkingIntention.textContent = `${walk.intention} ${isUnlocked ? "Choose a safe route and adjust pace as needed." : "Premium preview."}`;
+  walkingGuide.innerHTML = isUnlocked
+    ? `<p>${escapeHtml(walk.guide)}</p>`
+    : `<p>This guided walk is part of the future premium Walking With God library.</p><small>Preview: ${escapeHtml(walk.duration)} at ${escapeHtml(walk.pace)} around ${escapeHtml(walk.scripture)}.</small>`;
+  walkingPrompts.textContent = isUnlocked ? walk.prompts : "Prayer prompts unlock with the full premium walking session.";
+  walkingVisual.textContent = isUnlocked ? walk.visual : "Audio and visual direction unlocks with the premium production plan.";
+  walkingPrayer.textContent = isUnlocked ? walk.prayer : "Closing prayer unlocks with the full premium walking session.";
+}
+
 function renderAdmin() {
   const canAdmin = state.user?.role === "admin" && state.adminUnlocked;
   addFocusForm.hidden = !canAdmin;
@@ -1561,6 +1632,7 @@ function render() {
   renderBreathwork();
   renderYoga();
   renderBibleStudy();
+  renderWalking();
   renderNotesLibrary();
   renderAdmin();
   if (!focus) {
@@ -1616,6 +1688,7 @@ function render() {
   renderBreathwork();
   renderYoga();
   renderBibleStudy();
+  renderWalking();
   renderNotesLibrary();
   renderAdmin();
   saveActivePosition();
@@ -1672,6 +1745,16 @@ if (bibleStudyList) {
     state.activeBibleStudyIndex = Number(button.dataset.index);
     localStorage.setItem("walkWithGodBibleStudyIndex", String(state.activeBibleStudyIndex));
     renderBibleStudy();
+  });
+}
+
+if (walkingList) {
+  walkingList.addEventListener("click", (event) => {
+    const button = event.target.closest(".walking-button");
+    if (!button) return;
+    state.activeWalkingIndex = Number(button.dataset.index);
+    localStorage.setItem("walkWithGodWalkingIndex", String(state.activeWalkingIndex));
+    renderWalking();
   });
 }
 
