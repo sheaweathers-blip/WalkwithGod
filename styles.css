@@ -1158,6 +1158,91 @@ select:focus {
   background: linear-gradient(135deg, rgba(238, 231, 199, 0.96), rgba(214, 232, 219, 0.92));
 }
 
+.breathwork-section {
+  background:
+    radial-gradient(circle at 90% 12%, rgba(72, 107, 130, 0.2), transparent 30%),
+    radial-gradient(circle at 10% 88%, rgba(83, 137, 98, 0.28), transparent 32%),
+    linear-gradient(135deg, rgba(236, 247, 239, 0.97), rgba(217, 235, 224, 0.96));
+}
+
+.premium-lock-note {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  color: var(--deep-green);
+  background: rgba(255, 255, 255, 0.68);
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.breathwork-layout {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.5fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.breathwork-list {
+  display: grid;
+  gap: 9px;
+  max-height: 680px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.breathwork-button {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  min-height: 82px;
+  padding: 12px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.72);
+  text-align: left;
+}
+
+.breathwork-button[aria-pressed="true"] {
+  border-color: var(--green);
+  box-shadow: inset 0 0 0 1px var(--green);
+}
+
+.breathwork-button span,
+.breathwork-button strong {
+  color: var(--deep-green);
+}
+
+.breathwork-button small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.breathwork-reader {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background: var(--nature-water);
+}
+
+.breathwork-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.breathwork-meta span {
+  padding: 7px 10px;
+  border: 1px solid rgba(31, 75, 59, 0.14);
+  border-radius: 999px;
+  color: var(--deep-green);
+  background: rgba(255, 255, 255, 0.72);
+  font-weight: 900;
+}
+
 .admin-unlock-form,
 .auth-form,
 .add-focus-form,
@@ -1381,7 +1466,12 @@ select:focus {
 }
 
 .prayer-board {
+  margin-top: 14px;
   background: var(--nature-water);
+}
+
+.prayer-board-actions {
+  margin-top: 16px;
 }
 
 .compact-heading h3 {
@@ -1645,6 +1735,7 @@ select:focus {
   .workspace,
   .practice-grid,
   .premium-grid,
+  .breathwork-layout,
   .day-layout,
   .form-grid,
   .today-card,

@@ -390,6 +390,50 @@ const defaultFocuses = [
 
 const implementationText = "Take a moment to check in before moving on. Completion should mean you spent focused time with God, not just skimmed the reading.";
 const adminCode = "walkwithgod";
+const premiumBreathworkRoutines = [
+  ["Day 1", "Simply Breathe", "3 minutes", "4-in, 4-out", "Awareness", "Psalm 46:10", "Today, simply notice the breath. Inhale for 4, exhale for 4. Nothing to fix, nothing to achieve, just breathe with God.", "Soft morning light over a walking path", "Slow, reassuring, spacious voice with pauses after each count.", "Lord, teach me to begin with You, one quiet breath at a time."],
+  ["Day 2", "Let Go", "3 minutes", "4-in, 6-out", "Releasing tension", "1 Peter 5:7", "Inhale gently for 4. Exhale slowly for 6. With every longer exhale, release what you cannot control into God's care.", "Flowing river or slow clouds", "Warm and calm, emphasizing release on each exhale.", "Father, I give You what I was not meant to carry alone."],
+  ["Day 3", "Ground Yourself", "4 minutes", "Belly breathing", "Presence", "Colossians 2:7", "Place a hand on your belly. Let the breath rise and fall slowly. Notice that you are here, held by God, rooted in His love.", "Forest floor, moss, steady trees", "Grounded, gentle, with quiet reminders to relax the shoulders.", "Root me in Your truth and steady my heart today."],
+  ["Day 4", "Quiet the Mind", "4 minutes", "Box breathing", "Calm thoughts", "Isaiah 26:3", "Inhale 4, hold 4, exhale 4, hold 4. Imagine tracing a square while your thoughts settle before the Lord.", "Gentle ocean waves", "Clear counting with peaceful space between rounds.", "Keep my mind stayed on You and lead me into peace."],
+  ["Day 5", "Gratitude Breath", "4 minutes", "Inhale gratitude, exhale worry", "Thankfulness", "1 Thessalonians 5:18", "Breathe in and name one gift. Breathe out and release one worry. Let gratitude become prayer.", "Sunlit garden or wildflowers", "Soft, grateful, slightly brighter tone.", "Thank You, Lord, for meeting me in this moment."],
+  ["Day 6", "Release Stress", "3 minutes", "Deep inhale, sigh exhale", "Stress relief", "Matthew 11:28", "Take a deep breath in. Exhale with a gentle sigh. Let your body receive Christ's invitation to come and rest.", "Rain on leaves or quiet trail", "Comforting and unhurried, allowing audible exhales.", "Jesus, I come to You tired and receive Your rest."],
+  ["Day 7", "Weekly Reset", "10 minutes", "Mixed gentle breathing", "Review and renewal", "Lamentations 3:22-23", "Review the week through breath: awareness, release, grounding, calm, gratitude, and rest. Let mercy meet you again.", "Sunrise over a peaceful landscape", "Reflective, slow, with longer silent stretches.", "Renew my rhythm, Lord, and help me begin again with grace."],
+  ["Day 8", "Morning Energy", "4 minutes", "Deeper steady breathing", "New day", "Psalm 118:24", "Breathe a little deeper than usual, without strain. Welcome the new day as a gift from God.", "Sunrise and open sky", "Hopeful, bright, energizing without rushing.", "Lord, help me receive this day and walk in it faithfully."],
+  ["Day 9", "Clear Thinking", "4 minutes", "Box breathing", "Mental clarity", "James 1:5", "Use box breathing to clear mental clutter. Ask God for wisdom with each steady round.", "Clear mountain air", "Steady and focused, with crisp counting.", "God of wisdom, order my thoughts and guide my choices."],
+  ["Day 10", "Confidence", "5 minutes", "5-in, 5-out", "Courage", "Joshua 1:9", "Inhale for 5 and exhale for 5. Let each breath remind you that courage comes from God's presence.", "Strong trees in morning light", "Encouraging and grounded.", "Lord, make me strong and courageous because You are with me."],
+  ["Day 11", "Focus Flow", "5 minutes", "One breath, one task", "Attention", "Colossians 3:23", "Breathe slowly and choose one faithful task. Let your attention return to God and the work before you.", "Mountain trail or quiet desk with natural light", "Minimal, focused, with simple repetition.", "Help me work with a whole heart before You."],
+  ["Day 12", "Productivity Reset", "4 minutes", "4-in, 4-hold, 6-out", "Reset", "Psalm 90:12", "Inhale 4, hold 4, exhale 6. Let hurry leave your body and ask God to order your time.", "Clock, sunlight, calm workspace", "Practical, calm, lightly directive.", "Teach me to number my days and use this time wisely."],
+  ["Day 13", "Mental Clarity", "5 minutes", "Slow nasal breathing", "Organized thoughts", "Romans 12:2", "Breathe slowly and notice one thought at a time. Invite God to renew your mind with truth.", "Still lake reflecting trees", "Gentle and thoughtful.", "Renew my mind and help me recognize what is true."],
+  ["Day 14", "Weekend Recharge", "10 minutes", "Restful breathing", "Recovery", "Exodus 33:14", "Let the breath slow naturally. Receive the gift of God's presence as the deepest form of rest.", "Quiet meadow, soft wind", "Restful, spacious, with longer pauses.", "Your presence is my rest, Lord."],
+  ["Day 15", "Anxiety Relief", "5 minutes", "4-in, 6-out", "Safety", "Philippians 4:6-7", "Inhale for 4. Exhale for 6. With each exhale, let God's peace guard your heart and mind.", "Slow waves or rain-soft window", "Very calm and reassuring.", "God of peace, guard my heart and mind in Christ Jesus."],
+  ["Day 16", "Patience", "4 minutes", "Slow even breathing", "Waiting well", "Galatians 5:22", "Breathe evenly and practice not rushing the next breath. Let patience become a small act of surrender.", "Slow-growing plant or quiet path", "Gentle, slow, patient pacing.", "Grow patience in me by Your Spirit."],
+  ["Day 17", "Self-Compassion", "5 minutes", "Hand-on-heart breathing", "Kindness", "Psalm 103:13-14", "Place a hand over your heart. Breathe in God's compassion. Breathe out harsh self-judgment.", "Soft light through trees", "Tender, careful, compassionate.", "Father, help me receive Your compassion and speak with kindness."],
+  ["Day 18", "Release Anger", "5 minutes", "Cooling exhales", "Gentleness", "James 1:19-20", "Inhale calm light. Exhale anger without feeding it. Ask God to slow your words and soften your response.", "Storm clearing over hills", "Low, steady, de-escalating.", "Lord, make me quick to listen, slow to speak, and slow to anger."],
+  ["Day 19", "Forgiveness", "6 minutes", "Long exhale release", "Freedom", "Ephesians 4:32", "Breathe in mercy received. Breathe out the debt you keep rehearsing. Forgiveness may be a process; begin with surrender.", "Open field or path forward", "Gentle, non-forcing, pastoral.", "Jesus, lead me toward freedom, wisdom, and mercy."],
+  ["Day 20", "Hope", "5 minutes", "5-in, 5-out", "Hope renewed", "Romans 15:13", "Let each steady breath become room for hope. Inhale trust. Exhale despair and discouragement.", "Dawn breaking over mountains", "Hopeful and warm.", "God of hope, fill me with joy and peace as I trust You."],
+  ["Day 21", "Emotional Reset", "10 minutes", "Mixed calming breath", "Whole-heart reset", "Psalm 62:8", "Bring your whole heart before God: anxiety, anger, grief, hope, and need. Breathe slowly and pour out your heart to Him.", "Quiet chapel, trail, or still water", "Unhurried, emotionally safe, reflective.", "You are my refuge, Lord. I pour out my heart before You."],
+  ["Day 22", "Be Still", "5 minutes", "Breath prayer", "Stillness", "Psalm 46:10", "Inhale: Be still. Exhale: And know. Let the words become quiet prayer.", "Still lake at sunrise", "Whisper-soft, meditative, much silence.", "Be exalted in my life, God, as I become still before You."],
+  ["Day 23", "God's Peace", "5 minutes", "4-in, 6-out", "Peace", "Philippians 4:7", "Breathe in God's nearness. Breathe out fear. Let His peace guard what feels vulnerable.", "Gentle green valley", "Peaceful, protective, reassuring.", "Let Your peace guard my heart and mind today."],
+  ["Day 24", "Trust", "5 minutes", "I trust, God leads", "Surrender", "Proverbs 3:5-6", "Inhale: I trust. Exhale: God leads. Release the need to understand every step before obeying.", "Winding trail through trees", "Trust-building, steady, grounded.", "Direct my path as I trust You with all my heart."],
+  ["Day 25", "Strength", "5 minutes", "Deep steady breathing", "Renewal", "Isaiah 40:31", "Breathe slowly and imagine strength being renewed, not forced. Wait on the Lord with each breath.", "Eagle, open sky, mountain ridge", "Strong but calm, spacious.", "Renew my strength as I wait on You."],
+  ["Day 26", "Rest", "6 minutes", "Soft belly breathing", "Receiving rest", "Matthew 11:28", "Let your breath become effortless. You do not have to earn rest; receive Christ's invitation.", "Soft bed, dusk, quiet field", "Sleepy, soft, slow.", "Jesus, I receive the rest You freely offer."],
+  ["Day 27", "Gratitude Prayer", "5 minutes", "Thank You, Lord", "Thanksgiving", "Psalm 107:1", "Inhale: Thank You, Lord. Exhale: Thank You, Lord. Let gratitude settle into your body.", "Golden light over nature", "Grateful, warm, prayerful.", "Thank You for Your steadfast love and daily mercy."],
+  ["Day 28", "Surrender", "6 minutes", "Long exhale surrender", "Letting go", "Luke 22:42", "Name one burden. Inhale God's presence. Exhale: Into Your hands. Repeat gently.", "Hands open, quiet trail, soft sky", "Reverent, gentle, not rushed.", "Not my will, but Yours be done."],
+  ["Day 29", "Walking With God", "8 minutes", "Walking breath prayer", "Active prayer", "Micah 6:8", "Walk slowly if you can. Match prayer to your steps: justice, mercy, humility, with God.", "Walking path through trees", "Active, grounded, rhythmic.", "Teach me to walk humbly with You in ordinary life."],
+  ["Day 30", "Celebration and Renewal", "10 minutes", "Review and prayer", "Celebration", "2 Corinthians 5:17", "For thirty days you have paused, breathed, reflected, and grown. Review what God has been forming in you.", "Sunrise, open road, joyful nature", "Celebratory but peaceful, with gratitude.", "Make me new, Lord, and continue this work in me."]
+].map(([day, title, duration, technique, purpose, scripture, script, visual, voice, prayer], index) => ({
+  id: `breathwork-${index + 1}`,
+  day,
+  title,
+  duration,
+  technique,
+  purpose,
+  scripture,
+  script,
+  visual,
+  voice,
+  prayer
+}));
 
 const state = {
   focuses: [...defaultFocuses, ...loadAddedFocuses()],
@@ -404,6 +448,7 @@ const state = {
   community: JSON.parse(localStorage.getItem("walkWithGodCommunity") || "[]"),
   prayerRequests: [],
   prayerBoardOpen: localStorage.getItem("walkWithGodPrayerBoardOpen") === "true",
+  activeBreathworkIndex: Number(localStorage.getItem("walkWithGodBreathworkIndex") || 0),
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
@@ -425,6 +470,7 @@ const gatedSections = [
   document.querySelector("#notesLibrary"),
   document.querySelector("#community"),
   document.querySelector("#premium"),
+  document.querySelector("#breathwork"),
   document.querySelector("#install"),
   document.querySelector("#mobileAppNav"),
   document.querySelector("#feedback"),
@@ -513,6 +559,18 @@ const prayerStatus = document.querySelector("#prayerStatus");
 const prayerFeed = document.querySelector("#prayerFeed");
 const premiumGrid = document.querySelector("#premiumGrid");
 const premiumStatus = document.querySelector("#premiumStatus");
+const breathworkLockNote = document.querySelector("#breathworkLockNote");
+const breathworkList = document.querySelector("#breathworkList");
+const breathworkDayLabel = document.querySelector("#breathworkDayLabel");
+const breathworkTitle = document.querySelector("#breathworkTitle");
+const breathworkDuration = document.querySelector("#breathworkDuration");
+const breathworkTechnique = document.querySelector("#breathworkTechnique");
+const breathworkScripture = document.querySelector("#breathworkScripture");
+const breathworkPurpose = document.querySelector("#breathworkPurpose");
+const breathworkScript = document.querySelector("#breathworkScript");
+const breathworkVisual = document.querySelector("#breathworkVisual");
+const breathworkVoice = document.querySelector("#breathworkVoice");
+const breathworkPrayer = document.querySelector("#breathworkPrayer");
 const installAppButton = document.querySelector("#installAppButton");
 const installStatus = document.querySelector("#installStatus");
 const feedbackForm = document.querySelector("#feedbackForm");
@@ -1221,6 +1279,37 @@ function renderPremium() {
     : '<p class="empty-feed">Premium previews will appear here.</p>';
 }
 
+function renderBreathwork() {
+  if (!breathworkList) return;
+  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  state.activeBreathworkIndex = Math.max(0, Math.min(state.activeBreathworkIndex, premiumBreathworkRoutines.length - 1));
+  const routine = premiumBreathworkRoutines[state.activeBreathworkIndex];
+  breathworkLockNote.textContent = isUnlocked
+    ? "Admin preview is open. These routines are ready to become future video or audio sessions."
+    : "Premium coming soon. Free accounts can preview the series titles, while full guided scripts will unlock with a future premium plan.";
+  breathworkList.innerHTML = premiumBreathworkRoutines
+    .map((item, index) => `
+      <button class="breathwork-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBreathworkIndex}">
+        <span>${escapeHtml(item.day)}</span>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(item.duration)} - ${escapeHtml(item.technique)}</small>
+      </button>
+    `)
+    .join("");
+  breathworkDayLabel.textContent = routine.day;
+  breathworkTitle.textContent = routine.title;
+  breathworkDuration.textContent = routine.duration;
+  breathworkTechnique.textContent = routine.technique;
+  breathworkScripture.textContent = routine.scripture;
+  breathworkPurpose.textContent = `${routine.purpose} - ${isUnlocked ? "Full premium preview." : "Premium preview."}`;
+  breathworkScript.innerHTML = isUnlocked
+    ? `<p>${escapeHtml(routine.script)}</p>`
+    : `<p>This guided script is part of the future premium breathwork prayer library.</p><small>Preview: ${escapeHtml(routine.purpose)} with ${escapeHtml(routine.technique)}.</small>`;
+  breathworkVisual.textContent = isUnlocked ? routine.visual : "Visual direction unlocks with the premium production plan.";
+  breathworkVoice.textContent = isUnlocked ? routine.voice : "Voiceover direction unlocks with the full premium script.";
+  breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Closing prayer unlocks with the full premium routine.";
+}
+
 function renderAdmin() {
   const canAdmin = state.user?.role === "admin" && state.adminUnlocked;
   addFocusForm.hidden = !canAdmin;
@@ -1318,6 +1407,7 @@ function render() {
   renderCommunity();
   renderPrayerRequests();
   renderPremium();
+  renderBreathwork();
   renderNotesLibrary();
   renderAdmin();
   if (!focus) {
@@ -1370,6 +1460,7 @@ function render() {
   renderCommunity();
   renderPrayerRequests();
   renderPremium();
+  renderBreathwork();
   renderNotesLibrary();
   renderAdmin();
   saveActivePosition();
@@ -1398,6 +1489,16 @@ notesLibraryList.addEventListener("click", (event) => {
   document.querySelector("#themes").scrollIntoView({ behavior: "smooth" });
   loadCommunity().finally(render);
 });
+
+if (breathworkList) {
+  breathworkList.addEventListener("click", (event) => {
+    const button = event.target.closest(".breathwork-button");
+    if (!button) return;
+    state.activeBreathworkIndex = Number(button.dataset.index);
+    localStorage.setItem("walkWithGodBreathworkIndex", String(state.activeBreathworkIndex));
+    renderBreathwork();
+  });
+}
 
 completeButton.addEventListener("click", () => {
   const focus = activeFocus();
