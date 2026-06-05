@@ -244,6 +244,20 @@
                   <p class="block-label">Full Passage</p>
                   <button class="read-passage-button" id="readPassageButton" type="button">Read Passage Aloud</button>
                 </div>
+                <div class="read-passage-controls">
+                  <label>
+                    Voice
+                    <select id="passageVoiceSelect"></select>
+                  </label>
+                  <label>
+                    Speed
+                    <input id="passageRateInput" type="range" min="0.7" max="1.2" step="0.05" value="0.9" />
+                  </label>
+                  <label>
+                    Tone
+                    <input id="passagePitchInput" type="range" min="0.8" max="1.2" step="0.05" value="1" />
+                  </label>
+                </div>
                 <div id="verseText">Choose a day to load the passage.</div>
                 <p class="copy-status" id="readPassageStatus" role="status" aria-live="polite"></p>
               </div>
@@ -729,6 +743,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260604-read-passage"></script>
+    <script src="app.js?v=20260604-read-passage-voice"></script>
   </body>
 </html>

@@ -641,6 +641,33 @@ button:hover {
   opacity: 0.55;
 }
 
+.read-passage-controls {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.35fr) minmax(120px, 0.8fr) minmax(120px, 0.8fr);
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 12px;
+  border: 1px solid rgba(31, 75, 59, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.read-passage-controls label {
+  display: grid;
+  gap: 6px;
+  color: var(--deep-green);
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.read-passage-controls select {
+  min-height: 38px;
+}
+
+.read-passage-controls input[type="range"] {
+  width: 100%;
+}
+
 #verseText {
   max-height: 260px;
   overflow: auto;
@@ -2011,6 +2038,7 @@ select:focus {
   .form-grid,
   .today-card,
   .guided-checkin,
+  .read-passage-controls,
   .locked-benefits-grid,
   .note-library-item,
   .comment-form,

@@ -543,6 +543,7 @@ const state = {
   currentPassageReference: "",
   currentPassageText: "",
   isReadingPassage: false,
+  speechSettings: JSON.parse(localStorage.getItem("walkWithGodSpeechSettings") || '{"voiceURI":"","rate":0.9,"pitch":1}'),
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
@@ -614,6 +615,9 @@ const scriptureText = document.querySelector("#scriptureText");
 const verseText = document.querySelector("#verseText");
 const readPassageButton = document.querySelector("#readPassageButton");
 const readPassageStatus = document.querySelector("#readPassageStatus");
+const passageVoiceSelect = document.querySelector("#passageVoiceSelect");
+const passageRateInput = document.querySelector("#passageRateInput");
+const passagePitchInput = document.querySelector("#passagePitchInput");
 const favoriteVerseButton = document.querySelector("#favoriteVerseButton");
 const daySummary = document.querySelector("#daySummary");
 const activeTimeText = document.querySelector("#activeTimeText");
@@ -1206,6 +1210,38 @@ function speechSupported() {
   return "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
 }
 
+function saveSpeechSettings() {
+  localStorage.setItem("walkWithGodSpeechSettings", JSON.stringify(state.speechSettings));
+}
+
+function populateVoiceOptions() {
+  if (!passageVoiceSelect) return;
+  if (!speechSupported()) {
+    passageVoiceSelect.innerHTML = '<option value="">Not supported</option>';
+    passageVoiceSelect.disabled = true;
+    return;
+  }
+  const voices = window.speechSynthesis.getVoices();
+  passageVoiceSelect.disabled = !voices.length;
+  passageVoiceSelect.innerHTML = voices.length
+    ? voices
+        .map((voice) => `<option value="${escapeHtml(voice.voiceURI)}">${escapeHtml(voice.name)} (${escapeHtml(voice.lang)})</option>`)
+        .join("")
+    : '<option value="">Loading voices...</option>';
+  const savedVoice = voices.find((voice) => voice.voiceURI === state.speechSettings.voiceURI);
+  const defaultVoice = savedVoice || voices.find((voice) => voice.default) || voices[0];
+  if (defaultVoice) {
+    state.speechSettings.voiceURI = defaultVoice.voiceURI;
+    passageVoiceSelect.value = defaultVoice.voiceURI;
+    saveSpeechSettings();
+  }
+}
+
+function selectedSpeechVoice() {
+  if (!speechSupported()) return null;
+  return window.speechSynthesis.getVoices().find((voice) => voice.voiceURI === state.speechSettings.voiceURI) || null;
+}
+
 function updateReadPassageButton() {
   if (!readPassageButton) return;
   readPassageButton.textContent = state.isReadingPassage ? "Stop Reading" : "Read Passage Aloud";
@@ -1239,8 +1275,10 @@ function readPassageAloud() {
   }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(state.currentPassageText);
-  utterance.rate = 0.9;
-  utterance.pitch = 1;
+  const voice = selectedSpeechVoice();
+  if (voice) utterance.voice = voice;
+  utterance.rate = Number(state.speechSettings.rate) || 0.9;
+  utterance.pitch = Number(state.speechSettings.pitch) || 1;
   utterance.onend = () => {
     state.isReadingPassage = false;
     readPassageStatus.textContent = "Finished reading passage.";
@@ -1857,6 +1895,32 @@ if (walkingList) {
 
 if (readPassageButton) {
   readPassageButton.addEventListener("click", readPassageAloud);
+}
+
+if (passageVoiceSelect) {
+  passageVoiceSelect.addEventListener("change", () => {
+    state.speechSettings.voiceURI = passageVoiceSelect.value;
+    saveSpeechSettings();
+    if (state.isReadingPassage) {
+      stopPassageAudio("Voice changed. Press read to start again.");
+    }
+  });
+}
+
+if (passageRateInput) {
+  passageRateInput.value = String(state.speechSettings.rate || 0.9);
+  passageRateInput.addEventListener("input", () => {
+    state.speechSettings.rate = Number(passageRateInput.value);
+    saveSpeechSettings();
+  });
+}
+
+if (passagePitchInput) {
+  passagePitchInput.value = String(state.speechSettings.pitch || 1);
+  passagePitchInput.addEventListener("input", () => {
+    state.speechSettings.pitch = Number(passagePitchInput.value);
+    saveSpeechSettings();
+  });
 }
 
 document.addEventListener("click", (event) => {
@@ -2507,6 +2571,10 @@ async function registerAppShell() {
 async function init() {
   if (window.location.protocol === "file:") {
     serverWarning.hidden = false;
+  }
+  populateVoiceOptions();
+  if (speechSupported()) {
+    window.speechSynthesis.onvoiceschanged = populateVoiceOptions;
   }
   try {
     const result = await apiFetch("/api/me");
