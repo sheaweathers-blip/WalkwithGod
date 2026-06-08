@@ -643,7 +643,7 @@ button:hover {
 
 .read-passage-controls {
   display: grid;
-  grid-template-columns: minmax(180px, 1.35fr) minmax(120px, 0.8fr) minmax(120px, 0.8fr);
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
   gap: 10px;
   margin: 0 0 12px;
   padding: 12px;
@@ -988,6 +988,63 @@ select:focus {
   margin-top: -26px;
   position: relative;
   z-index: 2;
+}
+
+.start-here-section {
+  background:
+    radial-gradient(circle at 88% 10%, rgba(178, 138, 58, 0.2), transparent 28%),
+    linear-gradient(135deg, rgba(236, 247, 239, 0.97), rgba(221, 237, 226, 0.96));
+}
+
+.start-checklist {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.start-check-item {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.start-check-item.is-done {
+  background:
+    linear-gradient(135deg, rgba(224, 241, 215, 0.92), rgba(255, 255, 255, 0.7));
+}
+
+.check-dot {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-height: 44px;
+  border: 1px solid rgba(31, 75, 59, 0.18);
+  border-radius: 999px;
+  color: #fff;
+  background: var(--green);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.start-check-item:not(.is-done) .check-dot {
+  color: transparent;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.start-check-item strong {
+  color: var(--deep-green);
+}
+
+.start-check-item p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .today-card {
@@ -2048,6 +2105,14 @@ select:focus {
     grid-template-columns: 1fr;
   }
 
+  .start-check-item {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+
+  .start-check-item .quiet-button {
+    grid-column: 1 / -1;
+  }
+
   .today-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2095,7 +2160,7 @@ select:focus {
     bottom: 10px;
     z-index: 20;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 6px;
     padding: 8px;
     border: 1px solid rgba(31, 75, 59, 0.16);

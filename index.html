@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=20260531-premium-foundation" />
+    <link rel="stylesheet" href="styles.css?v=20260607-tester-ready" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -155,6 +155,17 @@
         </div>
       </section>
 
+      <section class="daily start-here-section" id="startHere" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Start Here</p>
+          <h2>Test your first walk</h2>
+          <p class="section-copy">
+            Use this short checklist to try the main parts of the app before exploring deeper.
+          </p>
+        </div>
+        <div class="start-checklist" id="startChecklist"></div>
+      </section>
+
       <section class="daily locked-section" id="lockedBenefits">
         <div class="section-heading">
           <p class="eyebrow">Free Account Required</p>
@@ -245,10 +256,6 @@
                   <button class="read-passage-button" id="readPassageButton" type="button">Read Passage Aloud</button>
                 </div>
                 <div class="read-passage-controls">
-                  <label>
-                    Voice
-                    <select id="passageVoiceSelect"></select>
-                  </label>
                   <label>
                     Speed
                     <input id="passageRateInput" type="range" min="0.7" max="1.2" step="0.05" value="0.9" />
@@ -581,10 +588,11 @@
       </section>
 
       <nav class="mobile-app-nav" id="mobileAppNav" aria-label="App sections" hidden>
+        <a href="#account">Account</a>
         <a href="#today">Today</a>
         <a href="#themes">Focus</a>
-        <a href="#notesLibrary">Notes</a>
         <a href="#community">Community</a>
+        <a href="#premium">Premium</a>
       </nav>
 
       <section class="daily" id="feedback" hidden>
@@ -601,6 +609,14 @@
             Feedback type
             <select id="feedbackType">
               <option value="general">General feedback</option>
+              <option value="login">Login or account issue</option>
+              <option value="reminder">Reminder or notification issue</option>
+              <option value="confusing">Something was confusing</option>
+              <option value="mobile">Mobile layout issue</option>
+              <option value="read-aloud">Read aloud issue</option>
+              <option value="premium-preview">Premium preview feedback</option>
+              <option value="bug">Text, image, or button problem</option>
+              <option value="idea">Feature idea</option>
               <option value="account">Account help</option>
               <option value="focus">Daily focus</option>
               <option value="community">Community</option>
@@ -608,7 +624,7 @@
           </label>
           <label>
             Feedback
-            <textarea id="feedbackText" placeholder="What would you like the admin team to know?"></textarea>
+            <textarea id="feedbackText" placeholder="What were you trying to do, what happened, and what device/browser were you using?"></textarea>
           </label>
           <button class="copy-button" type="submit">Send Feedback</button>
           <p class="copy-status" id="feedbackStatus" role="status" aria-live="polite"></p>
@@ -743,6 +759,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260604-read-passage-voice"></script>
+    <script src="app.js?v=20260607-tester-ready"></script>
   </body>
 </html>

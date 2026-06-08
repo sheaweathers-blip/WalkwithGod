@@ -561,6 +561,7 @@ const serverWarning = document.querySelector("#serverWarning");
 const lockedBenefits = document.querySelector("#lockedBenefits");
 const gatedSections = [
   document.querySelector("#today"),
+  document.querySelector("#startHere"),
   document.querySelector("#themes"),
   document.querySelector("#notesLibrary"),
   document.querySelector("#community"),
@@ -581,6 +582,7 @@ const favoriteCount = document.querySelector("#favoriteCount");
 const continueTodayButton = document.querySelector("#continueTodayButton");
 const quickCompleteButton = document.querySelector("#quickCompleteButton");
 const todayStatus = document.querySelector("#todayStatus");
+const startChecklist = document.querySelector("#startChecklist");
 const accountStatus = document.querySelector("#accountStatus");
 const accountHeading = document.querySelector("#accountHeading");
 const accountCopy = document.querySelector("#accountCopy");
@@ -615,7 +617,6 @@ const scriptureText = document.querySelector("#scriptureText");
 const verseText = document.querySelector("#verseText");
 const readPassageButton = document.querySelector("#readPassageButton");
 const readPassageStatus = document.querySelector("#readPassageStatus");
-const passageVoiceSelect = document.querySelector("#passageVoiceSelect");
 const passageRateInput = document.querySelector("#passageRateInput");
 const passagePitchInput = document.querySelector("#passagePitchInput");
 const favoriteVerseButton = document.querySelector("#favoriteVerseButton");
@@ -983,6 +984,85 @@ function renderToday() {
   quickCompleteButton.disabled = !focus || completedSet(focus.id).has(dayIndex);
 }
 
+function renderStartHere() {
+  if (!startChecklist) return;
+  const hasFocus = Boolean(activeFocus());
+  const completedAnyDay = Object.values(state.completed).some((set) => set.size > 0);
+  const hasNote = Object.values(state.notes).some((text) => String(text || "").trim());
+  const hasReminder = localStorage.getItem("walkWithGodReminderSaved") === "true";
+  const hasCommunity = state.community.some((entry) => entry.userId === state.user?.id || entry.userName === state.user?.name);
+  const items = [
+    {
+      done: Boolean(state.user),
+      title: "Create or log in to your free account",
+      copy: "You are signed in and ready to test.",
+      href: "#account",
+      action: "Account"
+    },
+    {
+      done: hasFocus,
+      title: "Choose a daily focus",
+      copy: "Open the Focus Library and select a theme that interests you.",
+      href: "#themes",
+      action: "Choose Focus"
+    },
+    {
+      done: completedAnyDay,
+      title: "Complete one day",
+      copy: "Read the passage, try the active time with God, and mark the day complete.",
+      href: "#themes",
+      action: "Continue Day"
+    },
+    {
+      done: hasNote,
+      title: "Save a private note",
+      copy: "Add a short reflection or check-in so you can test the notes library.",
+      href: "#notesLibrary",
+      action: "View Notes"
+    },
+    {
+      done: hasCommunity,
+      title: "Try community or prayer requests",
+      copy: "Post a check-in, react/comment, or open prayer requests.",
+      href: "#community",
+      action: "Community"
+    },
+    {
+      done: hasReminder,
+      title: "Review reminder settings",
+      copy: "Open profile reminders and try the reminder options that apply to your device.",
+      href: "#account",
+      action: "Settings"
+    },
+    {
+      done: false,
+      title: "Open premium previews",
+      copy: "Expand Breathwork, Yoga, Bible Study, or Walking and tell us what sounds useful.",
+      href: "#premium",
+      action: "Premium"
+    },
+    {
+      done: false,
+      title: "Send tester feedback",
+      copy: "Tell us what worked, what broke, and what felt confusing.",
+      href: "#feedback",
+      action: "Feedback"
+    }
+  ];
+  startChecklist.innerHTML = items
+    .map((item) => `
+      <article class="start-check-item ${item.done ? "is-done" : ""}">
+        <span class="check-dot" aria-hidden="true">${item.done ? "Done" : ""}</span>
+        <div>
+          <strong>${escapeHtml(item.title)}</strong>
+          <p>${escapeHtml(item.copy)}</p>
+        </div>
+        <a class="quiet-button" href="${item.href}">${escapeHtml(item.action)}</a>
+      </article>
+    `)
+    .join("");
+}
+
 function currentFavoriteId() {
   return `${state.activeId}:${state.activeDayIndex}`;
 }
@@ -1215,39 +1295,37 @@ function saveSpeechSettings() {
 }
 
 function populateVoiceOptions() {
-  if (!passageVoiceSelect) return;
-  if (!speechSupported()) {
-    passageVoiceSelect.innerHTML = '<option value="">Not supported</option>';
-    passageVoiceSelect.disabled = true;
+  if (!speechSupported()) return;
+  const voices = window.speechSynthesis.getVoices();
+  const googleUkFemaleVoice = voices.find((voice) => voice.name.toLowerCase() === "google uk english female");
+  if (!voices.length) {
     return;
   }
-  const voices = window.speechSynthesis.getVoices();
-  passageVoiceSelect.disabled = !voices.length;
-  passageVoiceSelect.innerHTML = voices.length
-    ? voices
-        .map((voice) => `<option value="${escapeHtml(voice.voiceURI)}">${escapeHtml(voice.name)} (${escapeHtml(voice.lang)})</option>`)
-        .join("")
-    : '<option value="">Loading voices...</option>';
-  const savedVoice = voices.find((voice) => voice.voiceURI === state.speechSettings.voiceURI);
-  const defaultVoice = savedVoice || voices.find((voice) => voice.default) || voices[0];
-  if (defaultVoice) {
-    state.speechSettings.voiceURI = defaultVoice.voiceURI;
-    passageVoiceSelect.value = defaultVoice.voiceURI;
+  if (!googleUkFemaleVoice) {
+    state.speechSettings.voiceURI = "";
     saveSpeechSettings();
+    updateReadPassageButton();
+    return;
   }
+  state.speechSettings.voiceURI = googleUkFemaleVoice.voiceURI;
+  saveSpeechSettings();
+  updateReadPassageButton();
 }
 
 function selectedSpeechVoice() {
   if (!speechSupported()) return null;
-  return window.speechSynthesis.getVoices().find((voice) => voice.voiceURI === state.speechSettings.voiceURI) || null;
+  return window.speechSynthesis.getVoices().find((voice) => voice.voiceURI === state.speechSettings.voiceURI && voice.name.toLowerCase() === "google uk english female") || null;
 }
 
 function updateReadPassageButton() {
   if (!readPassageButton) return;
   readPassageButton.textContent = state.isReadingPassage ? "Stop Reading" : "Read Passage Aloud";
-  readPassageButton.disabled = !state.currentPassageText || !speechSupported();
+  const hasRequiredVoice = !speechSupported() || Boolean(selectedSpeechVoice());
+  readPassageButton.disabled = !state.currentPassageText || !speechSupported() || !hasRequiredVoice;
   if (!speechSupported()) {
     readPassageStatus.textContent = "Reading aloud is not supported on this browser.";
+  } else if (!hasRequiredVoice) {
+    readPassageStatus.textContent = "Google UK English Female is not available on this browser/device.";
   } else if (!state.currentPassageText && !state.isReadingPassage) {
     readPassageStatus.textContent = "Passage will be available to read aloud after it loads.";
   }
@@ -1276,7 +1354,12 @@ function readPassageAloud() {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(state.currentPassageText);
   const voice = selectedSpeechVoice();
-  if (voice) utterance.voice = voice;
+  if (!voice) {
+    readPassageStatus.textContent = "Google UK English Female is not available on this browser/device.";
+    updateReadPassageButton();
+    return;
+  }
+  utterance.voice = voice;
   utterance.rate = Number(state.speechSettings.rate) || 0.9;
   utterance.pitch = Number(state.speechSettings.pitch) || 1;
   utterance.onend = () => {
@@ -1752,6 +1835,7 @@ function render() {
   readerEmpty.hidden = Boolean(focus);
   readerContent.hidden = !focus;
   renderToday();
+  renderStartHere();
   renderFocusList();
   renderPrayerBreath();
   renderReminder();
@@ -1815,6 +1899,7 @@ function render() {
   renderPrayerBreath();
   renderFavorites();
   renderToday();
+  renderStartHere();
   renderReminder();
   renderMode();
   renderCommunity();
@@ -1895,16 +1980,6 @@ if (walkingList) {
 
 if (readPassageButton) {
   readPassageButton.addEventListener("click", readPassageAloud);
-}
-
-if (passageVoiceSelect) {
-  passageVoiceSelect.addEventListener("change", () => {
-    state.speechSettings.voiceURI = passageVoiceSelect.value;
-    saveSpeechSettings();
-    if (state.isReadingPassage) {
-      stopPassageAudio("Voice changed. Press read to start again.");
-    }
-  });
 }
 
 if (passageRateInput) {
@@ -2021,6 +2096,7 @@ reminderForm.addEventListener("submit", (event) => {
   event.preventDefault();
   state.reminder = reminderFromForm();
   saveReminder();
+  localStorage.setItem("walkWithGodReminderSaved", "true");
   if (!state.user) {
     reminderStatus.textContent = "Reminder saved on this device. Sign in to enable push delivery.";
     return;
