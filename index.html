@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=20260607-tester-ready" />
+    <link rel="stylesheet" href="styles.css?v=20260608-twilio-compliance" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -33,6 +33,33 @@
             <a class="primary-link" href="#account">Get Started Free</a>
           </div>
         </div>
+      </section>
+
+      <section class="daily public-info-section" id="about">
+        <div class="section-heading">
+          <p class="eyebrow">About Walk With God</p>
+          <h2>Daily Scripture, prayer, movement, and community</h2>
+          <p class="section-copy">
+            Walk With God helps users build a daily faith rhythm through Bible-focused reading plans, active time with God, private notes, prayer requests, community encouragement, and optional reminders.
+          </p>
+        </div>
+        <div class="public-info-grid">
+          <article>
+            <strong>Free daily faith tools</strong>
+            <p>Create a free account to choose a focus, read Scripture, save notes, track progress, and join prayer/community features.</p>
+          </article>
+          <article>
+            <strong>Optional reminders</strong>
+            <p>Users can choose app, email, or text reminders. Text reminders are only sent when a user chooses text reminders and provides a phone number.</p>
+          </article>
+          <article>
+            <strong>Contact</strong>
+            <p>Email <a href="mailto:walkedwithgodtoday@gmail.com">walkedwithgodtoday@gmail.com</a> for help, account questions, or SMS support.</p>
+          </article>
+        </div>
+        <p class="sms-public-note">
+          SMS notice: By choosing text reminders, users agree to receive reminder text messages from Walk With God. Message and data rates may apply. Message frequency varies based on reminder settings. Reply STOP to opt out and HELP for help.
+        </p>
       </section>
 
       <section class="daily account-section" id="account">
@@ -115,6 +142,10 @@
                   Text message
                 </label>
               </fieldset>
+              <label class="sms-consent-check">
+                <input id="smsConsent" type="checkbox" />
+                I agree to receive reminder text messages from Walk With God at the phone number I provide. Message and data rates may apply. Message frequency varies based on my reminder settings. Reply STOP to opt out and HELP for help.
+              </label>
               <div class="form-grid">
                 <label>
                   Reminder email
@@ -759,6 +790,16 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260607-tester-ready"></script>
+    <footer class="site-footer">
+      <strong>Walk With God</strong>
+      <span>Contact: <a href="mailto:walkedwithgodtoday@gmail.com">walkedwithgodtoday@gmail.com</a></span>
+      <nav aria-label="Legal links">
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/sms-consent.html">SMS Consent</a>
+      </nav>
+    </footer>
+
+    <script src="app.js?v=20260608-twilio-compliance"></script>
   </body>
 </html>

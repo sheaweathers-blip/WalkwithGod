@@ -1150,6 +1150,42 @@ select:focus {
     linear-gradient(135deg, rgba(255, 252, 238, 0.96), rgba(221, 237, 229, 0.94));
 }
 
+.public-info-section {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(178, 138, 58, 0.22), transparent 30%),
+    linear-gradient(135deg, rgba(240, 248, 235, 0.98), rgba(218, 235, 224, 0.96));
+}
+
+.public-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.public-info-grid article,
+.sms-public-note {
+  padding: 16px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.public-info-grid strong {
+  color: var(--deep-green);
+}
+
+.public-info-grid p,
+.sms-public-note {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.sms-public-note {
+  margin: 16px 0 0;
+  font-weight: 750;
+}
+
 .locked-benefits-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1668,6 +1704,20 @@ select:focus {
   min-height: 0;
 }
 
+.sms-consent-check {
+  padding: 14px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.sms-consent-check input {
+  width: auto;
+  min-height: auto;
+}
+
 .admin-unlock-form input:focus,
 .auth-form input:focus,
 .add-focus-form input:focus,
@@ -2043,6 +2093,61 @@ select:focus {
   line-height: 1.48;
 }
 
+.site-footer {
+  max-width: 1240px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 24px clamp(18px, 4vw, 34px) 96px;
+  color: var(--muted);
+}
+
+.site-footer strong {
+  color: var(--deep-green);
+}
+
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.site-footer a,
+.legal-page a,
+.public-info-section a {
+  color: var(--green);
+  font-weight: 850;
+}
+
+.legal-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 64px) clamp(18px, 5vw, 42px);
+}
+
+.legal-page h1 {
+  font-size: clamp(2.5rem, 9vw, 4.6rem);
+}
+
+.legal-page h2 {
+  margin-top: 28px;
+  color: var(--deep-green);
+  font-size: 1.35rem;
+}
+
+.legal-page section {
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(31, 75, 59, 0.12);
+}
+
+.legal-page p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
 .reflection-form {
   display: grid;
   gap: 12px;
@@ -2093,6 +2198,7 @@ select:focus {
   .walking-layout,
   .day-layout,
   .form-grid,
+  .public-info-grid,
   .today-card,
   .guided-checkin,
   .read-passage-controls,

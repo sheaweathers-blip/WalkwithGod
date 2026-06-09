@@ -643,6 +643,7 @@ const reminderStatus = document.querySelector("#reminderStatus");
 const reminderPush = document.querySelector("#reminderPush");
 const reminderEmail = document.querySelector("#reminderEmail");
 const reminderSms = document.querySelector("#reminderSms");
+const smsConsent = document.querySelector("#smsConsent");
 const reminderEmailAddress = document.querySelector("#reminderEmailAddress");
 const reminderPhone = document.querySelector("#reminderPhone");
 const reminderSettingsPanel = document.querySelector("#reminderSettingsPanel");
@@ -1473,6 +1474,7 @@ function renderReminder() {
   reminderPush.checked = state.reminder.channels?.push !== false;
   reminderEmail.checked = Boolean(state.reminder.channels?.email);
   reminderSms.checked = Boolean(state.reminder.channels?.sms);
+  if (smsConsent) smsConsent.checked = localStorage.getItem("walkWithGodSmsConsent") === "true";
   reminderEmailAddress.value = state.reminder.email || state.user?.email || "";
   reminderPhone.value = state.reminder.phone || "";
   reminderStatus.textContent = state.user ? `Reminder set for ${reminderTime.value}.` : "Sign in to save reminders to your account and enable push.";
@@ -2094,9 +2096,14 @@ nextButton.addEventListener("click", () => {
 
 reminderForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (reminderSms.checked && smsConsent && !smsConsent.checked) {
+    reminderStatus.textContent = "Please agree to text reminder terms before saving SMS reminders.";
+    return;
+  }
   state.reminder = reminderFromForm();
   saveReminder();
   localStorage.setItem("walkWithGodReminderSaved", "true");
+  if (smsConsent?.checked) localStorage.setItem("walkWithGodSmsConsent", "true");
   if (!state.user) {
     reminderStatus.textContent = "Reminder saved on this device. Sign in to enable push delivery.";
     return;
