@@ -1060,6 +1060,13 @@ function renderStartHere() {
       action: "Feedback"
     }
   ];
+  const checklistSection = startChecklist.closest("#startHere");
+  const allDone = items.every((item) => item.done);
+  if (checklistSection) checklistSection.hidden = allDone;
+  if (allDone) {
+    startChecklist.innerHTML = "";
+    return;
+  }
   startChecklist.innerHTML = items
     .map((item) => `
       <article class="start-check-item ${item.done ? "is-done" : ""}">
