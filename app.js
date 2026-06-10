@@ -390,6 +390,11 @@ const defaultFocuses = [
 
 const implementationText = "Take a moment to check in before moving on. Completion should mean you spent focused time with God, not just skimmed the reading.";
 const adminCode = "walkwithgod";
+const reminderChannelAvailability = {
+  push: true,
+  email: false,
+  sms: false
+};
 const premiumBreathworkRoutines = [
   ["Day 1", "Simply Breathe", "3 minutes", "4-in, 4-out", "Awareness", "Psalm 46:10", "Today, simply notice the breath. Inhale for 4, exhale for 4. Nothing to fix, nothing to achieve, just breathe with God.", "Soft morning light over a walking path", "Slow, reassuring, spacious voice with pauses after each count.", "Lord, teach me to begin with You, one quiet breath at a time."],
   ["Day 2", "Let Go", "3 minutes", "4-in, 6-out", "Releasing tension", "1 Peter 5:7", "Inhale gently for 4. Exhale slowly for 6. With every longer exhale, release what you cannot control into God's care.", "Flowing river or slow clouds", "Warm and calm, emphasizing release on each exhale.", "Father, I give You what I was not meant to carry alone."],
@@ -1030,8 +1035,8 @@ function renderStartHere() {
     },
     {
       done: hasReminder,
-      title: "Review reminder settings",
-      copy: "Open profile reminders and try the reminder options that apply to your device.",
+      title: "Review app reminder settings",
+      copy: "App notifications are ready to test. Email and text reminders are paused while business messaging setup is completed.",
       href: "#account",
       action: "Settings"
     },
@@ -1472,12 +1477,14 @@ function renderReminder() {
   reminderTime.value = state.reminder.time || "07:00";
   reminderMessage.value = state.reminder.message || "Spend uninterrupted time with God today.";
   reminderPush.checked = state.reminder.channels?.push !== false;
-  reminderEmail.checked = Boolean(state.reminder.channels?.email);
-  reminderSms.checked = Boolean(state.reminder.channels?.sms);
+  reminderEmail.checked = false;
+  reminderSms.checked = false;
+  reminderEmail.disabled = !reminderChannelAvailability.email;
+  reminderSms.disabled = !reminderChannelAvailability.sms;
   if (smsConsent) smsConsent.checked = localStorage.getItem("walkWithGodSmsConsent") === "true";
   reminderEmailAddress.value = state.reminder.email || state.user?.email || "";
   reminderPhone.value = state.reminder.phone || "";
-  reminderStatus.textContent = state.user ? `Reminder set for ${reminderTime.value}.` : "Sign in to save reminders to your account and enable push.";
+  reminderStatus.textContent = state.user ? `App reminder settings ready for ${reminderTime.value}. Email and text are paused during setup.` : "Sign in to save app reminders to your account and enable push.";
 }
 
 function renderMode() {
@@ -1493,8 +1500,8 @@ function reminderFromForm() {
     message: reminderMessage.value.trim() || "Spend uninterrupted time with God today.",
     channels: {
       push: reminderPush.checked,
-      email: reminderEmail.checked,
-      sms: reminderSms.checked
+      email: reminderChannelAvailability.email && reminderEmail.checked,
+      sms: reminderChannelAvailability.sms && reminderSms.checked
     },
     email: reminderEmailAddress.value.trim(),
     phone: reminderPhone.value.trim()
@@ -2096,7 +2103,7 @@ nextButton.addEventListener("click", () => {
 
 reminderForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (reminderSms.checked && smsConsent && !smsConsent.checked) {
+  if (reminderChannelAvailability.sms && reminderSms.checked && smsConsent && !smsConsent.checked) {
     reminderStatus.textContent = "Please agree to text reminder terms before saving SMS reminders.";
     return;
   }
@@ -2110,7 +2117,7 @@ reminderForm.addEventListener("submit", (event) => {
   }
   apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) })
     .then(() => {
-      reminderStatus.textContent = `Reminder saved for ${state.reminder.time}.`;
+      reminderStatus.textContent = `App reminder saved for ${state.reminder.time}. Email and text will be enabled after setup is complete.`;
       reminderSettingsPanel.hidden = true;
     })
     .catch((error) => {
@@ -2153,6 +2160,7 @@ testPushButton.addEventListener("click", async () => {
   try {
     if (!state.user) throw new Error("Sign in before testing reminders.");
     state.reminder = reminderFromForm();
+    state.reminder.channels = { push: true, email: false, sms: false };
     saveReminder();
     await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
     const result = await apiFetch("/api/push/test", { method: "POST", body: JSON.stringify({}) });

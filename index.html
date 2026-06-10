@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=20260608-twilio-compliance" />
+    <link rel="stylesheet" href="styles.css?v=20260609-reminder-status" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -50,7 +50,7 @@
           </article>
           <article>
             <strong>Optional reminders</strong>
-            <p>Users can choose app, email, or text reminders. Text reminders are only sent when a user chooses text reminders and provides a phone number.</p>
+            <p>App notifications are available for testing now. Email and text reminders are planned, but temporarily paused while business messaging setup and verification are completed.</p>
           </article>
           <article>
             <strong>Contact</strong>
@@ -119,6 +119,10 @@
               <h3>Daily Reminder</h3>
             </div>
             <form class="reminder-form" id="reminderForm">
+              <div class="reminder-availability-note">
+                <strong>Testing note:</strong>
+                App notifications are available right now. Email and text reminders are temporarily paused while SendGrid/Twilio business verification is completed.
+              </div>
               <label>
                 Reminder time
                 <input id="reminderTime" type="time" />
@@ -133,16 +137,16 @@
                   <input id="reminderPush" type="checkbox" />
                   App notification
                 </label>
-                <label>
-                  <input id="reminderEmail" type="checkbox" />
-                  Email
+                <label class="reminder-channel-disabled">
+                  <input id="reminderEmail" type="checkbox" disabled />
+                  Email <span>Paused</span>
                 </label>
-                <label>
-                  <input id="reminderSms" type="checkbox" />
-                  Text message
+                <label class="reminder-channel-disabled">
+                  <input id="reminderSms" type="checkbox" disabled />
+                  Text message <span>Pending Twilio</span>
                 </label>
               </fieldset>
-              <label class="sms-consent-check">
+              <label class="sms-consent-check" id="smsConsentWrapper" hidden>
                 <input id="smsConsent" type="checkbox" />
                 I agree to receive reminder text messages from Walk With God at the phone number I provide. Message and data rates may apply. Message frequency varies based on my reminder settings. Reply STOP to opt out and HELP for help.
               </label>
@@ -800,6 +804,6 @@
       </nav>
     </footer>
 
-    <script src="app.js?v=20260608-twilio-compliance"></script>
+    <script src="app.js?v=20260609-reminder-status"></script>
   </body>
 </html>

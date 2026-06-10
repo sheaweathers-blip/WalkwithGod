@@ -1,14 +1,14 @@
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open("walk-with-god-v8").then((cache) =>
+    caches.open("walk-with-god-v9").then((cache) =>
       cache.addAll([
         "/",
         "/index.html",
         "/privacy.html",
         "/terms.html",
         "/sms-consent.html",
-        "/styles.css?v=20260608-twilio-compliance",
-        "/app.js?v=20260608-twilio-compliance",
+        "/styles.css?v=20260609-reminder-status",
+        "/app.js?v=20260609-reminder-status",
         "/manifest.json",
         "/assets/daily-devotion.png",
         "/assets/walk-with-god-logo.png",
@@ -23,7 +23,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v8").map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v9").map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -35,7 +35,7 @@ self.addEventListener("fetch", (event) => {
       .then((response) => {
         if (!response || !response.ok) return response;
         const copy = response.clone();
-        caches.open("walk-with-god-v8").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
+        caches.open("walk-with-god-v9").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
         return response;
       })
       .catch(() => caches.match(event.request).then((cached) => {
