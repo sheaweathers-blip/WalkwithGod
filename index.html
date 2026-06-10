@@ -8,8 +8,9 @@
     <meta name="theme-color" content="#1f4b3b" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
-    <link rel="apple-touch-icon" href="/assets/icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=20260609-reminder-status" />
+    <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260609-logo-fallback" />
+    <script src="logo-fallback.js?v=20260609-logo-fallback"></script>
+    <link rel="stylesheet" href="styles.css?v=20260609-logo-fallback" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -18,11 +19,11 @@
     </div>
     <main class="app-shell">
       <section class="hero" aria-label="Walk With God overview">
-        <img class="hero-image" src="/assets/daily-devotion.png?v=20260529" alt="" onerror="this.hidden=true; this.parentElement.classList.add('hero-fallback');" />
+        <img class="hero-image" src="/assets/daily-devotion.png?v=20260609-logo-fallback" alt="" onerror="this.hidden=true; this.parentElement.classList.add('hero-fallback');" />
         <div class="hero-scrim"></div>
         <div class="hero-content">
           <span class="brand-logo-shell" aria-label="Walk With God logo">
-            <img class="brand-logo" src="/assets/walk-with-god-logo.png?v=20260531" alt="" onerror="this.parentElement.hidden=true;" />
+            <img class="brand-logo" src="/assets/walk-with-god-logo.png?v=20260609-logo-fallback" alt="Walk With God logo" onerror="window.WWGUseLogoFallback?.(this) || (this.parentElement.hidden = true);" />
           </span>
           <p class="eyebrow">Daily Bible Focuses</p>
           <h1>Walk With God</h1>
@@ -804,6 +805,6 @@
       </nav>
     </footer>
 
-    <script src="app.js?v=20260609-reminder-status"></script>
+    <script src="app.js?v=20260609-logo-fallback"></script>
   </body>
 </html>
