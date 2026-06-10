@@ -819,10 +819,12 @@ function applyServerProgress(progress) {
 }
 
 function applyServerNotes(notes) {
-  state.notes = {};
+  const mergedNotes = { ...state.notes };
   for (const item of notes || []) {
-    state.notes[`${item.focusId}:${item.dayIndex}`] = item.text;
+    mergedNotes[`${item.focusId}:${item.dayIndex}`] = item.text;
   }
+  state.notes = mergedNotes;
+  saveNotes();
 }
 
 async function loadServerState() {
@@ -843,7 +845,8 @@ async function loadServerState() {
       message: reminderResult.reminder.message,
       channels: reminderResult.reminder.channels || { push: true, email: false, sms: false },
       email: reminderResult.reminder.email || "",
-      phone: reminderResult.reminder.phone || ""
+      phone: reminderResult.reminder.phone || "",
+      timeZone: reminderResult.reminder.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York"
     };
     saveReminder();
   }
@@ -994,9 +997,11 @@ function renderStartHere() {
   if (!startChecklist) return;
   const hasFocus = Boolean(activeFocus());
   const completedAnyDay = Object.values(state.completed).some((set) => set.size > 0);
-  const hasNote = Object.values(state.notes).some((text) => String(text || "").trim());
+  const hasNote = noteEntries().some((entry) => notePreview(entry).trim());
   const hasReminder = localStorage.getItem("walkWithGodReminderSaved") === "true";
   const hasCommunity = state.community.some((entry) => entry.userId === state.user?.id || entry.userName === state.user?.name);
+  const hasOpenedPremium = localStorage.getItem("walkWithGodPremiumPreviewOpened") === "true" || Object.values(state.premiumPanels).some(Boolean);
+  const hasSentFeedback = localStorage.getItem("walkWithGodFeedbackSent") === "true";
   const items = [
     {
       done: Boolean(state.user),
@@ -1041,14 +1046,14 @@ function renderStartHere() {
       action: "Settings"
     },
     {
-      done: false,
+      done: hasOpenedPremium,
       title: "Open premium previews",
       copy: "Expand Breathwork, Yoga, Bible Study, or Walking and tell us what sounds useful.",
       href: "#premium",
       action: "Premium"
     },
     {
-      done: false,
+      done: hasSentFeedback,
       title: "Send tester feedback",
       copy: "Tell us what worked, what broke, and what felt confusing.",
       href: "#feedback",
@@ -1088,17 +1093,29 @@ function renderFavorites() {
 }
 
 function noteEntries() {
-  return Object.entries(state.notes)
-    .filter(([, text]) => text && text.trim())
-    .map(([key, text]) => {
+  const keys = [...new Set([...Object.keys(state.notes), ...Object.keys(state.checkins)])];
+  return keys
+    .map((key) => {
+      const text = state.notes[key] || "";
+      const checkin = state.checkins[key] || {};
       const [focusId, dayIndexText] = key.split(":");
       const dayIndex = Number(dayIndexText);
       const focus = state.focuses.find((item) => item.id === focusId);
       const day = focus?.days[dayIndex];
-      return { key, focus, focusId, dayIndex, day, text };
+      return { key, focus, focusId, dayIndex, day, text, checkin };
     })
     .filter((entry) => entry.focus && entry.day)
+    .filter((entry) => entry.text.trim() || entry.checkin.stoodOut || entry.checkin.invitation || entry.checkin.bless)
     .sort((a, b) => a.focus.title.localeCompare(b.focus.title) || a.dayIndex - b.dayIndex);
+}
+
+function notePreview(entry) {
+  const parts = [];
+  if (entry.text.trim()) parts.push(entry.text.trim());
+  if (entry.checkin.stoodOut) parts.push(`What stood out: ${entry.checkin.stoodOut}`);
+  if (entry.checkin.invitation) parts.push(`God may be inviting me to: ${entry.checkin.invitation}`);
+  if (entry.checkin.bless) parts.push(`Who I can bless: ${entry.checkin.bless}`);
+  return parts.join("\n");
 }
 
 function renderNotesLibrary() {
@@ -1111,7 +1128,7 @@ function renderNotesLibrary() {
               <p class="block-label">${escapeHtml(entry.focus.title)} - ${escapeHtml(entry.day[0])}</p>
               <h3>${escapeHtml(entry.day[1])}</h3>
               <p class="scripture-reference">${escapeHtml(entry.day[2])}</p>
-              <p>${escapeHtml(entry.text)}</p>
+              <p>${escapeHtml(notePreview(entry))}</p>
             </div>
             <button class="quiet-button open-note-day" type="button" data-focus-id="${escapeHtml(entry.focusId)}" data-day-index="${entry.dayIndex}">Open Day</button>
           </article>
@@ -1504,7 +1521,8 @@ function reminderFromForm() {
       sms: reminderChannelAvailability.sms && reminderSms.checked
     },
     email: reminderEmailAddress.value.trim(),
-    phone: reminderPhone.value.trim()
+    phone: reminderPhone.value.trim(),
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York"
   };
 }
 
@@ -2012,8 +2030,10 @@ document.addEventListener("click", (event) => {
   if (!button) return;
   const panelId = button.dataset.premiumToggle;
   state.premiumPanels[panelId] = !state.premiumPanels[panelId];
+  if (state.premiumPanels[panelId]) localStorage.setItem("walkWithGodPremiumPreviewOpened", "true");
   savePremiumPanels();
   renderPremiumPanels();
+  renderStartHere();
 });
 
 completeButton.addEventListener("click", () => {
@@ -2070,25 +2090,38 @@ favoriteVerseButton.addEventListener("click", () => {
 
 saveNoteButton.addEventListener("click", () => {
   const focus = activeFocus();
-  state.notes[dayKey()] = noteInput.value.trim();
-  state.checkins[dayKey()] = {
+  if (!focus) {
+    noteStatus.textContent = "Choose a focus before saving a note.";
+    return;
+  }
+  const key = dayKey();
+  const noteText = noteInput.value.trim();
+  const checkin = {
     stoodOut: stoodOutInput.value.trim(),
     invitation: invitationInput.value.trim(),
     bless: blessInput.value.trim()
   };
+  if (!noteText && !checkin.stoodOut && !checkin.invitation && !checkin.bless) {
+    noteStatus.textContent = "Add a note or check-in detail before saving.";
+    return;
+  }
+  state.notes[key] = noteText;
+  state.checkins[key] = checkin;
   saveNotes();
   saveCheckins();
+  renderNotesLibrary();
+  renderStartHere();
   if (!state.user) {
     noteStatus.textContent = "Note saved on this device. Sign in to sync it.";
     return;
   }
+  const serverText = noteText || notePreview({ text: noteText, checkin });
   apiFetch("/api/notes", {
     method: "POST",
-    body: JSON.stringify({ focusId: focus.id, dayIndex: state.activeDayIndex, text: noteInput.value.trim() })
+    body: JSON.stringify({ focusId: focus.id, dayIndex: state.activeDayIndex, text: serverText })
   })
     .then(() => {
       noteStatus.textContent = "Note saved to your account.";
-      renderNotesLibrary();
     })
     .catch((error) => {
       noteStatus.textContent = error.message;
@@ -2101,28 +2134,31 @@ nextButton.addEventListener("click", () => {
   render();
 });
 
-reminderForm.addEventListener("submit", (event) => {
+reminderForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (reminderChannelAvailability.sms && reminderSms.checked && smsConsent && !smsConsent.checked) {
     reminderStatus.textContent = "Please agree to text reminder terms before saving SMS reminders.";
     return;
   }
-  state.reminder = reminderFromForm();
-  saveReminder();
-  localStorage.setItem("walkWithGodReminderSaved", "true");
-  if (smsConsent?.checked) localStorage.setItem("walkWithGodSmsConsent", "true");
-  if (!state.user) {
-    reminderStatus.textContent = "Reminder saved on this device. Sign in to enable push delivery.";
-    return;
+  try {
+    state.reminder = reminderFromForm();
+    saveReminder();
+    localStorage.setItem("walkWithGodReminderSaved", "true");
+    if (smsConsent?.checked) localStorage.setItem("walkWithGodSmsConsent", "true");
+    if (!state.user) {
+      reminderStatus.textContent = "Reminder saved on this device. Sign in to enable app notifications.";
+      return;
+    }
+    if (state.reminder.channels.push) {
+      reminderStatus.textContent = "Saving reminder and enabling app notifications...";
+      await enableAppNotifications();
+    }
+    await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
+    reminderStatus.textContent = `App reminder saved for ${state.reminder.time}. Email and text will be enabled after setup is complete.`;
+    renderStartHere();
+  } catch (error) {
+    reminderStatus.textContent = error.message;
   }
-  apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) })
-    .then(() => {
-      reminderStatus.textContent = `App reminder saved for ${state.reminder.time}. Email and text will be enabled after setup is complete.`;
-      reminderSettingsPanel.hidden = true;
-    })
-    .catch((error) => {
-      reminderStatus.textContent = error.message;
-    });
 });
 
 function urlBase64ToUint8Array(base64String) {
@@ -2132,25 +2168,30 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
 
+async function enableAppNotifications() {
+  if (!state.user) throw new Error("Sign in before enabling app notifications.");
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) throw new Error("This browser does not support app notifications.");
+  if (!("Notification" in window)) throw new Error("This browser does not support notification permission.");
+  const permission = await Notification.requestPermission();
+  if (permission !== "granted") throw new Error("Notification permission was not granted.");
+  const keyResult = await apiFetch("/api/push/public-key");
+  if (!keyResult.publicKey) throw new Error("App notification keys are not ready on the server.");
+  const registration = await navigator.serviceWorker.register("/service-worker.js");
+  const existingSubscription = await registration.pushManager.getSubscription();
+  if (existingSubscription) {
+    await existingSubscription.unsubscribe();
+  }
+  const subscription = await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(keyResult.publicKey)
+  });
+  return apiFetch("/api/push/subscribe", { method: "POST", body: JSON.stringify({ subscription }) });
+}
+
 enablePushButton.addEventListener("click", async () => {
   try {
-    if (!state.user) throw new Error("Sign in before enabling push notifications.");
-    if (!("serviceWorker" in navigator) || !("PushManager" in window)) throw new Error("This browser does not support push notifications.");
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") throw new Error("Notification permission was not granted.");
-    const keyResult = await apiFetch("/api/push/public-key");
-    if (!keyResult.publicKey) throw new Error("Push keys are not ready. Run npm install and restart the server.");
-    const registration = await navigator.serviceWorker.register("/service-worker.js");
-    const existingSubscription = await registration.pushManager.getSubscription();
-    if (existingSubscription) {
-      await existingSubscription.unsubscribe();
-    }
-    const subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(keyResult.publicKey)
-    });
-    const result = await apiFetch("/api/push/subscribe", { method: "POST", body: JSON.stringify({ subscription }) });
-    reminderStatus.textContent = result.pushReady ? "Push notifications enabled." : "Subscription saved, but install web-push on the server to send notifications.";
+    const result = await enableAppNotifications();
+    reminderStatus.textContent = result.pushReady ? "App notifications enabled on this device." : "Subscription saved, but app notifications are not ready on the server.";
   } catch (error) {
     reminderStatus.textContent = error.message;
   }
@@ -2171,7 +2212,7 @@ testPushButton.addEventListener("click", async () => {
     });
     reminderStatus.textContent = channelResults.length
       ? channelResults.join(" | ")
-      : "No reminder channel was selected for this test.";
+      : "No app notification device is enabled. Click Save Reminder or Enable Push first.";
   } catch (error) {
     reminderStatus.textContent = error.message;
   }
@@ -2390,7 +2431,9 @@ feedbackForm.addEventListener("submit", (event) => {
   })
     .then(() => {
       feedbackText.value = "";
+      localStorage.setItem("walkWithGodFeedbackSent", "true");
       feedbackStatus.textContent = "Feedback sent to the admin team.";
+      renderStartHere();
     })
     .catch((error) => {
       feedbackStatus.textContent = error.message;
