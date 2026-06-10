@@ -563,6 +563,7 @@ const themeList = document.querySelector("#themeList");
 const breatheInText = document.querySelector("#breatheInText");
 const breatheOutText = document.querySelector("#breatheOutText");
 const serverWarning = document.querySelector("#serverWarning");
+const aboutSection = document.querySelector("#about");
 const lockedBenefits = document.querySelector("#lockedBenefits");
 const gatedSections = [
   document.querySelector("#today"),
@@ -937,6 +938,7 @@ function renderAccount() {
 
 function renderAccessGate() {
   const isSignedIn = Boolean(state.user);
+  aboutSection.hidden = isSignedIn;
   lockedBenefits.hidden = isSignedIn;
   for (const section of gatedSections) {
     if (section) section.hidden = !isSignedIn;
