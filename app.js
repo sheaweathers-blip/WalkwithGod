@@ -795,6 +795,8 @@ const adminResetPasswordButton = document.querySelector("#adminResetPasswordButt
 const adminSupportStatus = document.querySelector("#adminSupportStatus");
 const adminFeedbackList = document.querySelector("#adminFeedbackList");
 const adminReportList = document.querySelector("#adminReportList");
+const adminCommunityList = document.querySelector("#adminCommunityList");
+const adminPrayerList = document.querySelector("#adminPrayerList");
 const premiumPanelLabels = {
   premiumOverview: "Premium Preview",
   breathwork: "Breathwork Prayer",
@@ -1687,6 +1689,16 @@ function renderCommunity() {
                         <div class="community-comment">
                           <strong>${escapeHtml(comment.userName || "Community member")}</strong>
                           <p>${escapeHtml(comment.text)}</p>
+                          <div class="comment-reaction-row">
+                            ${(() => {
+                              const commentCounts = reactionCounts(comment.reactions || []);
+                              return `
+                                <button class="reaction-button comment-reaction-button" type="button" data-comment-id="${escapeHtml(comment.id || "")}" data-reaction="praying">Praying ${commentCounts.praying || 0}</button>
+                                <button class="reaction-button comment-reaction-button" type="button" data-comment-id="${escapeHtml(comment.id || "")}" data-reaction="encouraged">Encouraged ${commentCounts.encouraged || 0}</button>
+                                <button class="reaction-button comment-reaction-button" type="button" data-comment-id="${escapeHtml(comment.id || "")}" data-reaction="amen">Amen ${commentCounts.amen || 0}</button>
+                              `;
+                            })()}
+                          </div>
                         </div>
                       `)
                       .join("")
@@ -1968,21 +1980,55 @@ function renderAdminDashboard(data = null) {
         `)
         .join("")
     : '<p class="empty-feed">No reports yet.</p>';
+
+  if (adminCommunityList) {
+    adminCommunityList.innerHTML = data.communityPosts.length
+      ? data.communityPosts
+          .map((post) => `
+            <article class="admin-item">
+              <strong>${escapeHtml(post.userName || "Community member")} - ${escapeHtml(post.dayLabel || "Community")}</strong>
+              <p>${escapeHtml(post.text)}</p>
+              <small>${escapeHtml(post.dayTitle || "General check-in")}</small>
+              <button class="quiet-button admin-delete-community-post" type="button" data-post-id="${escapeHtml(post.id)}">Remove Post</button>
+            </article>
+          `)
+          .join("")
+      : '<p class="empty-feed">No community posts yet.</p>';
+  }
+
+  if (adminPrayerList) {
+    adminPrayerList.innerHTML = data.prayerRequests.length
+      ? data.prayerRequests
+          .map((request) => `
+            <article class="admin-item">
+              <strong>${escapeHtml(request.userName || "Community member")}</strong>
+              <p>${escapeHtml(request.text)}</p>
+              <small>${request.prayedBy?.length || 0} people marked this as prayed</small>
+              <button class="quiet-button admin-delete-prayer-request" type="button" data-prayer-id="${escapeHtml(request.id)}">Remove Prayer Request</button>
+            </article>
+          `)
+          .join("")
+      : '<p class="empty-feed">No prayer requests yet.</p>';
+  }
 }
 
 async function loadAdminDashboard() {
   if (state.user?.role !== "admin") return;
-  const [summary, users, feedback, reports] = await Promise.all([
+  const [summary, users, feedback, reports, communityPosts, prayerRequests] = await Promise.all([
     apiFetch("/api/admin/summary"),
     apiFetch("/api/admin/users"),
     apiFetch("/api/admin/feedback"),
-    apiFetch("/api/admin/reports")
+    apiFetch("/api/admin/reports"),
+    apiFetch("/api/admin/community"),
+    apiFetch("/api/admin/prayer-requests")
   ]);
   renderAdminDashboard({
     summary,
     users: users.users || [],
     feedback: feedback.feedback || [],
-    reports: reports.reports || []
+    reports: reports.reports || [],
+    communityPosts: communityPosts.posts || [],
+    prayerRequests: prayerRequests.requests || []
   });
 }
 
@@ -2482,6 +2528,25 @@ cancelAuthButton.addEventListener("click", () => {
 });
 
 communityFeed.addEventListener("click", (event) => {
+  const commentReactionButton = event.target.closest(".comment-reaction-button[data-reaction]");
+  if (commentReactionButton) {
+    if (!state.user) {
+      communityStatus.textContent = "Sign in to react to a reply.";
+      return;
+    }
+    apiFetch("/api/community/comment/react", {
+      method: "POST",
+      body: JSON.stringify({ commentId: commentReactionButton.dataset.commentId, type: commentReactionButton.dataset.reaction })
+    })
+      .then(async () => {
+        await loadCommunity();
+        renderCommunity();
+      })
+      .catch((error) => {
+        communityStatus.textContent = error.message;
+      });
+    return;
+  }
   const reactionButton = event.target.closest(".reaction-button[data-reaction]");
   if (reactionButton) {
     if (!state.user) {
@@ -2798,6 +2863,48 @@ adminReportList.addEventListener("click", (event) => {
       });
   }
 });
+
+if (adminCommunityList) {
+  adminCommunityList.addEventListener("click", (event) => {
+    const button = event.target.closest(".admin-delete-community-post");
+    if (!button) return;
+    if (!window.confirm("Remove this community post from the shared feed?")) return;
+    apiFetch("/api/admin/community/hide", {
+      method: "POST",
+      body: JSON.stringify({ postId: button.dataset.postId })
+    })
+      .then(async () => {
+        adminStatus.textContent = "Community post removed.";
+        await loadCommunity();
+        renderCommunity();
+        await loadAdminDashboard();
+      })
+      .catch((error) => {
+        adminStatus.textContent = error.message;
+      });
+  });
+}
+
+if (adminPrayerList) {
+  adminPrayerList.addEventListener("click", (event) => {
+    const button = event.target.closest(".admin-delete-prayer-request");
+    if (!button) return;
+    if (!window.confirm("Remove this prayer request from the shared prayer board?")) return;
+    apiFetch("/api/admin/prayer-requests/hide", {
+      method: "POST",
+      body: JSON.stringify({ id: button.dataset.prayerId })
+    })
+      .then(async () => {
+        adminStatus.textContent = "Prayer request removed.";
+        await loadPrayerRequests();
+        renderPrayerRequests();
+        await loadAdminDashboard();
+      })
+      .catch((error) => {
+        adminStatus.textContent = error.message;
+      });
+  });
+}
 
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();

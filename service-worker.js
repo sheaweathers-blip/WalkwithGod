@@ -1,15 +1,15 @@
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open("walk-with-god-v16").then((cache) =>
+    caches.open("walk-with-god-v18").then((cache) =>
       cache.addAll([
         "/",
         "/index.html",
         "/privacy.html",
         "/terms.html",
         "/sms-consent.html",
-        "/styles.css?v=20260612-shared-community",
-        "/app.js?v=20260612-shared-community",
-        "/logo-fallback.js?v=20260612-shared-community",
+        "/styles.css?v=20260612-reply-reactions",
+        "/app.js?v=20260612-reply-reactions",
+        "/logo-fallback.js?v=20260612-reply-reactions",
         "/manifest.json",
         "/assets/daily-devotion.png",
         "/assets/walk-with-god-logo.png",
@@ -24,7 +24,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v16").map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v18").map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -36,7 +36,7 @@ self.addEventListener("fetch", (event) => {
       .then((response) => {
         if (!response || !response.ok) return response;
         const copy = response.clone();
-        caches.open("walk-with-god-v16").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
+        caches.open("walk-with-god-v18").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
         return response;
       })
       .catch(() => caches.match(event.request).then((cached) => {
@@ -61,7 +61,7 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(payload.title || "Walk With God", {
       body: payload.body || "Spend uninterrupted time with God today.",
       icon: "/assets/icon-512.png?v=20260531",
-      badge: "/assets/icon-192.png?v=20260612-shared-community",
+      badge: "/assets/icon-192.png?v=20260612-reply-reactions",
       data: { url: "/" }
     })
   );

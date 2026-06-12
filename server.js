@@ -361,6 +361,9 @@ async function sendReminderForUser(db, reminder, payload) {
   const results = [];
   if (reminder.channels?.push) {
     const subscriptions = db.pushSubscriptions.filter((item) => item.userId === reminder.userId);
+    if (!subscriptions.length) {
+      results.push({ channel: "push", ok: false, error: "No app notification device is enabled for this account." });
+    }
     for (const item of subscriptions) {
       try {
         results.push({ channel: "push", ...(await sendPush(item.subscription, payload)) });
@@ -469,7 +472,8 @@ async function handleApi(request, response) {
           .filter((comment) => comment.postId === post.id && !comment.hiddenAt)
           .map((comment) => ({
             ...comment,
-            userName: db.users.find((user) => user.id === comment.userId)?.name || "Community member"
+            userName: db.users.find((user) => user.id === comment.userId)?.name || "Community member",
+            reactions: db.reactions.filter((reaction) => reaction.commentId === comment.id)
           }))
       }));
     return json(response, 200, { posts });
@@ -508,6 +512,23 @@ async function handleApi(request, response) {
     db.reactions.push({ id: crypto.randomUUID(), postId, userId: user.id, type, createdAt: new Date().toISOString() });
     await writeDb(db);
     return json(response, 200, { reactions: db.reactions.filter((reaction) => reaction.postId === postId) });
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/community/comment/react") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const body = await readBody(request);
+    const commentId = normalizeText(body.commentId, 120);
+    const type = normalizeText(body.type, 30);
+    const allowed = new Set(["praying", "encouraged", "amen"]);
+    const comment = db.comments.find((item) => item.id === commentId && !item.hiddenAt);
+    if (!comment) return json(response, 404, { error: "Comment not found." });
+    if (!db.posts.some((post) => post.id === comment.postId && !post.hiddenAt)) return json(response, 404, { error: "Community post not found." });
+    if (!allowed.has(type)) return json(response, 400, { error: "Reaction was not recognized." });
+    db.reactions = db.reactions.filter((reaction) => !(reaction.commentId === commentId && reaction.userId === user.id && reaction.type === type));
+    db.reactions.push({ id: crypto.randomUUID(), commentId, userId: user.id, type, createdAt: new Date().toISOString() });
+    await writeDb(db);
+    return json(response, 200, { reactions: db.reactions.filter((reaction) => reaction.commentId === commentId) });
   }
 
   if (request.method === "POST" && url.pathname === "/api/community/comment") {
@@ -677,6 +698,7 @@ async function handleApi(request, response) {
       channels: normalizeChannels(body.channels),
       email: normalizeText(body.email, 160) || user.email,
       phone: normalizeText(body.phone, 32),
+      timeZone: normalizeText(body.timeZone, 80) || "America/New_York",
       updatedAt: new Date().toISOString(),
       lastSentDate: ""
     };
@@ -878,6 +900,30 @@ async function handleApi(request, response) {
       return json(response, 200, { reports });
     }
 
+    if (request.method === "GET" && url.pathname === "/api/admin/community") {
+      const posts = db.posts
+        .filter((post) => !post.hiddenAt)
+        .slice(-75)
+        .reverse()
+        .map((post) => ({
+          ...post,
+          userName: db.users.find((user) => user.id === post.userId)?.name || "Community member"
+        }));
+      return json(response, 200, { posts });
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/admin/prayer-requests") {
+      const requests = db.prayerRequests
+        .filter((requestItem) => !requestItem.hiddenAt)
+        .slice(-75)
+        .reverse()
+        .map((requestItem) => ({
+          ...requestItem,
+          userName: requestItem.isAnonymous ? "Anonymous" : db.users.find((user) => user.id === requestItem.userId)?.name || "Community member"
+        }));
+      return json(response, 200, { requests });
+    }
+
     if (request.method === "POST" && url.pathname === "/api/admin/reports/status") {
       const body = await readBody(request);
       const report = db.reports.find((item) => item.id === normalizeText(body.id, 120));
@@ -897,6 +943,16 @@ async function handleApi(request, response) {
       post.hiddenBy = admin.id;
       await writeDb(db);
       return json(response, 200, { post });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/admin/prayer-requests/hide") {
+      const body = await readBody(request);
+      const prayerRequest = db.prayerRequests.find((item) => item.id === normalizeText(body.id, 120));
+      if (!prayerRequest) return json(response, 404, { error: "Prayer request not found." });
+      prayerRequest.hiddenAt = new Date().toISOString();
+      prayerRequest.hiddenBy = admin.id;
+      await writeDb(db);
+      return json(response, 200, { request: prayerRequest });
     }
 
     return json(response, 404, { error: "Admin route not found." });
@@ -930,10 +986,25 @@ function reminderScheduler() {
   setInterval(async () => {
     const db = await readDb();
     const now = new Date();
-    const hhmm = now.toTimeString().slice(0, 5);
-    const today = now.toISOString().slice(0, 10);
     let changed = false;
     for (const reminder of db.reminders) {
+      const timeZone = reminder.timeZone || "America/New_York";
+      const localParts = Object.fromEntries(
+        new Intl.DateTimeFormat("en-CA", {
+          timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        })
+          .formatToParts(now)
+          .filter((part) => part.type !== "literal")
+          .map((part) => [part.type, part.value])
+      );
+      const hhmm = `${localParts.hour}:${localParts.minute}`;
+      const today = `${localParts.year}-${localParts.month}-${localParts.day}`;
       if (reminder.time !== hhmm || reminder.lastSentDate === today) continue;
       await sendReminderForUser(db, reminder, { title: "Walk With God", body: reminder.message });
       reminder.lastSentDate = today;

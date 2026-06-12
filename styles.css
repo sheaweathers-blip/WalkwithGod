@@ -808,6 +808,7 @@ button:hover {
 .note-library-item p:last-of-type {
   color: var(--muted);
   line-height: 1.55;
+  white-space: pre-wrap;
 }
 
 .completion-card {
@@ -1843,6 +1844,20 @@ select:focus {
   margin: 4px 0 0;
   color: var(--muted);
   line-height: 1.45;
+}
+
+.comment-reaction-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.comment-reaction-row .reaction-button {
+  min-height: 30px;
+  padding: 0 9px;
+  font-size: 0.78rem;
+  background: rgba(244, 249, 239, 0.86);
 }
 
 .comment-form {
