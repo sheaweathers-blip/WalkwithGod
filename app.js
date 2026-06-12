@@ -904,10 +904,8 @@ async function loadServerState() {
 }
 
 async function loadCommunity() {
-  const focus = activeFocus();
   try {
-    const path = focus ? `/api/community?focusId=${encodeURIComponent(focus.id)}` : "/api/community";
-    const result = await apiFetch(path);
+    const result = await apiFetch("/api/community");
     state.community = result.posts || [];
   } catch {
     state.community = JSON.parse(localStorage.getItem("walkWithGodCommunity") || "[]");
@@ -1665,8 +1663,7 @@ function reminderFromForm() {
 }
 
 function renderCommunity() {
-  const focus = activeFocus();
-  const entries = (focus ? state.community.filter((entry) => entry.focusId === focus.id) : state.community).slice(-8).reverse();
+  const entries = state.community.slice(-12).reverse();
   communityFeed.innerHTML = entries.length
     ? entries
         .map((entry) => {
