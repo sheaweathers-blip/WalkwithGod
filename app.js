@@ -385,6 +385,52 @@ const defaultFocuses = [
       ["Day 13", "Your Light Before Others", "Matthew 5:14-16", "God's people live visibly so others may glorify the Father."],
       ["Day 14", "The Revealing of Jesus Christ", "Revelation 1:1-8", "Scripture points toward the final revealing of Jesus, the Alpha and Omega."]
     ]
+  },
+  {
+    id: "self-love-and-confidence",
+    label: "Theme 18",
+    mark: "SL",
+    title: "Self-Love and Confidence in the Bible",
+    description: "A 14-day focus on receiving your God-given worth, rejecting shame, caring for yourself with wisdom, and walking in humble confidence.",
+    days: [
+      ["Day 1", "Made in God's Image", "Genesis 1:26-27", "Your worth begins with God's design, not performance, appearance, approval, or achievement."],
+      ["Day 2", "Wonderfully Made", "Psalm 139:13-16", "God formed you with intention and sees your life with care from the beginning."],
+      ["Day 3", "Called Very Good", "Genesis 1:31", "God's creation is not something to despise; His good design invites gratitude and stewardship."],
+      ["Day 4", "Loved as Neighbor and Self", "Mark 12:30-31", "Jesus connects love for God, neighbor, and self in a life ordered by holy love."],
+      ["Day 5", "No Condemnation", "Romans 8:1", "In Christ, condemnation is not your identity or your assignment."],
+      ["Day 6", "Chosen and Beloved", "Colossians 3:12-14", "God calls His people chosen, holy, and beloved before calling them into compassion and love."],
+      ["Day 7", "God's Workmanship", "Ephesians 2:10", "You are God's workmanship, created in Christ for good works prepared by Him."],
+      ["Day 8", "Confidence Before God", "Hebrews 4:14-16", "Because of Jesus, you can approach God with confidence to receive mercy and grace."],
+      ["Day 9", "Strength Without Fear", "2 Timothy 1:7", "God gives a spirit of power, love, and self-control instead of fear."],
+      ["Day 10", "Courage from God's Presence", "Joshua 1:9", "Biblical confidence grows from knowing God is with you wherever you go."],
+      ["Day 11", "Renewed Mind", "Romans 12:1-2", "God renews the mind so you can resist false labels and discern His good will."],
+      ["Day 12", "Speak Life", "Proverbs 18:21", "Words carry weight, including the words you speak over yourself."],
+      ["Day 13", "Clothed with Strength", "Proverbs 31:25", "Strength and dignity make room for hope instead of fear of the future."],
+      ["Day 14", "Christ Lives in Me", "Galatians 2:20", "Your life is held in Christ's love, and confidence grows from belonging to Him."]
+    ]
+  },
+  {
+    id: "god-loves-you",
+    label: "Theme 19",
+    mark: "GL",
+    title: "How God Loves You",
+    description: "A 14-day focus on the depth, nearness, patience, mercy, delight, and permanence of God's love for you.",
+    days: [
+      ["Day 1", "God So Loved", "John 3:16-17", "God's love is revealed in giving His Son to save rather than condemn."],
+      ["Day 2", "Loved First", "1 John 4:9-10", "Love begins with God, who loved first and sent His Son as the atoning sacrifice."],
+      ["Day 3", "While We Were Sinners", "Romans 5:6-8", "God's love meets people before they can make themselves worthy."],
+      ["Day 4", "Everlasting Love", "Jeremiah 31:3", "God's love is everlasting and draws His people with unfailing kindness."],
+      ["Day 5", "Held by Steadfast Love", "Psalm 136:1", "The Lord is good, and His steadfast love endures forever."],
+      ["Day 6", "Compassionate Father", "Psalm 103:8-14", "God is compassionate, slow to anger, and mindful of human weakness."],
+      ["Day 7", "Loved as Children", "1 John 3:1", "The Father gives a love so generous that His people are called children of God."],
+      ["Day 8", "The Shepherd's Care", "Psalm 23:1-6", "God's love shepherds, restores, guides, comforts, provides, and follows His people."],
+      ["Day 9", "Jesus Loves His Own", "John 13:1", "Jesus loves His own to the end with faithful, serving love."],
+      ["Day 10", "Abide in My Love", "John 15:9-11", "Jesus invites His followers to remain in His love and receive His joy."],
+      ["Day 11", "Loved Beyond Measuring", "Ephesians 3:16-19", "God's love in Christ is wide, long, high, deep, and beyond full comprehension."],
+      ["Day 12", "Nothing Can Separate", "Romans 8:35-39", "No suffering, power, fear, or created thing can separate you from God's love in Christ."],
+      ["Day 13", "Quieted by Love", "Zephaniah 3:17", "God is present, mighty to save, rejoices over His people, and quiets them by His love."],
+      ["Day 14", "Mercy Made New", "Lamentations 3:22-24", "God's steadfast love does not cease, and His mercies are new every morning."]
+    ]
   }
 ];
 
@@ -1273,6 +1319,88 @@ function deedForDay(focus, day, dayNumber) {
   return rotating[(dayNumber - 1) % rotating.length];
 }
 
+function themedApplicationAndDeed(focus, dayNumber) {
+  if (focus.id === "self-love-and-confidence") {
+    const applications = [
+      "Where have I been letting performance, appearance, or other people's opinions define what God has already spoken over me?",
+      "What part of myself do I struggle to receive as intentionally made by God, and how can I bring that honestly to Him today?",
+      "What would change in my self-talk if I treated God's design with gratitude instead of criticism?",
+      "How can loving myself biblically help me love God and my neighbor with more freedom, not selfishness?",
+      "What condemning label do I need to reject because it does not agree with my identity in Christ?",
+      "Where do I need to practice compassion toward myself so I can become more compassionate toward others?",
+      "What good work might God be inviting me into that I have been avoiding because I feel unqualified?",
+      "What would it look like to approach God with confidence today instead of hiding in shame?",
+      "Where is fear shrinking my obedience, voice, or presence, and what would power, love, and self-control look like there?",
+      "What step would I take today if I truly believed God's presence was stronger than my insecurity?",
+      "What thought pattern about myself needs to be renewed by God's truth?",
+      "What words have I been speaking over myself, and do they sound like life or discouragement?",
+      "Where can I carry myself with strength and dignity without becoming prideful or guarded?",
+      "How does belonging to Christ change the way I see my body, story, gifts, and future?"
+    ];
+    const deeds = [
+      "Write one sentence that begins, 'Because I am made in God's image...' and place it somewhere you will see it today.",
+      "Thank God for three specific parts of how He made you: one physical, one personal, and one spiritual.",
+      "Do one body-care action without punishment or pressure: drink water, stretch, rest, walk, or eat something nourishing.",
+      "Practice one act of healthy self-respect today by saying yes honestly, saying no wisely, or asking for what you need.",
+      "When a condemning thought appears, answer it out loud with: 'That is not my name in Christ.'",
+      "Speak to yourself today the way you would speak to a dear friend who needed grace.",
+      "Take one small step toward a gift, calling, or responsibility you have been minimizing.",
+      "Pray with open hands for two minutes, asking God for mercy and grace instead of trying to earn them.",
+      "Do one brave thing today that is guided by love, not fear.",
+      "Before entering your next task or conversation, pray: 'God is with me, so I can show up fully.'",
+      "Write down one false belief about yourself and one Scripture-shaped truth to replace it.",
+      "Refuse self-insult today. If one slips out, pause and restate it with honesty and kindness.",
+      "Choose posture as prayer today: stand, sit, or walk as someone held by God's strength and dignity.",
+      "Do one thing that reflects Christ living in you: forgive, create, serve, rest, speak truth, or receive love."
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
+  if (focus.id === "god-loves-you") {
+    const applications = [
+      "Do I most often imagine God moving toward me with love, disappointment, distance, or impatience?",
+      "What would it mean today to receive love as something God started, not something I achieved?",
+      "Where am I still trying to become worthy of a love Christ has already demonstrated?",
+      "What memory, fear, or pattern makes everlasting love hard for me to trust?",
+      "How can I let God's enduring love steady one unstable emotion or situation today?",
+      "Where do I need to receive God's compassion for my weakness instead of hiding it?",
+      "How would I live today if I truly believed I am God's beloved child?",
+      "Which part of Psalm 23 feels most needed right now: guidance, rest, restoration, comfort, provision, or nearness?",
+      "Where is Jesus inviting me to receive love that serves, washes feet, and stays to the end?",
+      "What helps me abide in Christ's love instead of drifting into hurry, shame, or striving?",
+      "Which dimension of God's love feels hardest to believe right now: width, length, height, or depth?",
+      "What fear loses power when I remember that nothing can separate me from God's love in Christ?",
+      "How might God's delight and nearness quiet something restless in me today?",
+      "Where do I need to begin again today because God's mercy is new this morning?"
+    ];
+    const deeds = [
+      "Read John 3:16 slowly three times and replace 'the world' with your name once as a personal reminder of God's giving love.",
+      "Before doing anything productive, pause and pray: 'God loved me first.' Let that be enough for one full minute.",
+      "Write 'Christ loved me here too' beside one part of your story you are tempted to hide.",
+      "Take a short walk and repeat: 'Your love is everlasting; Your kindness draws me.'",
+      "Send one message of steady encouragement to someone who may need to remember God's love endures.",
+      "Name one weakness to God without apologizing for being human, then receive His compassion for you.",
+      "Do one small thing today as a beloved child, not as someone trying to prove they deserve love.",
+      "Choose one phrase from Psalm 23 and carry it through your next activity as a breath prayer.",
+      "Serve someone in a quiet, practical way as a reflection of Jesus' faithful love.",
+      "Set a two-minute reminder to pause, breathe, and remain in Christ's love before rushing onward.",
+      "Draw or write four words: wide, long, high, deep. Under each one, name one way God has loved you.",
+      "When fear rises today, answer it with: 'This cannot separate me from God's love.'",
+      "Let God quiet you by love: sit still for three minutes with no fixing, explaining, or striving.",
+      "Mark a fresh start today by receiving mercy and then extending mercy to yourself or someone else."
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
+  return null;
+}
+
 function passageParts(reference) {
   return String(reference)
     .replace(/\bRomans Romans\b/gi, "Romans")
@@ -1414,6 +1542,7 @@ function getDayExtras(focus, day) {
   const title = day[1].toLowerCase();
   const focusTitle = focus.title.toLowerCase();
   const dayNumber = Number((day[0].match(/\d+/) || [1])[0]);
+  const themedExtras = themedApplicationAndDeed(focus, dayNumber);
   const applicationQuestions = [
     `What does ${day[1]} reveal about God's character, and how can I respond to Him today?`,
     `Where is this passage asking me to slow down, surrender, or listen more carefully?`,
@@ -1428,8 +1557,8 @@ function getDayExtras(focus, day) {
   ];
   return {
     active: "Set aside 15-20 uninterrupted minutes for active time with God. Walk, run, stretch, practice gentle yoga, swim, bike, or do another healthy movement you can do safely. Read the passage first, then use the activity for prayer, reflection, honest conversation with God, and caring for the body He gave you.",
-    application: applicationQuestions[(dayNumber - 1) % applicationQuestions.length],
-    deed: deedForDay(focus, day, dayNumber)
+    application: themedExtras?.application || applicationQuestions[(dayNumber - 1) % applicationQuestions.length],
+    deed: themedExtras?.deed || deedForDay(focus, day, dayNumber)
   };
 }
 
