@@ -1457,35 +1457,39 @@ function saveSpeechSettings() {
 function populateVoiceOptions() {
   if (!speechSupported()) return;
   const voices = window.speechSynthesis.getVoices();
-  const googleUkFemaleVoice = voices.find((voice) => voice.name.toLowerCase() === "google uk english female");
   if (!voices.length) {
     return;
   }
-  if (!googleUkFemaleVoice) {
-    state.speechSettings.voiceURI = "";
-    saveSpeechSettings();
-    updateReadPassageButton();
-    return;
-  }
-  state.speechSettings.voiceURI = googleUkFemaleVoice.voiceURI;
+  const preferredVoice = bestAvailableSpeechVoice(voices);
+  state.speechSettings.voiceURI = preferredVoice?.voiceURI || "";
   saveSpeechSettings();
   updateReadPassageButton();
 }
 
+function bestAvailableSpeechVoice(voices) {
+  const englishVoices = voices.filter((voice) => String(voice.lang || "").toLowerCase().startsWith("en"));
+  const pool = englishVoices.length ? englishVoices : voices;
+  const preferredNames = ["samantha", "google uk english female", "google us english", "microsoft aria", "microsoft jenny", "victoria", "karen", "serena", "susan", "zira"];
+  return (
+    pool.find((voice) => preferredNames.some((name) => voice.name.toLowerCase().includes(name))) ||
+    pool.find((voice) => voice.default) ||
+    pool[0] ||
+    null
+  );
+}
+
 function selectedSpeechVoice() {
   if (!speechSupported()) return null;
-  return window.speechSynthesis.getVoices().find((voice) => voice.voiceURI === state.speechSettings.voiceURI && voice.name.toLowerCase() === "google uk english female") || null;
+  const voices = window.speechSynthesis.getVoices();
+  return voices.find((voice) => voice.voiceURI === state.speechSettings.voiceURI) || bestAvailableSpeechVoice(voices);
 }
 
 function updateReadPassageButton() {
   if (!readPassageButton) return;
   readPassageButton.textContent = state.isReadingPassage ? "Stop Reading" : "Read Passage Aloud";
-  const hasRequiredVoice = !speechSupported() || Boolean(selectedSpeechVoice());
-  readPassageButton.disabled = !state.currentPassageText || !speechSupported() || !hasRequiredVoice;
+  readPassageButton.disabled = !state.currentPassageText || !speechSupported();
   if (!speechSupported()) {
     readPassageStatus.textContent = "Reading aloud is not supported on this browser.";
-  } else if (!hasRequiredVoice) {
-    readPassageStatus.textContent = "Google UK English Female is not available on this browser/device.";
   } else if (!state.currentPassageText && !state.isReadingPassage) {
     readPassageStatus.textContent = "Passage will be available to read aloud after it loads.";
   }
@@ -1514,12 +1518,8 @@ function readPassageAloud() {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(state.currentPassageText);
   const voice = selectedSpeechVoice();
-  if (!voice) {
-    readPassageStatus.textContent = "Google UK English Female is not available on this browser/device.";
-    updateReadPassageButton();
-    return;
-  }
-  utterance.voice = voice;
+  if (voice) utterance.voice = voice;
+  utterance.lang = voice?.lang || "en-US";
   utterance.rate = Number(state.speechSettings.rate) || 0.9;
   utterance.pitch = Number(state.speechSettings.pitch) || 1;
   utterance.onend = () => {
@@ -1639,7 +1639,10 @@ function renderReminder() {
   if (smsConsent) smsConsent.checked = localStorage.getItem("walkWithGodSmsConsent") === "true";
   reminderEmailAddress.value = state.reminder.email || state.user?.email || "";
   reminderPhone.value = state.reminder.phone || "";
-  reminderStatus.textContent = state.user ? `App reminder settings ready for ${reminderTime.value}. Email and text are paused during setup.` : "Sign in to save app reminders to your account and enable push.";
+  const supportMessage = notificationSupportMessage();
+  reminderStatus.textContent = state.user
+    ? supportMessage || `App reminder settings ready for ${reminderTime.value}. Email and text are paused during setup.`
+    : "Sign in to save app reminders to your account and enable push.";
 }
 
 function renderMode() {
@@ -1647,6 +1650,27 @@ function renderMode() {
   communityModeButton.classList.toggle("is-active", state.mode === "community");
   communityForm.hidden = state.mode !== "community";
   communityFeed.hidden = state.mode !== "community";
+}
+
+function isAppleMobileDevice() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+function isInstalledWebApp() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function notificationSupportMessage() {
+  if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
+    return "This browser does not support app notifications. Try Chrome or Edge on Android/desktop, Safari on Mac, or the installed Home Screen app on iPhone.";
+  }
+  if (isAppleMobileDevice() && !isInstalledWebApp()) {
+    return "On iPhone or iPad, app notifications only work after adding Walk With God to the Home Screen and opening it from the app icon.";
+  }
+  if (Notification.permission === "denied") {
+    return "Notifications are blocked for this browser. Turn them back on in your device or browser settings.";
+  }
+  return "";
 }
 
 function reminderFromForm() {
@@ -2351,6 +2375,10 @@ function urlBase64ToUint8Array(base64String) {
 
 async function enableAppNotifications() {
   if (!state.user) throw new Error("Sign in before enabling app notifications.");
+  const supportMessage = notificationSupportMessage();
+  if (supportMessage && (isAppleMobileDevice() || !("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window) || Notification.permission === "denied")) {
+    throw new Error(supportMessage);
+  }
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) throw new Error("This browser does not support app notifications.");
   if (!("Notification" in window)) throw new Error("This browser does not support notification permission.");
   const permission = await Notification.requestPermission();
