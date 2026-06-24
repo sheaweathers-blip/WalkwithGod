@@ -614,7 +614,6 @@ const aboutSection = document.querySelector("#about");
 const lockedBenefits = document.querySelector("#lockedBenefits");
 const gatedSections = [
   document.querySelector("#today"),
-  document.querySelector("#startHere"),
   document.querySelector("#themes"),
   document.querySelector("#notesLibrary"),
   document.querySelector("#community"),
@@ -635,7 +634,6 @@ const favoriteCount = document.querySelector("#favoriteCount");
 const continueTodayButton = document.querySelector("#continueTodayButton");
 const quickCompleteButton = document.querySelector("#quickCompleteButton");
 const todayStatus = document.querySelector("#todayStatus");
-const startChecklist = document.querySelector("#startChecklist");
 const accountStatus = document.querySelector("#accountStatus");
 const accountHeading = document.querySelector("#accountHeading");
 const accountCopy = document.querySelector("#accountCopy");
@@ -1041,94 +1039,6 @@ function renderToday() {
   streakCount.textContent = String(streakDays());
   favoriteCount.textContent = String(state.favorites.length);
   quickCompleteButton.disabled = !focus || completedSet(focus.id).has(dayIndex);
-}
-
-function renderStartHere() {
-  if (!startChecklist) return;
-  const hasFocus = Boolean(activeFocus());
-  const completedAnyDay = Object.values(state.completed).some((set) => set.size > 0);
-  const hasNote = noteEntries().some((entry) => notePreview(entry).trim());
-  const hasReminder = localStorage.getItem("walkWithGodReminderSaved") === "true";
-  const hasCommunity = state.community.some((entry) => entry.userId === state.user?.id || entry.userName === state.user?.name);
-  const hasOpenedPremium = localStorage.getItem("walkWithGodPremiumPreviewOpened") === "true" || Object.values(state.premiumPanels).some(Boolean);
-  const hasSentFeedback = localStorage.getItem("walkWithGodFeedbackSent") === "true";
-  const items = [
-    {
-      done: Boolean(state.user),
-      title: "Create or log in to your free account",
-      copy: "You are signed in and ready to test.",
-      href: "#account",
-      action: "Account"
-    },
-    {
-      done: hasFocus,
-      title: "Choose a daily focus",
-      copy: "Open the Focus Library and select a theme that interests you.",
-      href: "#themes",
-      action: "Choose Focus"
-    },
-    {
-      done: completedAnyDay,
-      title: "Complete one day",
-      copy: "Read the passage, try the active time with God, and mark the day complete.",
-      href: "#themes",
-      action: "Continue Day"
-    },
-    {
-      done: hasNote,
-      title: "Save a private note",
-      copy: "Add a short reflection or check-in so you can test the notes library.",
-      href: "#notesLibrary",
-      action: "View Notes"
-    },
-    {
-      done: hasCommunity,
-      title: "Try community or prayer requests",
-      copy: "Post a check-in, react/comment, or open prayer requests.",
-      href: "#community",
-      action: "Community"
-    },
-    {
-      done: hasReminder,
-      title: "Review app reminder settings",
-      copy: "App notifications are ready to test. Email and text reminders are paused while business messaging setup is completed.",
-      href: "#account",
-      action: "Settings"
-    },
-    {
-      done: hasOpenedPremium,
-      title: "Open premium previews",
-      copy: "Expand Breathwork, Yoga, Bible Study, or Walking and tell us what sounds useful.",
-      href: "#premium",
-      action: "Premium"
-    },
-    {
-      done: hasSentFeedback,
-      title: "Send tester feedback",
-      copy: "Tell us what worked, what broke, and what felt confusing.",
-      href: "#feedback",
-      action: "Feedback"
-    }
-  ];
-  const checklistSection = startChecklist.closest("#startHere");
-  const allDone = items.every((item) => item.done);
-  if (checklistSection) checklistSection.hidden = allDone;
-  if (allDone) {
-    startChecklist.innerHTML = "";
-    return;
-  }
-  startChecklist.innerHTML = items
-    .map((item) => `
-      <article class="start-check-item ${item.done ? "is-done" : ""}">
-        <span class="check-dot" aria-hidden="true">${item.done ? "Done" : ""}</span>
-        <div>
-          <strong>${escapeHtml(item.title)}</strong>
-          <p>${escapeHtml(item.copy)}</p>
-        </div>
-        <a class="quiet-button" href="${item.href}">${escapeHtml(item.action)}</a>
-      </article>
-    `)
-    .join("");
 }
 
 function currentFavoriteId() {
@@ -2069,7 +1979,6 @@ function render() {
   readerEmpty.hidden = Boolean(focus);
   readerContent.hidden = !focus;
   renderToday();
-  renderStartHere();
   renderFocusList();
   renderPrayerBreath();
   renderReminder();
@@ -2133,7 +2042,6 @@ function render() {
   renderPrayerBreath();
   renderFavorites();
   renderToday();
-  renderStartHere();
   renderReminder();
   renderMode();
   renderCommunity();
@@ -2240,7 +2148,6 @@ document.addEventListener("click", (event) => {
   if (state.premiumPanels[panelId]) localStorage.setItem("walkWithGodPremiumPreviewOpened", "true");
   savePremiumPanels();
   renderPremiumPanels();
-  renderStartHere();
 });
 
 completeButton.addEventListener("click", () => {
@@ -2317,7 +2224,6 @@ saveNoteButton.addEventListener("click", () => {
   saveNotes();
   saveCheckins();
   renderNotesLibrary();
-  renderStartHere();
   if (!state.user) {
     noteStatus.textContent = "Note saved on this device. Sign in to sync it.";
     return;
@@ -2358,11 +2264,10 @@ reminderForm.addEventListener("submit", async (event) => {
     }
     if (state.reminder.channels.push) {
       reminderStatus.textContent = "Saving reminder and enabling app notifications...";
-      await enableAppNotifications();
+    await enableAppNotifications();
     }
     await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
     reminderStatus.textContent = `App reminder saved for ${state.reminder.time}. Email and text will be enabled after setup is complete.`;
-    renderStartHere();
   } catch (error) {
     reminderStatus.textContent = error.message;
   }
@@ -2663,7 +2568,6 @@ feedbackForm.addEventListener("submit", (event) => {
       feedbackText.value = "";
       localStorage.setItem("walkWithGodFeedbackSent", "true");
       feedbackStatus.textContent = "Feedback sent to the admin team.";
-      renderStartHere();
     })
     .catch((error) => {
       feedbackStatus.textContent = error.message;
