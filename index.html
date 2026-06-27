@@ -8,9 +8,9 @@
     <meta name="theme-color" content="#1f4b3b" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
-    <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260623-remove-checklist" />
-    <script src="logo-fallback.js?v=20260623-remove-checklist"></script>
-    <link rel="stylesheet" href="styles.css?v=20260623-remove-checklist" />
+    <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260626-sms-opt-in" />
+    <script src="logo-fallback.js?v=20260626-sms-opt-in"></script>
+    <link rel="stylesheet" href="styles.css?v=20260626-sms-opt-in" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -19,11 +19,11 @@
     </div>
     <main class="app-shell">
       <section class="hero" aria-label="Walk With God overview">
-        <img class="hero-image" src="/assets/daily-devotion.png?v=20260623-remove-checklist" alt="" onerror="this.hidden=true; this.parentElement.classList.add('hero-fallback');" />
+        <img class="hero-image" src="/assets/daily-devotion.png?v=20260626-sms-opt-in" alt="" onerror="this.hidden=true; this.parentElement.classList.add('hero-fallback');" />
         <div class="hero-scrim"></div>
         <div class="hero-content">
           <span class="brand-logo-shell" aria-label="Walk With God logo">
-            <img class="brand-logo" src="/assets/walk-with-god-logo.png?v=20260623-remove-checklist" alt="Walk With God logo" onerror="window.WWGUseLogoFallback?.(this) || (this.parentElement.hidden = true);" />
+            <img class="brand-logo" src="/assets/walk-with-god-logo.png?v=20260626-sms-opt-in" alt="Walk With God logo" onerror="window.WWGUseLogoFallback?.(this) || (this.parentElement.hidden = true);" />
           </span>
           <p class="eyebrow">Daily Bible Focuses</p>
           <h1>Walk With God</h1>
@@ -122,7 +122,7 @@
             <form class="reminder-form" id="reminderForm">
               <div class="reminder-availability-note">
                 <strong>Testing note:</strong>
-                App notifications are available right now. Email and text reminders are temporarily paused while SendGrid/Twilio business verification is completed.
+                App notifications are available right now. Text reminders can be selected for opt-in setup, but delivery depends on Twilio approval. Email reminders are temporarily paused.
               </div>
               <label>
                 Reminder time
@@ -142,14 +142,14 @@
                   <input id="reminderEmail" type="checkbox" disabled />
                   Email <span>Paused</span>
                 </label>
-                <label class="reminder-channel-disabled">
-                  <input id="reminderSms" type="checkbox" disabled />
-                  Text message <span>Pending Twilio</span>
+                <label>
+                  <input id="reminderSms" type="checkbox" />
+                  Text message <span>Pending carrier approval</span>
                 </label>
               </fieldset>
-              <label class="sms-consent-check" id="smsConsentWrapper" hidden>
+              <label class="sms-consent-check" id="smsConsentWrapper">
                 <input id="smsConsent" type="checkbox" />
-                I agree to receive reminder text messages from Walk With God at the phone number I provide. Message and data rates may apply. Message frequency varies based on my reminder settings. Reply STOP to opt out and HELP for help.
+                By checking this box, I agree to receive recurring text message reminders from Walk With God at the phone number I provide. These messages may include daily Scripture focus reminders, prayer/reflection prompts, and account-related reminder updates. Message frequency may vary, up to 1 message per day. Message and data rates may apply. Reply STOP to unsubscribe and HELP for help. Consent is not required to create an account or use the free app. See the <a href="/sms-consent.html" target="_blank" rel="noreferrer">SMS Consent</a>, <a href="/privacy.html" target="_blank" rel="noreferrer">Privacy Policy</a>, and <a href="/terms.html" target="_blank" rel="noreferrer">Terms</a>.
               </label>
               <div class="form-grid">
                 <label>
@@ -806,6 +806,6 @@
       </nav>
     </footer>
 
-    <script src="app.js?v=20260623-remove-checklist"></script>
+    <script src="app.js?v=20260626-sms-opt-in"></script>
   </body>
 </html>

@@ -439,7 +439,7 @@ const adminCode = "walkwithgod";
 const reminderChannelAvailability = {
   push: true,
   email: false,
-  sms: false
+  sms: true
 };
 const premiumBreathworkRoutines = [
   ["Day 1", "Simply Breathe", "3 minutes", "4-in, 4-out", "Awareness", "Psalm 46:10", "Today, simply notice the breath. Inhale for 4, exhale for 4. Nothing to fix, nothing to achieve, just breathe with God.", "Soft morning light over a walking path", "Slow, reassuring, spacious voice with pauses after each count.", "Lord, teach me to begin with You, one quiet breath at a time."],
@@ -695,6 +695,7 @@ const reminderPush = document.querySelector("#reminderPush");
 const reminderEmail = document.querySelector("#reminderEmail");
 const reminderSms = document.querySelector("#reminderSms");
 const smsConsent = document.querySelector("#smsConsent");
+const smsConsentWrapper = document.querySelector("#smsConsentWrapper");
 const reminderEmailAddress = document.querySelector("#reminderEmailAddress");
 const reminderPhone = document.querySelector("#reminderPhone");
 const reminderSettingsPanel = document.querySelector("#reminderSettingsPanel");
@@ -1545,15 +1546,16 @@ function renderReminder() {
   reminderMessage.value = state.reminder.message || "Spend uninterrupted time with God today.";
   reminderPush.checked = state.reminder.channels?.push !== false;
   reminderEmail.checked = false;
-  reminderSms.checked = false;
+  reminderSms.checked = Boolean(state.reminder.channels?.sms);
   reminderEmail.disabled = !reminderChannelAvailability.email;
   reminderSms.disabled = !reminderChannelAvailability.sms;
   if (smsConsent) smsConsent.checked = localStorage.getItem("walkWithGodSmsConsent") === "true";
+  if (smsConsentWrapper) smsConsentWrapper.hidden = !reminderSms.checked;
   reminderEmailAddress.value = state.reminder.email || state.user?.email || "";
   reminderPhone.value = state.reminder.phone || "";
   const supportMessage = notificationSupportMessage();
   reminderStatus.textContent = state.user
-    ? supportMessage || `App reminder settings ready for ${reminderTime.value}. Email and text are paused during setup.`
+    ? supportMessage || `App reminder settings ready for ${reminderTime.value}. Text delivery depends on Twilio approval.`
     : "Sign in to save app reminders to your account and enable push.";
 }
 
@@ -2249,15 +2251,23 @@ nextButton.addEventListener("click", () => {
 
 reminderForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (reminderChannelAvailability.sms && reminderSms.checked && !reminderPhone.value.trim()) {
+    reminderStatus.textContent = "Enter a phone number before saving text reminders.";
+    return;
+  }
   if (reminderChannelAvailability.sms && reminderSms.checked && smsConsent && !smsConsent.checked) {
-    reminderStatus.textContent = "Please agree to text reminder terms before saving SMS reminders.";
+    reminderStatus.textContent = "Please agree to the text reminder consent before saving SMS reminders.";
     return;
   }
   try {
     state.reminder = reminderFromForm();
     saveReminder();
     localStorage.setItem("walkWithGodReminderSaved", "true");
-    if (smsConsent?.checked) localStorage.setItem("walkWithGodSmsConsent", "true");
+    if (smsConsent?.checked && state.reminder.channels.sms) {
+      localStorage.setItem("walkWithGodSmsConsent", "true");
+    } else {
+      localStorage.removeItem("walkWithGodSmsConsent");
+    }
     if (!state.user) {
       reminderStatus.textContent = "Reminder saved on this device. Sign in to enable app notifications.";
       return;
@@ -2267,9 +2277,19 @@ reminderForm.addEventListener("submit", async (event) => {
     await enableAppNotifications();
     }
     await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
-    reminderStatus.textContent = `App reminder saved for ${state.reminder.time}. Email and text will be enabled after setup is complete.`;
+    reminderStatus.textContent = state.reminder.channels.sms
+      ? `Reminder saved for ${state.reminder.time}. Text opt-in is recorded; SMS delivery depends on Twilio approval.`
+      : `App reminder saved for ${state.reminder.time}.`;
   } catch (error) {
     reminderStatus.textContent = error.message;
+  }
+});
+
+reminderSms.addEventListener("change", () => {
+  if (smsConsentWrapper) smsConsentWrapper.hidden = !reminderSms.checked;
+  if (!reminderSms.checked) {
+    if (smsConsent) smsConsent.checked = false;
+    localStorage.removeItem("walkWithGodSmsConsent");
   }
 });
 
