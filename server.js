@@ -187,6 +187,17 @@ function json(response, status, body, headers = {}) {
   response.end(JSON.stringify(body));
 }
 
+function twiml(response, message) {
+  const safeMessage = String(message)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+  response.writeHead(200, { "Content-Type": "text/xml; charset=utf-8" });
+  response.end(`<?xml version="1.0" encoding="UTF-8"?><Response><Message>${safeMessage}</Message></Response>`);
+}
+
 function parseCookies(request) {
   return Object.fromEntries(
     (request.headers.cookie || "")
@@ -212,9 +223,13 @@ function readBody(request) {
     });
     request.on("end", () => {
       try {
-        resolve(body ? JSON.parse(body) : {});
+        if (!body) return resolve({});
+        if (String(request.headers["content-type"] || "").includes("application/x-www-form-urlencoded")) {
+          return resolve(Object.fromEntries(new URLSearchParams(body)));
+        }
+        resolve(JSON.parse(body));
       } catch {
-        reject(new Error("Invalid JSON"));
+        reject(new Error("Invalid request body"));
       }
     });
   });
@@ -405,6 +420,36 @@ async function handleApi(request, response) {
 
   if (request.method === "GET" && url.pathname === "/api/me") {
     return json(response, 200, { user: publicUser(currentUser(request, db)) });
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/twilio/sms") {
+    const body = await readBody(request);
+    const incoming = String(body.Body || "").trim().toUpperCase();
+    const from = String(body.From || "").trim();
+    const stopWords = new Set(["STOP", "STOPALL", "UNSUBSCRIBE", "CANCEL", "END", "QUIT"]);
+    const startWords = new Set(["START", "UNSTOP", "YES"]);
+
+    if (stopWords.has(incoming)) {
+      let changed = false;
+      for (const reminder of db.reminders) {
+        if (reminder.phone === from) {
+          reminder.channels = { ...(reminder.channels || {}), sms: false };
+          changed = true;
+        }
+      }
+      if (changed) await writeDb(db);
+      return twiml(response, "You have opted out of Walk With God text reminders. You will no longer receive reminder texts. Reply HELP for help or contact walkedwithgodtoday@gmail.com.");
+    }
+
+    if (incoming === "HELP") {
+      return twiml(response, "Walk With God help: text reminders are optional daily Scripture and prayer reminders. Reply STOP to unsubscribe. Email walkedwithgodtoday@gmail.com for support.");
+    }
+
+    if (startWords.has(incoming)) {
+      return twiml(response, "Walk With God received your message. To receive reminders, log in at walk-with-god.org and turn on text reminders in Reminder Settings. Reply STOP to unsubscribe.");
+    }
+
+    return twiml(response, "Walk With God received your message. Reply HELP for help or STOP to unsubscribe from text reminders.");
   }
 
   if (request.method === "POST" && url.pathname === "/api/auth/signup") {
