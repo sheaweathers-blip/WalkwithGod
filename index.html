@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Walk With God</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1f4b3b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Walk With God" />
+    <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
+    <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
+    <link rel="stylesheet" href="styles.css?v=20260629-twilio-optin-proof" />
+  </head>
+  <body>
+    <div class="server-warning" id="serverWarning" hidden>
+      Accounts, community, progress sync, and reminders require the server version:
+      <a href="http://127.0.0.1:4173">open http://127.0.0.1:4173</a>.
+    </div>
+    <main class="app-shell">
+      <section class="hero" aria-label="Walk With God overview">
+        <img class="hero-image" src="/assets/daily-devotion.png?v=20260627-visual-refresh" alt="" onerror="this.hidden=true; this.parentElement.classList.add('hero-fallback');" />
+        <div class="hero-scrim"></div>
+        <div class="hero-content">
+          <span class="brand-logo-shell" aria-label="Walk With God logo">
+            <img class="brand-logo" src="/assets/walk-with-god-logo.png?v=20260627-visual-refresh" alt="Walk With God logo" onerror="window.WWGUseLogoFallback?.(this) || (this.parentElement.hidden = true);" />
+          </span>
+          <p class="eyebrow">Daily Bible Focuses</p>
+          <h1>Walk With God</h1>
+          <p class="hero-copy">
+            Move through the story of Scripture one focused day at a time, completing each theme in its guided number of days.
+          </p>
+          <div class="hero-actions" id="heroActions">
+            <a class="primary-link" href="#account">Get Started Free</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="daily public-info-section" id="about">
+        <div class="section-heading">
+          <p class="eyebrow">About Walk With God</p>
+          <h2>Daily Scripture, prayer, movement, and community</h2>
+          <p class="section-copy">
+            Walk With God helps users build a daily faith rhythm through Bible-focused reading plans, active time with God, private notes, prayer requests, community encouragement, and optional reminders.
+          </p>
+        </div>
+        <div class="public-info-grid">
+          <article>
+            <strong>Free daily faith tools</strong>
+            <p>Create a free account to choose a focus, read Scripture, save notes, track progress, and join prayer/community features.</p>
+          </article>
+          <article>
+            <strong>Optional reminders</strong>
+            <p>App notifications are available for testing now. Email and text reminders are planned, but temporarily paused while business messaging setup and verification are completed.</p>
+          </article>
+          <article>
+            <strong>Contact</strong>
+            <p>Email <a href="mailto:walkedwithgodtoday@gmail.com">walkedwithgodtoday@gmail.com</a> for help, account questions, or SMS support.</p>
+          </article>
+        </div>
+        <p class="sms-public-note">
+          SMS notice: By choosing text reminders, users agree to receive reminder text messages from Walk With God. Message and data rates may apply. Message frequency varies based on reminder settings. Reply STOP to opt out and HELP for help.
+        </p>
+      </section>
+
+      <section class="daily account-section" id="account">
+        <div class="section-heading">
+          <p class="eyebrow">Account</p>
+          <h2 id="accountHeading">Start with a free account</h2>
+          <p class="section-copy" id="accountCopy">
+            Create an account or log in to open your daily focuses, prayer requests, community, notes, progress, and reminders.
+          </p>
+        </div>
+
+        <div class="account-card" id="accountCard">
+          <p id="accountStatus">Choose one option below to begin.</p>
+          <div class="support-message-list" id="supportMessageList"></div>
+          <div class="account-actions" id="accountActions">
+            <button class="copy-button" id="showSignupButton" type="button">Create Account</button>
+            <button class="quiet-button" id="showLoginButton" type="button">Log In</button>
+            <button class="quiet-button" id="showReminderSettingsButton" type="button" hidden>Reminder Settings</button>
+            <button class="quiet-button" id="logoutButton" type="button" hidden>Sign Out</button>
+          </div>
+          <form class="auth-form" id="authForm" hidden>
+            <div class="form-grid">
+              <label>
+                Name
+                <input id="authName" placeholder="Your name" />
+              </label>
+              <label>
+                Email
+                <input id="authEmail" type="email" placeholder="you@example.com" required />
+              </label>
+            </div>
+            <label>
+              Password
+              <input id="authPassword" type="password" placeholder="At least 8 characters" required />
+            </label>
+            <div class="reflection-actions">
+              <button class="copy-button" id="submitAuthButton" type="submit">Continue</button>
+              <button class="quiet-button" id="cancelAuthButton" type="button">Cancel</button>
+            </div>
+            <p class="copy-status" id="authMessage" role="status" aria-live="polite"></p>
+          </form>
+
+          <div class="onboarding-panel" id="onboardingPanel" hidden>
+            <p class="eyebrow">First Step</p>
+            <h3>What kind of focus would help right now?</h3>
+            <div class="onboarding-options" id="onboardingOptions">
+              <button class="quiet-button" type="button" data-suggest-focus="prayer-and-listening">Prayer</button>
+              <button class="quiet-button" type="button" data-suggest-focus="hardship-and-suffering">Hardship</button>
+              <button class="quiet-button" type="button" data-suggest-focus="holy-spirit">Holy Spirit</button>
+              <button class="quiet-button" type="button" data-suggest-focus="biblical-marriage">Marriage</button>
+            </div>
+          </div>
+
+          <div class="settings-panel" id="reminderSettingsPanel" hidden>
+            <div class="settings-panel-heading">
+              <p class="eyebrow">Profile Settings</p>
+              <h3>Daily Reminder</h3>
+            </div>
+            <form class="reminder-form" id="reminderForm">
+              <div class="reminder-availability-note">
+                <strong>Testing note:</strong>
+                App notifications are available right now. Text reminders can be selected for opt-in setup, but delivery depends on Twilio approval. Email reminders are temporarily paused.
+              </div>
+              <label>
+                Reminder time
+                <input id="reminderTime" type="time" />
+              </label>
+              <label>
+                Reminder words
+                <input id="reminderMessage" placeholder="Spend uninterrupted time with God today." />
+              </label>
+              <fieldset class="reminder-channels">
+                <legend>Reminder method</legend>
+                <label>
+                  <input id="reminderPush" type="checkbox" />
+                  App notification
+                </label>
+                <label class="reminder-channel-disabled">
+                  <input id="reminderEmail" type="checkbox" disabled />
+                  Email <span>Paused</span>
+                </label>
+                <label>
+                  <input id="reminderSms" type="checkbox" />
+                  Text message <span>Pending carrier approval</span>
+                </label>
+              </fieldset>
+              <label class="sms-consent-check" id="smsConsentWrapper">
+                <input id="smsConsent" type="checkbox" />
+                By checking this box, I agree to receive recurring text message reminders from Walk With God at the phone number I provide. These messages may include daily Scripture focus reminders, prayer/reflection prompts, and account-related reminder updates. Message frequency may vary, up to 1 message per day. Message and data rates may apply. Reply STOP to unsubscribe and HELP for help. Consent is not required to create an account or use the free app. See the <a href="/sms-consent.html" target="_blank" rel="noreferrer">SMS Consent</a>, <a href="/privacy.html" target="_blank" rel="noreferrer">Privacy Policy</a>, and <a href="/terms.html" target="_blank" rel="noreferrer">Terms</a>.
+              </label>
+              <div class="form-grid">
+                <label>
+                  Reminder email
+                  <input id="reminderEmailAddress" type="email" placeholder="you@example.com" />
+                </label>
+                <label>
+                  Text number
+                  <input id="reminderPhone" type="tel" placeholder="+15551234567" />
+                </label>
+              </div>
+              <div class="reflection-actions">
+                <button class="copy-button" type="submit">Save Reminder</button>
+                <button class="quiet-button" id="enablePushButton" type="button">Enable Push</button>
+                <button class="quiet-button" id="testPushButton" type="button">Test Reminder</button>
+              </div>
+              <p class="copy-status" id="reminderStatus" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="daily today-section" id="today" hidden>
+        <div class="today-card">
+          <div>
+            <p class="eyebrow">Today</p>
+            <h2 id="todayTitle">Begin today's walk</h2>
+            <p class="section-copy" id="todayCopy">Choose a focus to see your next Scripture, active time, and deed of the day.</p>
+          </div>
+          <div class="today-stats">
+            <div><strong id="streakCount">0</strong><span>day rhythm</span></div>
+            <div><strong id="favoriteCount">0</strong><span>favorite verses</span></div>
+          </div>
+          <div class="reflection-actions">
+            <button class="copy-button" id="continueTodayButton" type="button">Continue Today</button>
+            <button class="quiet-button" id="quickCompleteButton" type="button">Mark Complete</button>
+          </div>
+          <p class="copy-status" id="todayStatus" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="daily home-dashboard-section" id="homeDashboard" hidden>
+        <div class="home-dashboard-card">
+          <div class="home-dashboard-copy">
+            <p class="eyebrow">Today's Walk</p>
+            <h2 id="homeDashboardTitle">Your daily walk is ready</h2>
+            <p class="section-copy" id="homeDashboardCopy">
+              Continue your focus with Scripture, active time with God, application, and one lived deed.
+            </p>
+            <div class="dashboard-actions">
+              <a class="primary-link" href="#themes">Open Focus</a>
+              <a class="secondary-link" href="#community">Community</a>
+              <a class="secondary-link" href="#notesLibrary">Notes</a>
+            </div>
+          </div>
+          <div class="home-dashboard-metrics" aria-label="Daily progress snapshot">
+            <div>
+              <strong id="dashboardStreak">0</strong>
+              <span>day rhythm</span>
+            </div>
+            <div>
+              <strong id="dashboardProgress">0%</strong>
+              <span>focus progress</span>
+            </div>
+            <div>
+              <strong id="dashboardNotes">0</strong>
+              <span>saved notes</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="daily locked-section" id="lockedBenefits">
+        <div class="section-heading">
+          <p class="eyebrow">Free Account Required</p>
+          <h2>Create an account to begin your walk</h2>
+          <p class="section-copy">
+            Themes, daily progress, notes, prayer requests, community encouragement, reminders, and favorites are free after sign in.
+          </p>
+        </div>
+        <div class="locked-benefits-grid">
+          <article>
+            <strong>Daily Focuses</strong>
+            <p>Choose a Scripture theme and continue one guided day at a time.</p>
+          </article>
+          <article>
+            <strong>Prayer and Community</strong>
+            <p>Share prayer requests, react with encouragement, and walk with others.</p>
+          </article>
+          <article>
+            <strong>Personal Progress</strong>
+            <p>Save notes, favorite verses, reminders, and your daily rhythm.</p>
+          </article>
+        </div>
+        <p class="premium-note">
+          Coming later: optional premium experiences like virtual Bible classes, God-focused movement, breathwork, and deeper guided studies.
+        </p>
+      </section>
+
+      <section class="workspace" id="themes" hidden>
+        <aside class="library" aria-label="Daily focus themes">
+          <div class="section-heading">
+            <p class="eyebrow">Focus Library</p>
+            <h2>Choose a Theme</h2>
+          </div>
+          <div class="theme-list" id="themeList"></div>
+          <div class="prayer-breath-panel" id="prayerBreathPanel">
+            <p class="eyebrow">Prayer Breath</p>
+            <div class="breath-line">
+              <span>Breathe in</span>
+              <strong id="breatheInText">Lord, draw near.</strong>
+            </div>
+            <div class="breath-line">
+              <span>Breathe out</span>
+              <strong id="breatheOutText">I will walk with You.</strong>
+            </div>
+          </div>
+        </aside>
+
+        <section class="reader-panel" id="readerPanel" aria-label="Daily focus reader">
+          <div class="reader-empty" id="readerEmpty">
+            <p class="eyebrow">Select a Theme</p>
+            <h2>Choose a focus to begin</h2>
+            <p class="theme-purpose-intro">
+              Pick a theme from the library to open its daily progress, Scripture readings, active time with God, application question, deed of the day, and check-in notes.
+            </p>
+          </div>
+
+          <div class="reader-content" id="readerContent" hidden>
+            <div class="reader-topline">
+            <div>
+              <p class="eyebrow" id="activeCategoryLabel">Theme 1</p>
+              <h2 id="activeTitle">Creation</h2>
+            </div>
+            <span class="days-pill" id="daysPill">14 days</span>
+          </div>
+
+          <p class="theme-purpose-intro" id="activePurpose"></p>
+
+          <div class="progress-wrap">
+            <div class="progress-copy">
+              <span id="progressText">0 of 14 days complete</span>
+              <span id="encouragementText">Complete this focus in 14 days.</span>
+            </div>
+            <div class="progress-track" aria-hidden="true">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+
+          <div class="day-layout">
+            <div class="day-list" id="dayList" aria-label="Days in this focus"></div>
+
+            <article class="day-reader">
+              <p class="block-label" id="dayLabel">Day 1</p>
+              <h3 id="dayTitle">Creation of light</h3>
+              <p class="scripture-reference" id="scriptureText">Genesis 1:1-5</p>
+              <div class="verse-text-card" id="verseTextCard">
+                <div class="passage-card-heading">
+                  <p class="block-label">Full Passage</p>
+                  <button class="read-passage-button" id="readPassageButton" type="button">Read Passage Aloud</button>
+                </div>
+                <div class="read-passage-controls">
+                  <label>
+                    Speed
+                    <input id="passageRateInput" type="range" min="0.7" max="1.2" step="0.05" value="0.9" />
+                  </label>
+                  <label>
+                    Tone
+                    <input id="passagePitchInput" type="range" min="0.8" max="1.2" step="0.05" value="1" />
+                  </label>
+                </div>
+                <div id="verseText">Choose a day to load the passage.</div>
+                <p class="copy-status" id="readPassageStatus" role="status" aria-live="polite"></p>
+              </div>
+              <button class="favorite-button" id="favoriteVerseButton" type="button">Save Favorite Verse</button>
+              <p id="daySummary"></p>
+              <div class="daily-rhythm-grid">
+                <div class="rhythm-card">
+                  <p class="block-label">15-20 Minute Active Time With God</p>
+                  <p id="activeTimeText"></p>
+                </div>
+                <div class="rhythm-card">
+                  <p class="block-label">Application Question</p>
+                  <p id="applicationText"></p>
+                </div>
+                <div class="rhythm-card">
+                  <p class="block-label">Deed of the Day</p>
+                  <p id="deedText"></p>
+                </div>
+              </div>
+              <div class="implementation-box">
+                <p class="block-label">Check In</p>
+                <p id="implementationText"></p>
+                <label class="notes-label" for="noteInput">Private notes</label>
+                <textarea id="noteInput" placeholder="What did you notice, pray, practice, or need to return to?"></textarea>
+                <div class="guided-checkin">
+                  <label>
+                    What stood out?
+                    <input id="stoodOutInput" placeholder="A word, verse, conviction, or comfort" />
+                  </label>
+                  <label>
+                    What is God inviting me to do?
+                    <input id="invitationInput" placeholder="One faithful next step" />
+                  </label>
+                  <label>
+                    Who can I bless today?
+                    <input id="blessInput" placeholder="A name or situation" />
+                  </label>
+                </div>
+                <button class="quiet-button" id="saveNoteButton" type="button">Save Note</button>
+                <p class="copy-status" id="noteStatus" role="status" aria-live="polite"></p>
+              </div>
+              <div class="favorites-panel">
+                <p class="block-label">Favorite Verses</p>
+                <div id="favoriteVersesList"></div>
+              </div>
+              <div id="completionContainer"></div>
+              <div class="reader-actions">
+                <button class="complete-button" id="completeButton" type="button">Mark Day Complete</button>
+                <button class="quiet-button" id="nextButton" type="button">Next Day</button>
+              </div>
+            </article>
+          </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="daily notes-library-section" id="notesLibrary" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Private Notes</p>
+          <h2>Your saved notes library</h2>
+          <p class="section-copy">
+            Review your private notes across every focus without returning to each exact day.
+          </p>
+        </div>
+        <div class="notes-library-list" id="notesLibraryList"></div>
+      </section>
+
+      <section class="daily" id="community" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Community</p>
+          <h2>Walk alone or with others</h2>
+          <p class="section-copy">
+            Keep your check-in private, or add a simple community encouragement for others following the same focus.
+          </p>
+        </div>
+
+        <div class="mode-toggle" role="group" aria-label="Practice mode">
+          <button class="mode-button" id="soloModeButton" type="button">Solo</button>
+          <button class="mode-button" id="communityModeButton" type="button">Community</button>
+        </div>
+
+        <form class="community-form" id="communityForm">
+          <label>
+            Community check-in
+            <textarea id="communityInput" placeholder="Share one sentence of encouragement, gratitude, or what you practiced today."></textarea>
+          </label>
+          <button class="copy-button" type="submit">Share Check-In</button>
+          <p class="copy-status" id="communityStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="community-feed" id="communityFeed" aria-label="Community check-ins"></div>
+
+        <div class="reflection-actions prayer-board-actions">
+          <button class="quiet-button" id="togglePrayerBoardButton" type="button">View Prayer Requests</button>
+        </div>
+
+        <div class="prayer-board" id="prayerBoard" hidden>
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Prayer Requests</p>
+            <h3>Pray with the community</h3>
+          </div>
+          <form class="prayer-form" id="prayerForm">
+            <label>
+              Prayer request
+              <textarea id="prayerInput" placeholder="Share a prayer request with the community."></textarea>
+            </label>
+            <label class="inline-check">
+              <input id="anonymousPrayer" type="checkbox" />
+              Share anonymously
+            </label>
+            <button class="copy-button" type="submit">Share Prayer Request</button>
+            <p class="copy-status" id="prayerStatus" role="status" aria-live="polite"></p>
+          </form>
+          <div class="prayer-feed" id="prayerFeed"></div>
+        </div>
+      </section>
+
+      <section class="daily premium-section" id="premium" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Premium Coming Soon</p>
+          <h2>Deeper ways to walk with God</h2>
+          <p class="section-copy">
+            A preview of future paid experiences like virtual Bible classes, God-focused movement, breathwork prayer, and deeper guided studies.
+          </p>
+        </div>
+        <button class="premium-expand-button" type="button" data-premium-toggle="premiumOverview">Open Premium Preview</button>
+        <div class="premium-panel-content" id="premiumOverviewPanel" hidden>
+          <div class="premium-grid" id="premiumGrid"></div>
+          <p class="copy-status" id="premiumStatus" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="daily breathwork-section" id="breathwork" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Premium Breathwork Prayer</p>
+          <h2>30 days of breathing with God</h2>
+          <p class="section-copy">
+            A future premium video and audio series for calm, focus, emotional wellness, and prayer. Move gently, breathe comfortably, and stop if you feel lightheaded.
+          </p>
+        </div>
+        <button class="premium-expand-button" type="button" data-premium-toggle="breathwork">Open Breathwork Prayer</button>
+        <div class="premium-panel-content" id="breathworkPanel" hidden>
+          <div class="premium-lock-note" id="breathworkLockNote"></div>
+          <div class="breathwork-layout">
+          <div class="breathwork-list" id="breathworkList" aria-label="Breathwork routines"></div>
+          <article class="breathwork-reader">
+            <p class="block-label" id="breathworkDayLabel">Day 1</p>
+            <h3 id="breathworkTitle">Simply Breathe</h3>
+            <div class="breathwork-meta">
+              <span id="breathworkDuration">3 minutes</span>
+              <span id="breathworkTechnique">4-in, 4-out</span>
+            </div>
+            <p class="scripture-reference" id="breathworkScripture">Psalm 46:10</p>
+            <p id="breathworkPurpose"></p>
+            <div class="verse-text-card">
+              <p class="block-label">Guided Script</p>
+              <div id="breathworkScript"></div>
+            </div>
+            <div class="daily-rhythm-grid">
+              <div class="rhythm-card">
+                <p class="block-label">Future Video Visual</p>
+                <p id="breathworkVisual"></p>
+              </div>
+              <div class="rhythm-card">
+                <p class="block-label">Voiceover Direction</p>
+                <p id="breathworkVoice"></p>
+              </div>
+              <div class="rhythm-card">
+                <p class="block-label">Closing Prayer</p>
+                <p id="breathworkPrayer"></p>
+              </div>
+            </div>
+          </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="daily yoga-section" id="faithYoga" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Premium Faith-Led Yoga</p>
+          <h2>Christ-centered movement sessions</h2>
+          <p class="section-copy">
+            A future premium video series for gentle stretching, strength, mobility, rest, prayer, and Scripture meditation. Move slowly, honor your limits, and skip anything that does not feel safe for your body.
+          </p>
+        </div>
+        <button class="premium-expand-button" type="button" data-premium-toggle="faithYoga">Open Faith-Led Yoga</button>
+        <div class="premium-panel-content" id="faithYogaPanel" hidden>
+          <div class="premium-lock-note" id="yogaLockNote"></div>
+          <div class="yoga-layout">
+          <div class="yoga-list" id="yogaList" aria-label="Faith-led yoga sessions"></div>
+          <article class="yoga-reader">
+            <p class="block-label" id="yogaSessionLabel">Session 1</p>
+            <h3 id="yogaTitle">Begin in Stillness</h3>
+            <div class="yoga-meta">
+              <span id="yogaDuration">20 minutes</span>
+              <span id="yogaStyle">Gentle flow</span>
+            </div>
+            <p class="scripture-reference" id="yogaScripture">Psalm 46:10</p>
+            <p id="yogaIntention"></p>
+            <div class="verse-text-card">
+              <p class="block-label">Movement Flow</p>
+              <div id="yogaFlow"></div>
+            </div>
+            <div class="daily-rhythm-grid">
+              <div class="rhythm-card">
+                <p class="block-label">Future Video Visual</p>
+                <p id="yogaVisual"></p>
+              </div>
+              <div class="rhythm-card">
+                <p class="block-label">Voiceover Direction</p>
+                <p id="yogaVoice"></p>
+              </div>
+              <div class="rhythm-card">
+                <p class="block-label">Closing Prayer</p>
+                <p id="yogaPrayer"></p>
+              </div>
+            </div>
+          </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="daily bible-study-section" id="premiumBibleStudy" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Premium Bible Study</p>
+          <h2>In-depth Scripture sessions</h2>
+          <p class="section-copy">
+            A future premium class library for deeper Bible study, guided teaching, reflection, discussion, and practical discipleship.
+          </p>
+        </div>
+        <button class="premium-expand-button" type="button" data-premium-toggle="bibleStudy">Open Bible Study</button>
+        <div class="premium-panel-content" id="bibleStudyPanel" hidden>
+          <div class="premium-lock-note" id="bibleStudyLockNote"></div>
+          <div class="bible-study-layout">
+          <div class="bible-study-list" id="bibleStudyList" aria-label="Premium Bible study sessions"></div>
+          <article class="bible-study-reader">
+            <p class="block-label" id="bibleStudySessionLabel">Study 1</p>
+            <h3 id="bibleStudyTitle">How to Read Scripture With God</h3>
+            <div class="bible-study-meta">
+              <span id="bibleStudyDuration">35 minutes</span>
+              <span id="bibleStudyFormat">Teaching + reflection</span>
+            </div>
+            <p class="scripture-reference" id="bibleStudyScripture">2 Timothy 3:16-17</p>
+            <p id="bibleStudyAim"></p>
+            <div class="verse-text-card">
+              <p class="block-label">Teaching Outline</p>
+              <div id="bibleStudyOutline"></div>
+            </div>
+            <div class="daily-rhythm-grid">
+              <div class="rhythm-card">
+                <p class="block-label">Discussion Questions</p>
+                <p id="bibleStudyQuestions"></p>
+              </div>
+              <div class="rhythm-card">
+                <p class="block-label">Practice Assignment</p>
+                <p id="bibleStudyPractice"></p>
+              </div>
+              <div class="rhythm-card">
+                <p class="block-label">Closing Prayer</p>
+                <p id="bibleStudyPrayer"></p>
+              </div>
+            </div>
+          </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="daily walking-section" id="premiumWalking" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Premium Walking With God</p>
+          <h2>Guided prayer walks</h2>
+          <p class="section-copy">
+            A future premium walking library with Scripture-led movement, prayer prompts, reflection, and gentle pacing for daily devotion in motion.
+          </p>
+        </div>
+        <button class="premium-expand-button" type="button" data-premium-toggle="walking">Open Walking Sessions</button>
+        <div class="premium-panel-content" id="walkingPanel" hidden>
+          <div class="premium-lock-note" id="walkingLockNote"></div>
+          <div class="walking-layout">
+          <div class="walking-list" id="walkingList" aria-label="Premium walking sessions"></div>
+          <article class="walking-reader">
+            <p class="block-label" id="walkingSessionLabel">Walk 1</p>
+            <h3 id="walkingTitle">Begin the Day With God</h3>
+            <div class="walking-meta">
+              <span id="walkingDuration">15 minutes</span>
+              <span id="walkingPace">Easy pace</span>
+            </div>
+            <p class="scripture-reference" id="walkingScripture">Psalm 143:8</p>
+            <p id="walkingIntention"></p>
+            <div class="verse-text-card">
+              <p class="block-label">Guided Walk</p>
+              <div id="walkingGuide"></div>
+            </div>
+            <div class="daily-rhythm-grid">
+              <div class="rhythm-card">
+                <p class="block-label">Prayer Prompts</p>
+                <p id="walkingPrompts"></p>
+              </div>
+              <div class="rhythm-card">
+                <p class="block-label">Future Audio Visual</p>
+                <p id="walkingVisual"></p>
+              </div>
+              <div class="rhythm-card">
+                <p class="block-label">Closing Prayer</p>
+                <p id="walkingPrayer"></p>
+              </div>
+            </div>
+          </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="daily install-section" id="install" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Keep It Close</p>
+          <h2>Add Walk With God to your phone</h2>
+          <p class="section-copy">Install the app shortcut for quicker daily access when your reminder arrives.</p>
+        </div>
+        <button class="copy-button" id="installAppButton" type="button">Install App</button>
+        <p class="copy-status" id="installStatus" role="status" aria-live="polite"></p>
+      </section>
+
+      <nav class="mobile-app-nav" id="mobileAppNav" aria-label="App sections" hidden>
+        <a href="#today">Today</a>
+        <a href="#themes">Focus</a>
+        <a href="#notesLibrary">Notes</a>
+        <a href="#community">Community</a>
+        <a href="#account">Account</a>
+      </nav>
+
+      <section class="daily" id="feedback" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Feedback</p>
+          <h2>Tell the team what would help</h2>
+          <p class="section-copy">
+            Send feedback to the admin team about your account, a focus, the community, or the app experience.
+          </p>
+        </div>
+
+        <form class="feedback-form" id="feedbackForm">
+          <label>
+            Feedback type
+            <select id="feedbackType">
+              <option value="general">General feedback</option>
+              <option value="login">Login or account issue</option>
+              <option value="reminder">Reminder or notification issue</option>
+              <option value="confusing">Something was confusing</option>
+              <option value="mobile">Mobile layout issue</option>
+              <option value="read-aloud">Read aloud issue</option>
+              <option value="premium-preview">Premium preview feedback</option>
+              <option value="bug">Text, image, or button problem</option>
+              <option value="idea">Feature idea</option>
+              <option value="account">Account help</option>
+              <option value="focus">Daily focus</option>
+              <option value="community">Community</option>
+            </select>
+          </label>
+          <label>
+            Feedback
+            <textarea id="feedbackText" placeholder="What were you trying to do, what happened, and what device/browser were you using?"></textarea>
+          </label>
+          <button class="copy-button" type="submit">Send Feedback</button>
+          <p class="copy-status" id="feedbackStatus" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="daily" id="admin" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Admin</p>
+          <h2>Manage focuses</h2>
+          <p class="section-copy">
+            Additional themes can only be added from the admin area. New focuses are saved on this device.
+          </p>
+        </div>
+
+        <form class="admin-unlock-form" id="adminUnlockForm">
+          <label>
+            Admin code
+            <input id="adminCode" type="password" placeholder="Enter admin code" autocomplete="current-password" required />
+          </label>
+          <div class="reflection-actions">
+            <button class="copy-button" type="submit">Unlock Admin</button>
+            <button class="quiet-button" type="button" id="lockAdminButton" hidden>Lock Admin</button>
+          </div>
+          <p class="copy-status" id="adminStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <form class="add-focus-form" id="addFocusForm" hidden>
+          <div class="form-grid">
+            <label>
+              Focus title
+              <input id="newFocusTitle" placeholder="Example: The Life of Jesus" required />
+            </label>
+            <label>
+              Theme label
+              <input id="newFocusLabel" placeholder="Example: Theme 5" />
+            </label>
+          </div>
+          <label>
+            Focus description
+            <textarea id="newFocusDescription" placeholder="Briefly describe what this focus helps the user practice or understand." required></textarea>
+          </label>
+          <label>
+            Daily readings
+            <textarea id="newFocusDays" placeholder="Add one day per line: Day 1 | The Birth of Jesus | Luke 2:1-20" required></textarea>
+          </label>
+          <div class="reflection-actions">
+            <button class="copy-button" type="submit">Add Focus</button>
+            <button class="quiet-button" type="button" id="clearAddedFocuses">Clear Added Focuses</button>
+          </div>
+          <p class="copy-status" id="addFocusStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <form class="premium-content-form" id="premiumContentForm" hidden>
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Premium</p>
+            <h3>Add future premium content</h3>
+          </div>
+          <div class="form-grid">
+            <label>
+              Content type
+              <select id="premiumContentType">
+                <option value="Bible Class">Bible Class</option>
+                <option value="Movement With God">Movement With God</option>
+                <option value="Breathwork Prayer">Breathwork Prayer</option>
+                <option value="Premium Study">Premium Study</option>
+              </select>
+            </label>
+            <label>
+              Length
+              <input id="premiumContentLength" placeholder="Example: 20 minutes or 4 lessons" />
+            </label>
+          </div>
+          <label>
+            Title
+            <input id="premiumContentTitle" placeholder="Example: Gentle Morning Prayer Flow" required />
+          </label>
+          <label>
+            Scripture
+            <input id="premiumContentScripture" placeholder="Example: Psalm 23:3" />
+          </label>
+          <label>
+            Description
+            <textarea id="premiumContentDescription" placeholder="Describe what this class, movement session, breathwork, or study will help users practice." required></textarea>
+          </label>
+          <label>
+            Optional link
+            <input id="premiumContentUrl" placeholder="Future video, class, or resource link" />
+          </label>
+          <button class="copy-button" type="submit">Add Premium Preview</button>
+          <p class="copy-status" id="premiumContentStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="admin-dashboard" id="adminDashboard" hidden>
+          <div class="admin-summary" id="adminSummary"></div>
+
+          <div class="admin-grid">
+            <section class="admin-panel">
+              <h3>Client Accounts</h3>
+              <div class="admin-list" id="adminUserList"></div>
+            </section>
+
+            <section class="admin-panel">
+              <h3>Selected Client</h3>
+              <div id="adminUserDetail" class="admin-detail">Choose a client to view support details.</div>
+              <form class="admin-support-form" id="adminSupportForm" hidden>
+                <label>
+                  Support message
+                  <textarea id="adminSupportMessage" placeholder="Send a short support message to this client."></textarea>
+                </label>
+                <div class="reflection-actions">
+                  <button class="copy-button" type="submit">Send Message</button>
+                  <button class="quiet-button" type="button" id="adminResetPasswordButton">Reset Password</button>
+                </div>
+                <p class="copy-status" id="adminSupportStatus" role="status" aria-live="polite"></p>
+              </form>
+            </section>
+          </div>
+
+          <div class="admin-grid">
+            <section class="admin-panel">
+              <h3>Feedback Inbox</h3>
+              <div class="admin-list" id="adminFeedbackList"></div>
+            </section>
+
+            <section class="admin-panel">
+              <h3>Community Reports</h3>
+              <div class="admin-list" id="adminReportList"></div>
+            </section>
+          </div>
+
+          <div class="admin-grid">
+            <section class="admin-panel">
+              <h3>Community Posts</h3>
+              <div class="admin-list" id="adminCommunityList"></div>
+            </section>
+
+            <section class="admin-panel">
+              <h3>Prayer Requests</h3>
+              <div class="admin-list" id="adminPrayerList"></div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <strong>Walk With God</strong>
+      <span>Contact: <a href="mailto:walkedwithgodtoday@gmail.com">walkedwithgodtoday@gmail.com</a></span>
+      <nav aria-label="Legal links">
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/sms-consent.html">SMS Consent</a>
+        <a href="/twilio-opt-in-proof.html">SMS Opt-In Proof</a>
+      </nav>
+    </footer>
+
+    <script src="app.js?v=20260627-visual-refresh"></script>
+  </body>
+</html>
