@@ -1273,6 +1273,39 @@ select:focus {
   font-weight: 850;
 }
 
+.account-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(31, 75, 59, 0.14);
+}
+
+.account-shortcuts a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  color: var(--deep-green);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(232, 242, 226, 0.74));
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.account-shortcuts a:hover,
+.account-shortcuts a:focus {
+  border-color: var(--green);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(216, 235, 208, 0.88));
+}
+
 .settings-panel {
   margin-top: 18px;
   padding-top: 18px;
@@ -2491,6 +2524,10 @@ select:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .account-shortcuts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .home-dashboard-section {
     margin-top: 0;
   }
@@ -2612,5 +2649,9 @@ select:focus {
 
   .dashboard-actions {
     display: grid;
+  }
+
+  .account-shortcuts {
+    grid-template-columns: 1fr;
   }
 }

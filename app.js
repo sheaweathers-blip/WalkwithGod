@@ -645,6 +645,7 @@ const accountHeading = document.querySelector("#accountHeading");
 const accountCopy = document.querySelector("#accountCopy");
 const supportMessageList = document.querySelector("#supportMessageList");
 const accountActions = document.querySelector("#accountActions");
+const accountShortcuts = document.querySelector("#accountShortcuts");
 const showSignupButton = document.querySelector("#showSignupButton");
 const showLoginButton = document.querySelector("#showLoginButton");
 const showReminderSettingsButton = document.querySelector("#showReminderSettingsButton");
@@ -968,6 +969,7 @@ function renderAccount() {
     showLoginButton.hidden = true;
     showReminderSettingsButton.hidden = false;
     logoutButton.hidden = false;
+    if (accountShortcuts) accountShortcuts.hidden = false;
   } else {
     accountHeading.textContent = "Start with a free account";
     accountCopy.textContent = "Create an account or log in to open your daily focuses, prayer requests, community, notes, progress, and reminders.";
@@ -977,6 +979,7 @@ function renderAccount() {
     showReminderSettingsButton.hidden = true;
     reminderSettingsPanel.hidden = true;
     logoutButton.hidden = true;
+    if (accountShortcuts) accountShortcuts.hidden = true;
   }
   onboardingPanel.hidden = Boolean(state.activeId) || !state.user;
   supportMessageList.innerHTML = state.supportMessages.length
