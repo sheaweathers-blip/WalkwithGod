@@ -1040,12 +1040,23 @@ select:focus {
   background: #fff;
 }
 
+.music-toggle-button.is-playing {
+  color: #fff;
+  border-color: var(--green);
+  background:
+    linear-gradient(135deg, var(--deep-green), var(--green));
+}
+
 .copy-status {
   min-height: 22px;
   margin: 10px 0 0;
   color: var(--green);
   font-size: 0.92rem;
   font-weight: 750;
+}
+
+.music-status:empty {
+  display: none;
 }
 
 .daily {

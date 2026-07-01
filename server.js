@@ -34,6 +34,8 @@ const types = {
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".png": "image/png",
+  ".mp3": "audio/mpeg",
+  ".wav": "audio/wav",
   ".json": "application/json; charset=utf-8"
 };
 

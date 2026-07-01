@@ -649,6 +649,9 @@ const accountShortcuts = document.querySelector("#accountShortcuts");
 const showSignupButton = document.querySelector("#showSignupButton");
 const showLoginButton = document.querySelector("#showLoginButton");
 const showReminderSettingsButton = document.querySelector("#showReminderSettingsButton");
+const musicToggleButton = document.querySelector("#musicToggleButton");
+const backgroundMusic = document.querySelector("#backgroundMusic");
+const musicStatus = document.querySelector("#musicStatus");
 const authForm = document.querySelector("#authForm");
 const authName = document.querySelector("#authName");
 const authEmail = document.querySelector("#authEmail");
@@ -968,6 +971,7 @@ function renderAccount() {
     showSignupButton.hidden = true;
     showLoginButton.hidden = true;
     showReminderSettingsButton.hidden = false;
+    if (musicToggleButton) musicToggleButton.hidden = false;
     logoutButton.hidden = false;
     if (accountShortcuts) accountShortcuts.hidden = false;
   } else {
@@ -977,6 +981,7 @@ function renderAccount() {
     showSignupButton.hidden = false;
     showLoginButton.hidden = false;
     showReminderSettingsButton.hidden = true;
+    if (musicToggleButton) musicToggleButton.hidden = true;
     reminderSettingsPanel.hidden = true;
     logoutButton.hidden = true;
     if (accountShortcuts) accountShortcuts.hidden = true;
@@ -989,6 +994,41 @@ function renderAccount() {
         .map((message) => `<article class="support-message"><strong>Admin message</strong><p>${escapeHtml(message.text)}</p></article>`)
         .join("")
     : "";
+  renderMusicControl();
+}
+
+function musicPreferred() {
+  return localStorage.getItem("walkWithGodMusicEnabled") === "true";
+}
+
+function renderMusicControl() {
+  if (!musicToggleButton || !backgroundMusic) return;
+  const isPlaying = !backgroundMusic.paused;
+  musicToggleButton.textContent = isPlaying ? "Pause Music" : "Play Music";
+  musicToggleButton.classList.toggle("is-playing", isPlaying);
+  if (musicStatus && !state.user) musicStatus.textContent = "";
+}
+
+async function playBackgroundMusic() {
+  if (!backgroundMusic) return;
+  backgroundMusic.volume = 0.28;
+  try {
+    await backgroundMusic.play();
+    localStorage.setItem("walkWithGodMusicEnabled", "true");
+    if (musicStatus) musicStatus.textContent = "Gentle background music is playing.";
+  } catch {
+    localStorage.removeItem("walkWithGodMusicEnabled");
+    if (musicStatus) musicStatus.textContent = "Tap Play Music again if your browser blocked audio.";
+  }
+  renderMusicControl();
+}
+
+function pauseBackgroundMusic(message = "Music paused.") {
+  if (!backgroundMusic) return;
+  backgroundMusic.pause();
+  localStorage.removeItem("walkWithGodMusicEnabled");
+  if (musicStatus) musicStatus.textContent = message;
+  renderMusicControl();
 }
 
 function renderAccessGate() {
@@ -2619,6 +2659,22 @@ showReminderSettingsButton.addEventListener("click", () => {
     reminderStatus.textContent = state.user ? `Reminder set for ${reminderTime.value}.` : "";
   }
 });
+
+if (musicToggleButton && backgroundMusic) {
+  musicToggleButton.addEventListener("click", () => {
+    if (backgroundMusic.paused) {
+      playBackgroundMusic();
+    } else {
+      pauseBackgroundMusic();
+    }
+  });
+  backgroundMusic.addEventListener("play", renderMusicControl);
+  backgroundMusic.addEventListener("pause", renderMusicControl);
+  backgroundMusic.addEventListener("error", () => {
+    if (musicStatus) musicStatus.textContent = "Music could not load right now.";
+    renderMusicControl();
+  });
+}
 cancelAuthButton.addEventListener("click", () => {
   authForm.hidden = true;
   authMessage.textContent = "";
@@ -3062,6 +3118,9 @@ async function init() {
   }
   await registerAppShell();
   render();
+  if (state.user && musicPreferred()) {
+    if (musicStatus) musicStatus.textContent = "Tap Play Music to resume gentle background music.";
+  }
 }
 
 init();

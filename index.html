@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260629-twilio-optin-proof" />
+    <link rel="stylesheet" href="styles.css?v=20260701-music" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -79,6 +79,7 @@
             <button class="copy-button" id="showSignupButton" type="button">Create Account</button>
             <button class="quiet-button" id="showLoginButton" type="button">Log In</button>
             <button class="quiet-button" id="showReminderSettingsButton" type="button" hidden>Reminder Settings</button>
+            <button class="quiet-button music-toggle-button" id="musicToggleButton" type="button" hidden>Play Music</button>
             <button class="quiet-button" id="logoutButton" type="button" hidden>Sign Out</button>
           </div>
           <nav class="account-shortcuts" id="accountShortcuts" aria-label="Account shortcuts" hidden>
@@ -89,6 +90,7 @@
             <a href="#premium">Premium Preview</a>
             <a href="#install">Install App</a>
           </nav>
+          <p class="copy-status music-status" id="musicStatus" role="status" aria-live="polite"></p>
           <form class="auth-form" id="authForm" hidden>
             <div class="form-grid">
               <label>
@@ -846,6 +848,7 @@
       </nav>
     </footer>
 
-    <script src="app.js?v=20260627-visual-refresh"></script>
+    <audio id="backgroundMusic" src="/assets/sunlit-dream.mp3?v=20260701-music" preload="none" loop></audio>
+    <script src="app.js?v=20260701-music"></script>
   </body>
 </html>
