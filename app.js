@@ -2471,7 +2471,12 @@ testPushButton.addEventListener("click", async () => {
   try {
     if (!state.user) throw new Error("Sign in before testing reminders.");
     state.reminder = reminderFromForm();
-    state.reminder.channels = { push: true, email: false, sms: false };
+    if (state.reminder.channels.sms && !state.reminder.phone) {
+      throw new Error("Enter a phone number before testing text reminders.");
+    }
+    if (state.reminder.channels.sms && smsConsent && !smsConsent.checked) {
+      throw new Error("Please agree to the text reminder consent before testing SMS reminders.");
+    }
     saveReminder();
     await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
     const result = await apiFetch("/api/push/test", { method: "POST", body: JSON.stringify({}) });
@@ -2482,7 +2487,7 @@ testPushButton.addEventListener("click", async () => {
     });
     reminderStatus.textContent = channelResults.length
       ? channelResults.join(" | ")
-      : "No app notification device is enabled. Click Save Reminder or Enable Push first.";
+      : "No reminder channel is enabled. Choose app notification or text message first.";
   } catch (error) {
     reminderStatus.textContent = error.message;
   }
