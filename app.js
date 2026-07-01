@@ -573,6 +573,16 @@ const premiumWalkingSessions = [
   prayer
 }));
 
+const backgroundMusicTracks = [
+  ["Sunlit Dream", "/assets/music/sunlit-dream.mp3?v=20260701-playlist"],
+  ["Nature Breath", "/assets/music/nature-breath.mp3?v=20260701-playlist"],
+  ["Sacred Breath", "/assets/music/sacred-breath.mp3?v=20260701-playlist"],
+  ["Holy Resonance", "/assets/music/holy-resonance.mp3?v=20260701-playlist"],
+  ["Eden Echoes", "/assets/music/eden-echoes.mp3?v=20260701-playlist"],
+  ["Living Waters", "/assets/music/living-waters.mp3?v=20260701-playlist"],
+  ["Creation Sings", "/assets/music/creation-sings.mp3?v=20260701-playlist"]
+].map(([title, src], index) => ({ title, src, index }));
+
 const state = {
   focuses: [...defaultFocuses, ...loadAddedFocuses()],
   activeId: localStorage.getItem("walkWithGodActiveFocus") || "",
@@ -594,6 +604,7 @@ const state = {
   currentPassageReference: "",
   currentPassageText: "",
   isReadingPassage: false,
+  activeMusicIndex: Number(localStorage.getItem("walkWithGodMusicIndex") || 0),
   speechSettings: JSON.parse(localStorage.getItem("walkWithGodSpeechSettings") || '{"voiceURI":"","rate":0.9,"pitch":1}'),
   premiumContent: [],
   isPremium: false,
@@ -1001,21 +1012,39 @@ function musicPreferred() {
   return localStorage.getItem("walkWithGodMusicEnabled") === "true";
 }
 
+function activeMusicTrack() {
+  state.activeMusicIndex = Math.max(0, Math.min(state.activeMusicIndex, backgroundMusicTracks.length - 1));
+  return backgroundMusicTracks[state.activeMusicIndex] || backgroundMusicTracks[0];
+}
+
+function loadActiveMusicTrack() {
+  if (!backgroundMusic) return null;
+  const track = activeMusicTrack();
+  if (!backgroundMusic.src.endsWith(track.src)) {
+    backgroundMusic.src = track.src;
+    backgroundMusic.load();
+  }
+  return track;
+}
+
 function renderMusicControl() {
   if (!musicToggleButton || !backgroundMusic) return;
   const isPlaying = !backgroundMusic.paused;
+  const track = activeMusicTrack();
   musicToggleButton.textContent = isPlaying ? "Pause Music" : "Play Music";
   musicToggleButton.classList.toggle("is-playing", isPlaying);
+  musicToggleButton.title = `${isPlaying ? "Now playing" : "Ready to play"}: ${track.title}`;
   if (musicStatus && !state.user) musicStatus.textContent = "";
 }
 
 async function playBackgroundMusic() {
   if (!backgroundMusic) return;
+  const track = loadActiveMusicTrack();
   backgroundMusic.volume = 0.28;
   try {
     await backgroundMusic.play();
     localStorage.setItem("walkWithGodMusicEnabled", "true");
-    if (musicStatus) musicStatus.textContent = "Gentle background music is playing.";
+    if (musicStatus) musicStatus.textContent = `Now playing: ${track.title}.`;
   } catch {
     localStorage.removeItem("walkWithGodMusicEnabled");
     if (musicStatus) musicStatus.textContent = "Tap Play Music again if your browser blocked audio.";
@@ -1029,6 +1058,13 @@ function pauseBackgroundMusic(message = "Music paused.") {
   localStorage.removeItem("walkWithGodMusicEnabled");
   if (musicStatus) musicStatus.textContent = message;
   renderMusicControl();
+}
+
+function playNextBackgroundTrack() {
+  if (!backgroundMusicTracks.length) return;
+  state.activeMusicIndex = (state.activeMusicIndex + 1) % backgroundMusicTracks.length;
+  localStorage.setItem("walkWithGodMusicIndex", String(state.activeMusicIndex));
+  playBackgroundMusic();
 }
 
 function renderAccessGate() {
@@ -2670,6 +2706,7 @@ if (musicToggleButton && backgroundMusic) {
   });
   backgroundMusic.addEventListener("play", renderMusicControl);
   backgroundMusic.addEventListener("pause", renderMusicControl);
+  backgroundMusic.addEventListener("ended", playNextBackgroundTrack);
   backgroundMusic.addEventListener("error", () => {
     if (musicStatus) musicStatus.textContent = "Music could not load right now.";
     renderMusicControl();
@@ -3104,6 +3141,7 @@ async function init() {
   if (speechSupported()) {
     window.speechSynthesis.onvoiceschanged = populateVoiceOptions;
   }
+  loadActiveMusicTrack();
   try {
     const result = await apiFetch("/api/me");
     state.user = result.user;
