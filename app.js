@@ -1685,7 +1685,7 @@ function renderReminder() {
   reminderPhone.value = state.reminder.phone || "";
   const supportMessage = notificationSupportMessage();
   reminderStatus.textContent = state.user
-    ? supportMessage || `App reminder settings ready for ${reminderTime.value}. Text delivery depends on Twilio approval.`
+    ? supportMessage || `Reminder settings ready for ${reminderTime.value}. Text reminders are available when selected.`
     : "Sign in to save app reminders to your account and enable push.";
 }
 
@@ -2412,7 +2412,7 @@ reminderForm.addEventListener("submit", async (event) => {
     }
     await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
     reminderStatus.textContent = state.reminder.channels.sms
-      ? `Reminder saved for ${state.reminder.time}. Text opt-in is recorded; SMS delivery depends on Twilio approval.`
+      ? `Reminder saved for ${state.reminder.time}. Text reminders are turned on for this account.`
       : `App reminder saved for ${state.reminder.time}.`;
   } catch (error) {
     reminderStatus.textContent = error.message;
