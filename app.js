@@ -442,7 +442,7 @@ let reminderChannelAvailability = {
   sms: true
 };
 const premiumBreathworkRoutines = [
-  ["Day 1", "Simply Breathe", "3 minutes", "4-in, 4-out", "Awareness", "Psalm 46:10", "Today, simply notice the breath. Inhale for 4, exhale for 4. Nothing to fix, nothing to achieve, just breathe with God.", "Soft morning light over a walking path", "Slow, reassuring, spacious voice with pauses after each count.", "Lord, teach me to begin with You, one quiet breath at a time."],
+  ["Day 1", "Simply Breathe", "3 minutes", "4-in, 4-out", "Awareness", "Psalm 46:10", "Today, simply notice the breath. Inhale for 4, exhale for 4. Nothing to fix, nothing to achieve, just breathe with God.", "Soft morning light over a walking path", "Slow, reassuring, spacious voice with pauses after each count.", "Lord, teach me to begin with You, one quiet breath at a time.", "/api/premium-media/breathwork-day-1"],
   ["Day 2", "Let Go", "3 minutes", "4-in, 6-out", "Releasing tension", "1 Peter 5:7", "Inhale gently for 4. Exhale slowly for 6. With every longer exhale, release what you cannot control into God's care.", "Flowing river or slow clouds", "Warm and calm, emphasizing release on each exhale.", "Father, I give You what I was not meant to carry alone."],
   ["Day 3", "Ground Yourself", "4 minutes", "Belly breathing", "Presence", "Colossians 2:7", "Place a hand on your belly. Let the breath rise and fall slowly. Notice that you are here, held by God, rooted in His love.", "Forest floor, moss, steady trees", "Grounded, gentle, with quiet reminders to relax the shoulders.", "Root me in Your truth and steady my heart today."],
   ["Day 4", "Quiet the Mind", "4 minutes", "Box breathing", "Calm thoughts", "Isaiah 26:3", "Inhale 4, hold 4, exhale 4, hold 4. Imagine tracing a square while your thoughts settle before the Lord.", "Gentle ocean waves", "Clear counting with peaceful space between rounds.", "Keep my mind stayed on You and lead me into peace."],
@@ -472,7 +472,7 @@ const premiumBreathworkRoutines = [
   ["Day 28", "Surrender", "6 minutes", "Long exhale surrender", "Letting go", "Luke 22:42", "Name one burden. Inhale God's presence. Exhale: Into Your hands. Repeat gently.", "Hands open, quiet trail, soft sky", "Reverent, gentle, not rushed.", "Not my will, but Yours be done."],
   ["Day 29", "Walking With God", "8 minutes", "Walking breath prayer", "Active prayer", "Micah 6:8", "Walk slowly if you can. Match prayer to your steps: justice, mercy, humility, with God.", "Walking path through trees", "Active, grounded, rhythmic.", "Teach me to walk humbly with You in ordinary life."],
   ["Day 30", "Celebration and Renewal", "10 minutes", "Review and prayer", "Celebration", "2 Corinthians 5:17", "For thirty days you have paused, breathed, reflected, and grown. Review what God has been forming in you.", "Sunrise, open road, joyful nature", "Celebratory but peaceful, with gratitude.", "Make me new, Lord, and continue this work in me."]
-].map(([day, title, duration, technique, purpose, scripture, script, visual, voice, prayer], index) => ({
+].map(([day, title, duration, technique, purpose, scripture, script, visual, voice, prayer, audioSrc], index) => ({
   id: `breathwork-${index + 1}`,
   day,
   title,
@@ -483,7 +483,8 @@ const premiumBreathworkRoutines = [
   script,
   visual,
   voice,
-  prayer
+  prayer,
+  audioSrc
 }));
 const premiumYogaSessions = [
   ["Session 1", "Begin in Stillness", "20 minutes", "Gentle flow", "Psalm 46:10", "Settle your body and attention before God before moving into the day.", "Opening seated breath prayer, neck and shoulder release, cat-cow, child's pose, low lunge, forward fold, gentle twist, supported rest.", "Soft morning light, mat near a window, calm greenery", "Quiet and reverent, with simple cues and Scripture woven between movements.", "Lord, quiet my striving and help my body and soul become still before You."],
@@ -753,6 +754,9 @@ const breathworkScript = document.querySelector("#breathworkScript");
 const breathworkVisual = document.querySelector("#breathworkVisual");
 const breathworkVoice = document.querySelector("#breathworkVoice");
 const breathworkPrayer = document.querySelector("#breathworkPrayer");
+const breathworkMediaCard = document.querySelector("#breathworkMediaCard");
+const breathworkAudio = document.querySelector("#breathworkAudio");
+const breathworkAudioNote = document.querySelector("#breathworkAudioNote");
 const yogaLockNote = document.querySelector("#yogaLockNote");
 const yogaList = document.querySelector("#yogaList");
 const yogaSessionLabel = document.querySelector("#yogaSessionLabel");
@@ -2007,6 +2011,21 @@ function renderBreathwork() {
   breathworkScript.innerHTML = isUnlocked
     ? `<p>${escapeHtml(routine.script)}</p>`
     : `<p>This guided script is part of the future premium breathwork prayer library.</p><small>Preview: ${escapeHtml(routine.purpose)} with ${escapeHtml(routine.technique)}.</small>`;
+  if (breathworkMediaCard && breathworkAudio && breathworkAudioNote) {
+    const canPlayMedia = isUnlocked && Boolean(routine.audioSrc);
+    breathworkMediaCard.hidden = !canPlayMedia;
+    if (canPlayMedia) {
+      if (!breathworkAudio.src.endsWith(routine.audioSrc)) {
+        breathworkAudio.src = routine.audioSrc;
+        breathworkAudio.load();
+      }
+      breathworkAudioNote.textContent = "Admin/premium-only audio for building the first finished breathwork video.";
+    } else {
+      breathworkAudio.removeAttribute("src");
+      breathworkAudio.load();
+      breathworkAudioNote.textContent = "";
+    }
+  }
   breathworkVisual.textContent = isUnlocked ? routine.visual : "Visual direction unlocks with the premium production plan.";
   breathworkVoice.textContent = isUnlocked ? routine.voice : "Voiceover direction unlocks with the full premium script.";
   breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Closing prayer unlocks with the full premium routine.";

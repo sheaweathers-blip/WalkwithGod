@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260701-continuous-music" />
+    <link rel="stylesheet" href="styles.css?v=20260701-premium-media-lock" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -486,6 +486,11 @@
             </div>
             <p class="scripture-reference" id="breathworkScripture">Psalm 46:10</p>
             <p id="breathworkPurpose"></p>
+            <div class="premium-media-card" id="breathworkMediaCard" hidden>
+              <p class="block-label">Premium Audio Preview</p>
+              <audio id="breathworkAudio" controls preload="none"></audio>
+              <p id="breathworkAudioNote"></p>
+            </div>
             <div class="verse-text-card">
               <p class="block-label">Guided Script</p>
               <div id="breathworkScript"></div>
@@ -850,6 +855,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260701-continuous-music"></script>
+    <script src="app.js?v=20260701-premium-media-lock"></script>
   </body>
 </html>

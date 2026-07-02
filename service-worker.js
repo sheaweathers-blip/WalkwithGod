@@ -1,6 +1,6 @@
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open("walk-with-god-v29").then((cache) =>
+    caches.open("walk-with-god-v30").then((cache) =>
       cache.addAll([
         "/",
         "/index.html",
@@ -8,8 +8,8 @@ self.addEventListener("install", (event) => {
         "/terms.html",
         "/sms-consent.html",
         "/twilio-opt-in-proof.html",
-        "/styles.css?v=20260701-continuous-music",
-        "/app.js?v=20260701-continuous-music",
+        "/styles.css?v=20260701-premium-media-lock",
+        "/app.js?v=20260701-premium-media-lock",
         "/logo-fallback.js?v=20260627-visual-refresh",
         "/manifest.json",
         "/assets/daily-devotion.png",
@@ -25,19 +25,23 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v29").map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v30").map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  if (new URL(event.request.url).pathname.startsWith("/api/premium-media/")) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
   event.respondWith(
     fetch(event.request)
       .then((response) => {
         if (!response || !response.ok) return response;
         const copy = response.clone();
-        caches.open("walk-with-god-v29").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
+        caches.open("walk-with-god-v30").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
         return response;
       })
       .catch(() => caches.match(event.request).then((cached) => {

@@ -39,6 +39,10 @@ const types = {
   ".json": "application/json; charset=utf-8"
 };
 
+const premiumMedia = {
+  "breathwork-day-1": "breathwork-day-1.wav"
+};
+
 function ensureData() {
   fs.mkdirSync(dataDir, { recursive: true });
   if (!fs.existsSync(dbPath)) {
@@ -807,6 +811,27 @@ async function handleApi(request, response) {
     return json(response, 200, { content, isPremium });
   }
 
+  if (request.method === "GET" && url.pathname.startsWith("/api/premium-media/")) {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const isPremium = user.role === "admin" || user.subscriptionStatus === "premium";
+    if (!isPremium) return json(response, 403, { error: "Premium access is required." });
+    const mediaId = url.pathname.replace("/api/premium-media/", "");
+    const filename = premiumMedia[mediaId];
+    if (!filename) return json(response, 404, { error: "Premium media not found." });
+    const filePath = path.join(root, "premium-media", filename);
+    fs.readFile(filePath, (error, data) => {
+      if (error) return json(response, 404, { error: "Premium media not found." });
+      response.writeHead(200, {
+        "Content-Type": types[path.extname(filePath)] || "application/octet-stream",
+        "Content-Length": data.length,
+        "Cache-Control": "no-store"
+      });
+      response.end(data);
+    });
+    return;
+  }
+
   if (url.pathname.startsWith("/api/admin/")) {
     const admin = requireAdmin(request, response, db);
     if (!admin) return;
@@ -1015,6 +1040,12 @@ async function handleApi(request, response) {
 function serveStatic(request, response) {
   const requestedPath = request.url === "/" ? "/index.html" : request.url.split("?")[0];
   const filePath = path.normalize(path.join(root, decodeURIComponent(requestedPath)));
+
+  if (requestedPath.startsWith("/premium-media/") || requestedPath.startsWith("/data/")) {
+    response.writeHead(404);
+    response.end("Not found");
+    return;
+  }
 
   if (!filePath.startsWith(root)) {
     response.writeHead(403);
