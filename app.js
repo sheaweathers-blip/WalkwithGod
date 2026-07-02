@@ -661,6 +661,7 @@ const showSignupButton = document.querySelector("#showSignupButton");
 const showLoginButton = document.querySelector("#showLoginButton");
 const showReminderSettingsButton = document.querySelector("#showReminderSettingsButton");
 const musicToggleButton = document.querySelector("#musicToggleButton");
+const musicSkipButton = document.querySelector("#musicSkipButton");
 const backgroundMusic = document.querySelector("#backgroundMusic");
 const musicStatus = document.querySelector("#musicStatus");
 const authForm = document.querySelector("#authForm");
@@ -983,6 +984,7 @@ function renderAccount() {
     showLoginButton.hidden = true;
     showReminderSettingsButton.hidden = false;
     if (musicToggleButton) musicToggleButton.hidden = false;
+    if (musicSkipButton) musicSkipButton.hidden = false;
     logoutButton.hidden = false;
     if (accountShortcuts) accountShortcuts.hidden = false;
   } else {
@@ -993,6 +995,7 @@ function renderAccount() {
     showLoginButton.hidden = false;
     showReminderSettingsButton.hidden = true;
     if (musicToggleButton) musicToggleButton.hidden = true;
+    if (musicSkipButton) musicSkipButton.hidden = true;
     reminderSettingsPanel.hidden = true;
     logoutButton.hidden = true;
     if (accountShortcuts) accountShortcuts.hidden = true;
@@ -1034,6 +1037,7 @@ function renderMusicControl() {
   musicToggleButton.textContent = isPlaying ? "Pause Music" : "Play Music";
   musicToggleButton.classList.toggle("is-playing", isPlaying);
   musicToggleButton.title = `${isPlaying ? "Now playing" : "Ready to play"}: ${track.title}`;
+  if (musicSkipButton) musicSkipButton.title = `Skip ${track.title}`;
   if (musicStatus && !state.user) musicStatus.textContent = "";
 }
 
@@ -1062,9 +1066,16 @@ function pauseBackgroundMusic(message = "Music paused.") {
 
 function playNextBackgroundTrack() {
   if (!backgroundMusicTracks.length) return;
+  const wasPlaying = backgroundMusic && !backgroundMusic.paused;
   state.activeMusicIndex = (state.activeMusicIndex + 1) % backgroundMusicTracks.length;
   localStorage.setItem("walkWithGodMusicIndex", String(state.activeMusicIndex));
-  playBackgroundMusic();
+  const track = loadActiveMusicTrack();
+  if (musicStatus) musicStatus.textContent = `Next song: ${track.title}.`;
+  if (wasPlaying) {
+    playBackgroundMusic();
+  } else {
+    renderMusicControl();
+  }
 }
 
 function renderAccessGate() {
@@ -2704,6 +2715,9 @@ if (musicToggleButton && backgroundMusic) {
       pauseBackgroundMusic();
     }
   });
+  if (musicSkipButton) {
+    musicSkipButton.addEventListener("click", playNextBackgroundTrack);
+  }
   backgroundMusic.addEventListener("play", renderMusicControl);
   backgroundMusic.addEventListener("pause", renderMusicControl);
   backgroundMusic.addEventListener("ended", playNextBackgroundTrack);

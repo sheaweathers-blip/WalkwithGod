@@ -1047,6 +1047,12 @@ select:focus {
     linear-gradient(135deg, var(--deep-green), var(--green));
 }
 
+.music-skip-button {
+  color: var(--deep-green);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(236, 244, 229, 0.82));
+}
+
 .copy-status {
   min-height: 22px;
   margin: 10px 0 0;
