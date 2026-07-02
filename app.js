@@ -436,7 +436,7 @@ const defaultFocuses = [
 
 const implementationText = "Take a moment to check in before moving on. Completion should mean you spent focused time with God, not just skimmed the reading.";
 const adminCode = "walkwithgod";
-const reminderChannelAvailability = {
+let reminderChannelAvailability = {
   push: true,
   email: false,
   sms: true
@@ -716,6 +716,9 @@ const reminderStatus = document.querySelector("#reminderStatus");
 const reminderPush = document.querySelector("#reminderPush");
 const reminderEmail = document.querySelector("#reminderEmail");
 const reminderSms = document.querySelector("#reminderSms");
+const reminderAvailabilityNote = document.querySelector("#reminderAvailabilityNote");
+const reminderEmailLabel = document.querySelector("#reminderEmailLabel");
+const reminderEmailStatus = document.querySelector("#reminderEmailStatus");
 const smsConsent = document.querySelector("#smsConsent");
 const smsConsentWrapper = document.querySelector("#smsConsentWrapper");
 const reminderEmailAddress = document.querySelector("#reminderEmailAddress");
@@ -879,6 +882,19 @@ async function apiFetch(path, options = {}) {
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload.error || "Request failed.");
   return payload;
+}
+
+async function loadReminderAvailability() {
+  try {
+    const health = await apiFetch("/api/health");
+    reminderChannelAvailability = {
+      push: Boolean(health.pushReady),
+      email: Boolean(health.emailReady),
+      sms: Boolean(health.smsReady)
+    };
+  } catch {
+    reminderChannelAvailability = { push: false, email: false, sms: false };
+  }
 }
 
 function applyServerProgress(progress) {
@@ -1764,18 +1780,31 @@ function renderDayList(focus) {
 function renderReminder() {
   reminderTime.value = state.reminder.time || "07:00";
   reminderMessage.value = state.reminder.message || "Spend uninterrupted time with God today.";
-  reminderPush.checked = state.reminder.channels?.push !== false;
-  reminderEmail.checked = false;
+  reminderPush.checked = reminderChannelAvailability.push && state.reminder.channels?.push !== false;
+  reminderEmail.checked = reminderChannelAvailability.email && Boolean(state.reminder.channels?.email);
   reminderSms.checked = Boolean(state.reminder.channels?.sms);
+  reminderPush.disabled = !reminderChannelAvailability.push;
   reminderEmail.disabled = !reminderChannelAvailability.email;
   reminderSms.disabled = !reminderChannelAvailability.sms;
+  if (reminderAvailabilityNote) {
+    const emailText = reminderChannelAvailability.email
+      ? "Email reminders are available now."
+      : "Email reminders will appear once SendGrid is connected in Railway.";
+    reminderAvailabilityNote.innerHTML = `<strong>Reminder options:</strong> App notifications and text reminders are available right now. ${emailText}`;
+  }
+  if (reminderEmailLabel) {
+    reminderEmailLabel.classList.toggle("reminder-channel-disabled", !reminderChannelAvailability.email);
+  }
+  if (reminderEmailStatus) {
+    reminderEmailStatus.textContent = reminderChannelAvailability.email ? "Available" : "Setup needed";
+  }
   if (smsConsent) smsConsent.checked = localStorage.getItem("walkWithGodSmsConsent") === "true";
   if (smsConsentWrapper) smsConsentWrapper.hidden = !reminderSms.checked;
   reminderEmailAddress.value = state.reminder.email || state.user?.email || "";
   reminderPhone.value = state.reminder.phone || "";
   const supportMessage = notificationSupportMessage();
   reminderStatus.textContent = state.user
-    ? supportMessage || `Reminder settings ready for ${reminderTime.value}. Text reminders are available when selected.`
+    ? supportMessage || `Reminder settings ready for ${reminderTime.value}. Choose the reminder methods you want to use.`
     : "Sign in to save app reminders to your account and enable push.";
 }
 
@@ -2475,6 +2504,10 @@ nextButton.addEventListener("click", () => {
 
 reminderForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (reminderChannelAvailability.email && reminderEmail.checked && !reminderEmailAddress.value.trim()) {
+    reminderStatus.textContent = "Enter an email address before saving email reminders.";
+    return;
+  }
   if (reminderChannelAvailability.sms && reminderSms.checked && !reminderPhone.value.trim()) {
     reminderStatus.textContent = "Enter a phone number before saving text reminders.";
     return;
@@ -2501,9 +2534,13 @@ reminderForm.addEventListener("submit", async (event) => {
     await enableAppNotifications();
     }
     await apiFetch("/api/reminder", { method: "POST", body: JSON.stringify(state.reminder) });
-    reminderStatus.textContent = state.reminder.channels.sms
-      ? `Reminder saved for ${state.reminder.time}. Text reminders are turned on for this account.`
-      : `App reminder saved for ${state.reminder.time}.`;
+    const enabledChannels = [];
+    if (state.reminder.channels.push) enabledChannels.push("app");
+    if (state.reminder.channels.email) enabledChannels.push("email");
+    if (state.reminder.channels.sms) enabledChannels.push("text");
+    reminderStatus.textContent = enabledChannels.length
+      ? `Reminder saved for ${state.reminder.time}. ${enabledChannels.join(", ")} reminders are turned on for this account.`
+      : `Reminder saved for ${state.reminder.time}. Choose a reminder method to receive it.`;
   } catch (error) {
     reminderStatus.textContent = error.message;
   }
@@ -2561,6 +2598,9 @@ testPushButton.addEventListener("click", async () => {
   try {
     if (!state.user) throw new Error("Sign in before testing reminders.");
     state.reminder = reminderFromForm();
+    if (state.reminder.channels.email && !state.reminder.email) {
+      throw new Error("Enter an email address before testing email reminders.");
+    }
     if (state.reminder.channels.sms && !state.reminder.phone) {
       throw new Error("Enter a phone number before testing text reminders.");
     }
@@ -3156,6 +3196,7 @@ async function init() {
     window.speechSynthesis.onvoiceschanged = populateVoiceOptions;
   }
   loadActiveMusicTrack();
+  await loadReminderAvailability();
   try {
     const result = await apiFetch("/api/me");
     state.user = result.user;

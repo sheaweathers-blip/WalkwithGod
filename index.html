@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260701-playlist" />
+    <link rel="stylesheet" href="styles.css?v=20260701-email-reminders" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -51,7 +51,7 @@
           </article>
           <article>
             <strong>Optional reminders</strong>
-            <p>App notifications and text reminders are available now. Email reminders are planned for a later update.</p>
+            <p>App notifications and text reminders are available now. Email reminders can be used once SendGrid is connected.</p>
           </article>
           <article>
             <strong>Contact</strong>
@@ -131,9 +131,9 @@
               <h3>Daily Reminder</h3>
             </div>
             <form class="reminder-form" id="reminderForm">
-              <div class="reminder-availability-note">
+              <div class="reminder-availability-note" id="reminderAvailabilityNote">
                 <strong>Testing note:</strong>
-                App notifications and text reminders are available right now. Email reminders are temporarily paused.
+                App notifications and text reminders are available right now. Email reminders will appear once SendGrid is connected.
               </div>
               <label>
                 Reminder time
@@ -149,9 +149,9 @@
                   <input id="reminderPush" type="checkbox" />
                   App notification
                 </label>
-                <label class="reminder-channel-disabled">
+                <label class="reminder-channel-disabled" id="reminderEmailLabel">
                   <input id="reminderEmail" type="checkbox" disabled />
-                  Email <span>Paused</span>
+                  Email <span id="reminderEmailStatus">Setup needed</span>
                 </label>
                 <label>
                   <input id="reminderSms" type="checkbox" />
@@ -850,6 +850,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260701-playlist"></script>
+    <script src="app.js?v=20260701-email-reminders"></script>
   </body>
 </html>
