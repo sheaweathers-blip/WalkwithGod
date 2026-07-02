@@ -1080,9 +1080,9 @@ function pauseBackgroundMusic(message = "Music paused.") {
   renderMusicControl();
 }
 
-function playNextBackgroundTrack() {
+function playNextBackgroundTrack({ keepPlaying = false } = {}) {
   if (!backgroundMusicTracks.length) return;
-  const wasPlaying = backgroundMusic && !backgroundMusic.paused;
+  const wasPlaying = keepPlaying || (backgroundMusic && !backgroundMusic.paused);
   state.activeMusicIndex = (state.activeMusicIndex + 1) % backgroundMusicTracks.length;
   localStorage.setItem("walkWithGodMusicIndex", String(state.activeMusicIndex));
   const track = loadActiveMusicTrack();
@@ -2760,7 +2760,7 @@ if (musicToggleButton && backgroundMusic) {
   }
   backgroundMusic.addEventListener("play", renderMusicControl);
   backgroundMusic.addEventListener("pause", renderMusicControl);
-  backgroundMusic.addEventListener("ended", playNextBackgroundTrack);
+  backgroundMusic.addEventListener("ended", () => playNextBackgroundTrack({ keepPlaying: true }));
   backgroundMusic.addEventListener("error", () => {
     if (musicStatus) musicStatus.textContent = "Music could not load right now.";
     renderMusicControl();
