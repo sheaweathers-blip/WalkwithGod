@@ -78,11 +78,11 @@ def save_card(kind):
 
     if kind == "title":
         draw_centered(draw, "Walk With God", 590, serif_big, (21, 43, 35, 255))
-        draw_centered(draw, "Premium Breathwork Prayer", 705, serif_mid, (38, 72, 58, 255))
-        draw_centered(draw, "Simply Breathe", 770, sans_small, (72, 96, 83, 255))
+        draw_centered(draw, "Premium Breathwork Prayer", 705, serif_mid, (21, 43, 35, 255))
+        draw_centered(draw, "Simply Breathe", 770, sans_small, (21, 43, 35, 255))
     else:
         draw_centered(draw, "Begin with God", 615, serif_big, (21, 43, 35, 255))
-        draw_centered(draw, "one quiet breath at a time", 730, serif_mid, (38, 72, 58, 255))
+        draw_centered(draw, "one quiet breath at a time", 730, serif_mid, (21, 43, 35, 255))
 
     frame.convert("RGB").save(OUT / f"logo-intro-{kind}-card.png", quality=95)
 
