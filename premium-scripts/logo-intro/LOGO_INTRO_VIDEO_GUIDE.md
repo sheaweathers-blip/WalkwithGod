@@ -6,6 +6,8 @@ Use this as the opening for premium breathwork, walking, yoga, and Bible study v
 
 - Title card: `premium-scripts/logo-intro/logo-intro-title-card.png`
 - Ending card: `premium-scripts/logo-intro/logo-intro-end-card.png`
+- Mobile title card: `premium-scripts/logo-intro/logo-intro-mobile-title-card.png`
+- Mobile ending card: `premium-scripts/logo-intro/logo-intro-mobile-end-card.png`
 - Logo: `assets/walk-with-god-logo.png`
 - Main breathwork audio: `premium-media/breathwork-day-1.wav`
 - Suggested music bed: `assets/music/living-waters.mp3` or `assets/music/nature-breath.mp3`
@@ -52,7 +54,15 @@ Avoid adding a lot of extra instructions on the intro. Let the session itself te
 
 Create a separate **Mobile Video 9:16** version in Canva.
 
-Use the same title card as the visual reference, but rebuild the text/logo centered for vertical so nothing gets cropped.
+Use `logo-intro-mobile-title-card.png` instead of resizing the horizontal title card. It is already built at **1080 x 1920**, with the logo large and centered for phone screens.
+
+Suggested mobile timeline:
+
+- 0.0-1.0 seconds: fade in
+- 1.0-6.5 seconds: hold on `logo-intro-mobile-title-card.png`
+- 6.5-8.0 seconds: fade out or crossfade into the session video
+
+Use `logo-intro-mobile-end-card.png` as the closing screen if you want the video to end with the brand.
 
 ## Finished File Name
 
