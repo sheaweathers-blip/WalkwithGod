@@ -710,6 +710,11 @@ const completionContainer = document.querySelector("#completionContainer");
 const notesLibraryList = document.querySelector("#notesLibraryList");
 const completeButton = document.querySelector("#completeButton");
 const nextButton = document.querySelector("#nextButton");
+const focusCelebrationOverlay = document.querySelector("#focusCelebrationOverlay");
+const focusCelebrationTitle = document.querySelector("#focusCelebrationTitle");
+const focusCelebrationCopy = document.querySelector("#focusCelebrationCopy");
+const celebrationNextFocusButton = document.querySelector("#celebrationNextFocusButton");
+const celebrationCloseButton = document.querySelector("#celebrationCloseButton");
 const reminderForm = document.querySelector("#reminderForm");
 const reminderTime = document.querySelector("#reminderTime");
 const reminderMessage = document.querySelector("#reminderMessage");
@@ -1241,8 +1246,10 @@ function renderCompletion(focus, isFocusComplete) {
   if (!isFocusComplete) return "";
   return `
     <div class="completion-card">
+      <div class="completion-emblem" aria-hidden="true">✓</div>
       <p class="block-label">Focus Complete</p>
       <h3>${escapeHtml(focus.title)} completed</h3>
+      <p>You walked through every day of this focus. Pause, breathe, and thank God for the Scripture, practice, and obedience He has been forming in you.</p>
       <p>Lord, help this focus become lived faith. Let Your word keep shaping my attention, choices, relationships, and obedience. Amen.</p>
       <a class="secondary-link" href="#themes">Choose Next Focus</a>
     </div>
@@ -1720,6 +1727,40 @@ function activeFocus() {
 function completedSet(focusId) {
   if (!state.completed[focusId]) state.completed[focusId] = new Set();
   return state.completed[focusId];
+}
+
+function isFocusComplete(focus) {
+  return completedSet(focus.id).size >= focus.days.length;
+}
+
+function showFocusCelebration(focus) {
+  if (!focusCelebrationOverlay || !focusCelebrationTitle || !focusCelebrationCopy) return;
+  focusCelebrationTitle.textContent = `${focus.title} completed`;
+  focusCelebrationCopy.textContent = `You completed all ${focus.days.length} days. Take a quiet moment to thank God for meeting you in this focus, then choose your next faithful step.`;
+  focusCelebrationOverlay.hidden = false;
+  document.body.classList.add("celebration-open");
+}
+
+function hideFocusCelebration() {
+  if (!focusCelebrationOverlay) return;
+  focusCelebrationOverlay.hidden = true;
+  document.body.classList.remove("celebration-open");
+}
+
+function markDayComplete(focus, dayIndex, statusElement) {
+  const completed = completedSet(focus.id);
+  const wasFocusComplete = isFocusComplete(focus);
+  const wasDayComplete = completed.has(dayIndex);
+  completed.add(dayIndex);
+  rememberCompletionDate();
+  saveCompleted();
+  if (state.user) {
+    apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ focusId: focus.id, dayIndex }) }).catch((error) => {
+      if (statusElement) statusElement.textContent = error.message;
+    });
+  }
+  const becameFocusComplete = !wasDayComplete && !wasFocusComplete && isFocusComplete(focus);
+  return { becameFocusComplete };
 }
 
 function clampActiveDay(focus) {
@@ -2424,15 +2465,9 @@ document.addEventListener("click", (event) => {
 
 completeButton.addEventListener("click", () => {
   const focus = activeFocus();
-  completedSet(focus.id).add(state.activeDayIndex);
-  rememberCompletionDate();
-  saveCompleted();
-  if (state.user) {
-    apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ focusId: focus.id, dayIndex: state.activeDayIndex }) }).catch((error) => {
-      noteStatus.textContent = error.message;
-    });
-  }
+  const result = markDayComplete(focus, state.activeDayIndex, noteStatus);
   render();
+  if (result.becameFocusComplete) showFocusCelebration(focus);
 });
 
 continueTodayButton.addEventListener("click", () => {
@@ -2447,17 +2482,30 @@ quickCompleteButton.addEventListener("click", () => {
   const focus = activeFocus() || state.focuses[0];
   state.activeId = focus.id;
   state.activeDayIndex = nextOpenDay(focus);
-  completedSet(focus.id).add(state.activeDayIndex);
-  rememberCompletionDate();
-  saveCompleted();
-  if (state.user) {
-    apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ focusId: focus.id, dayIndex: state.activeDayIndex }) }).catch((error) => {
-      todayStatus.textContent = error.message;
-    });
-  }
-  todayStatus.textContent = "Completed for today. Welcome back whenever you are ready for the next step.";
+  const result = markDayComplete(focus, state.activeDayIndex, todayStatus);
+  todayStatus.textContent = result.becameFocusComplete
+    ? `${focus.title} completed. Take a moment to celebrate what God has walked you through.`
+    : "Completed for today. Welcome back whenever you are ready for the next step.";
   render();
+  if (result.becameFocusComplete) showFocusCelebration(focus);
 });
+
+if (celebrationCloseButton) {
+  celebrationCloseButton.addEventListener("click", hideFocusCelebration);
+}
+
+if (celebrationNextFocusButton) {
+  celebrationNextFocusButton.addEventListener("click", () => {
+    hideFocusCelebration();
+    document.querySelector("#themes").scrollIntoView({ behavior: "smooth" });
+  });
+}
+
+if (focusCelebrationOverlay) {
+  focusCelebrationOverlay.addEventListener("click", (event) => {
+    if (event.target === focusCelebrationOverlay) hideFocusCelebration();
+  });
+}
 
 favoriteVerseButton.addEventListener("click", () => {
   const focus = activeFocus();

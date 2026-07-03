@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260701-premium-media-lock" />
+    <link rel="stylesheet" href="styles.css?v=20260702-focus-celebration" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -843,6 +843,27 @@
       </section>
     </main>
 
+    <div class="celebration-overlay" id="focusCelebrationOverlay" hidden>
+      <div class="celebration-card" role="dialog" aria-modal="true" aria-labelledby="focusCelebrationTitle">
+        <div class="celebration-burst" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <p class="eyebrow">Focus Complete</p>
+        <h2 id="focusCelebrationTitle">You completed this focus</h2>
+        <p id="focusCelebrationCopy">
+          Take a moment to thank God for the time, attention, and obedience you offered one day at a time.
+        </p>
+        <div class="reflection-actions">
+          <button class="copy-button" id="celebrationNextFocusButton" type="button">Choose Next Focus</button>
+          <button class="quiet-button" id="celebrationCloseButton" type="button">Keep Reflecting</button>
+        </div>
+      </div>
+    </div>
+
     <footer class="site-footer">
       <strong>Walk With God</strong>
       <span>Contact: <a href="mailto:walkedwithgodtoday@gmail.com">walkedwithgodtoday@gmail.com</a></span>
@@ -855,6 +876,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260701-premium-media-lock"></script>
+    <script src="app.js?v=20260702-focus-celebration"></script>
   </body>
 </html>
