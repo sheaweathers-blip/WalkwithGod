@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260709-rhythm-sync" />
+    <link rel="stylesheet" href="styles.css?v=20260709-path-framework" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -28,7 +28,7 @@
           <p class="eyebrow">Daily Bible Focuses</p>
           <h1>Walk With God</h1>
           <p class="hero-copy">
-            Move through the story of Scripture one focused day at a time, completing each theme in its guided number of days.
+            Take your next step with God today through Scripture, prayer, active time, reflection, and lived faith.
           </p>
           <div class="hero-actions" id="heroActions">
             <a class="primary-link" href="#account">Get Started Free</a>
@@ -85,6 +85,7 @@
           </div>
           <nav class="account-shortcuts" id="accountShortcuts" aria-label="Account shortcuts" hidden>
             <a href="#today">Today</a>
+            <a href="#walkPath">Path</a>
             <a href="#themes">Focus Library</a>
             <a href="#notesLibrary">Private Notes</a>
             <a href="#community">Community</a>
@@ -233,6 +234,17 @@
         </div>
       </section>
 
+      <section class="daily path-section" id="walkPath" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">The Walk With God Path</p>
+          <h2>Take your next step with God today</h2>
+          <p class="section-copy">
+            A gentle rhythm for discipleship: not a pass/fail checklist, but a simple way to follow Jesus one faithful step at a time.
+          </p>
+        </div>
+        <div class="path-steps" id="pathSteps" aria-label="Seven steps in the Walk With God Path"></div>
+      </section>
+
       <section class="daily locked-section" id="lockedBenefits">
         <div class="section-heading">
           <p class="eyebrow">Free Account Required</p>
@@ -337,6 +349,15 @@
               </div>
               <button class="favorite-button" id="favoriteVerseButton" type="button">Save Favorite Verse</button>
               <p id="daySummary"></p>
+              <div class="path-today-card" id="pathTodayCard">
+                <span class="path-today-mark" id="pathTodayMark" aria-hidden="true">1</span>
+                <div>
+                  <p class="block-label" id="pathTodayLabel">Today on the Path</p>
+                  <h4 id="pathTodayTitle">Pause</h4>
+                  <p id="pathTodayCopy">Slow down and notice God's presence before moving forward.</p>
+                  <small id="pathTodayJesus">Jesus often withdrew to quiet places.</small>
+                </div>
+              </div>
               <div class="daily-rhythm-grid">
                 <div class="rhythm-card">
                   <p class="block-label">15-20 Minute Active Time With God</p>
@@ -362,7 +383,7 @@
                     <input id="stoodOutInput" placeholder="A word, verse, conviction, or comfort" />
                   </label>
                   <label>
-                    What is God inviting me to do?
+                    What was my next step with God today?
                     <input id="invitationInput" placeholder="One faithful next step" />
                   </label>
                   <label>
@@ -661,6 +682,7 @@
 
       <nav class="mobile-app-nav" id="mobileAppNav" aria-label="App sections" hidden>
         <a href="#today">Today</a>
+        <a href="#walkPath">Path</a>
         <a href="#themes">Themes</a>
         <a href="#notesLibrary">Notes</a>
         <a href="#community">Community</a>
@@ -876,6 +898,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260709-rhythm-sync"></script>
+    <script src="app.js?v=20260709-path-framework"></script>
   </body>
 </html>

@@ -607,6 +607,16 @@ const backgroundMusicTracks = [
   ["Creation Sings", "/assets/music/creation-sings.mp3?v=20260701-playlist"]
 ].map(([title, src], index) => ({ title, src, index }));
 
+const walkPathSteps = [
+  ["Pause", "Psalm 46:10", "Slow down, breathe, and notice God's presence before moving forward.", "Jesus often withdrew to quiet places.", "Luke 5:16"],
+  ["Pray", "Mark 1:35", "Speak honestly with God, listen, and bring your real life before Him.", "Jesus regularly prayed to the Father.", "Mark 1:35"],
+  ["Listen", "John 5:19", "Receive Scripture slowly, not just to finish, but to hear and obey.", "Jesus lived in perfect dependence on the Father's will.", "John 5:19"],
+  ["Walk", "Luke 24:15", "Move with God through walking, stretching, breathing, or another safe activity.", "Jesus walked with people and taught along the way.", "Luke 24:15"],
+  ["Live", "John 13:14-15", "Let faith become obedience, mercy, service, repentance, and love.", "Jesus embodied humble love and called His followers to do likewise.", "John 13:14-15"],
+  ["Remember", "Luke 22:19", "Mark what God is teaching, answering, healing, and forming in you.", "Jesus gave His people a way to remember Him.", "Luke 22:19"],
+  ["Share", "Matthew 28:19-20", "Encourage, pray with, serve, testify, invite, or bless someone else.", "Jesus sent His followers to make disciples.", "Matthew 28:19-20"]
+].map(([name, verse, summary, jesus, jesusReference], index) => ({ name, verse, summary, jesus, jesusReference, index }));
+
 const state = {
   focuses: [...defaultFocuses, ...loadAddedFocuses()],
   activeId: localStorage.getItem("walkWithGodActiveFocus") || "",
@@ -651,6 +661,7 @@ const lockedBenefits = document.querySelector("#lockedBenefits");
 const gatedSections = [
   document.querySelector("#today"),
   document.querySelector("#homeDashboard"),
+  document.querySelector("#walkPath"),
   document.querySelector("#themes"),
   document.querySelector("#notesLibrary"),
   document.querySelector("#community"),
@@ -676,6 +687,13 @@ const homeDashboardCopy = document.querySelector("#homeDashboardCopy");
 const dashboardStreak = document.querySelector("#dashboardStreak");
 const dashboardProgress = document.querySelector("#dashboardProgress");
 const dashboardNotes = document.querySelector("#dashboardNotes");
+const pathSteps = document.querySelector("#pathSteps");
+const pathTodayCard = document.querySelector("#pathTodayCard");
+const pathTodayMark = document.querySelector("#pathTodayMark");
+const pathTodayLabel = document.querySelector("#pathTodayLabel");
+const pathTodayTitle = document.querySelector("#pathTodayTitle");
+const pathTodayCopy = document.querySelector("#pathTodayCopy");
+const pathTodayJesus = document.querySelector("#pathTodayJesus");
 const accountStatus = document.querySelector("#accountStatus");
 const accountHeading = document.querySelector("#accountHeading");
 const accountCopy = document.querySelector("#accountCopy");
@@ -1226,6 +1244,46 @@ function renderHomeDashboard() {
   dashboardStreak.textContent = String(streakDays());
   dashboardProgress.textContent = `${progressPercent}%`;
   dashboardNotes.textContent = String(notesCount);
+}
+
+function pathStepByName(name) {
+  return walkPathSteps.find((step) => step.name === name) || walkPathSteps[0];
+}
+
+function pathStepForDay(focus, day, dayNumber) {
+  const text = `${focus?.title || ""} ${day?.join(" ") || ""}`.toLowerCase();
+  const rules = [
+    ["Pause", ["be still", "rest", "sabbath", "peace", "anxiety", "fear", "quiet", "stillness", "compassionate father", "grief", "suffering", "hardship"]],
+    ["Pray", ["pray", "prayer", "intercession", "confession", "repent", "return to me", "honest prayer", "lord's prayer", "ask", "pour out"]],
+    ["Listen", ["listen", "scripture", "word", "wisdom", "truth", "prophet", "teaching", "voice", "discern", "command", "law", "study", "guided into truth"]],
+    ["Walk", ["walk", "body", "health", "wellness", "strength", "renewed", "creation", "created", "image", "movement", "work with your whole heart"]],
+    ["Live", ["serve", "obedience", "forgive", "mercy", "love", "faithful", "good works", "workmanship", "fruit", "marriage", "deed", "purpose", "humility"]],
+    ["Remember", ["remember", "covenant", "redeem", "redemption", "thank", "gratitude", "mercy made new", "loved", "god loves", "favorite", "answered"]],
+    ["Share", ["share", "witness", "sent", "mission", "good news", "speak out", "make disciples", "community", "light", "testimony", "announce"]]
+  ];
+  const matched = rules.find(([, keywords]) => keywords.some((keyword) => text.includes(keyword)));
+  if (matched) return pathStepByName(matched[0]);
+  return walkPathSteps[(Math.max(1, dayNumber) - 1) % walkPathSteps.length];
+}
+
+function renderWalkPath() {
+  if (!pathSteps) return;
+  const focus = activeFocus() || state.focuses[0];
+  const dayIndex = focus ? nextOpenDay(focus) : 0;
+  const dayNumber = Number((focus?.days[dayIndex]?.[0]?.match(/\d+/) || [dayIndex + 1])[0]);
+  const activeStep = pathStepForDay(focus, focus?.days[dayIndex], dayNumber);
+  pathSteps.innerHTML = walkPathSteps
+    .map((step) => `
+      <article class="path-step ${step.name === activeStep.name ? "is-active" : ""}">
+        <span class="path-stone" aria-hidden="true">${step.index + 1}</span>
+        <div>
+          <h3>${step.name}</h3>
+          <p>${step.summary}</p>
+          <small>${step.verse} · ${step.jesus} (${step.jesusReference})</small>
+        </div>
+      </article>
+    `)
+    .join("");
 }
 
 function currentFavoriteId() {
@@ -2390,6 +2448,7 @@ function render() {
   readerContent.hidden = !focus;
   renderToday();
   renderHomeDashboard();
+  renderWalkPath();
   renderFocusList();
   renderPrayerBreath();
   renderReminder();
@@ -2415,6 +2474,8 @@ function render() {
   const isDayComplete = completed.has(state.activeDayIndex);
   const isFocusComplete = completed.size === focus.days.length;
   const extras = getDayExtras(focus, day);
+  const dayNumber = Number((day[0].match(/\d+/) || [state.activeDayIndex + 1])[0]);
+  const pathStep = pathStepForDay(focus, day, dayNumber);
 
   activeCategoryLabel.textContent = focus.label;
   activeTitle.textContent = focus.title;
@@ -2426,6 +2487,14 @@ function render() {
   dayLabel.textContent = day[0];
   dayTitle.textContent = day[1];
   scriptureText.textContent = day[2];
+  if (pathTodayCard) {
+    pathTodayCard.dataset.step = pathStep.name.toLowerCase();
+    pathTodayMark.textContent = String(pathStep.index + 1);
+    pathTodayLabel.textContent = `Today on the Path · ${pathStep.verse}`;
+    pathTodayTitle.textContent = pathStep.name;
+    pathTodayCopy.textContent = pathStep.summary;
+    pathTodayJesus.textContent = `${pathStep.jesus} (${pathStep.jesusReference})`;
+  }
   if (state.currentPassageReference !== day[2]) {
     stopPassageAudio();
     loadVerseText(day[2]);
@@ -2454,6 +2523,7 @@ function render() {
   renderFavorites();
   renderToday();
   renderHomeDashboard();
+  renderWalkPath();
   renderReminder();
   renderMode();
   renderCommunity();
