@@ -1181,7 +1181,7 @@ function renderAccount() {
     if (accountShortcuts) accountShortcuts.hidden = false;
   } else {
     accountHeading.textContent = "Start with a free account";
-    accountCopy.textContent = "Create an account or log in to open your daily focuses, prayer requests, community, notes, progress, and reminders.";
+    accountCopy.textContent = "Create an account or log in to open your daily focuses, prayer requests, community, notes, path rhythm, and reminders.";
     accountStatus.textContent = "Choose one option below to begin.";
     showSignupButton.hidden = false;
     showLoginButton.hidden = false;
@@ -1522,11 +1522,11 @@ function renderCompletion(focus, isFocusComplete) {
   return `
     <div class="completion-card">
       <div class="completion-emblem" aria-hidden="true">✓</div>
-      <p class="block-label">Focus Complete</p>
-      <h3>${escapeHtml(focus.title)} completed</h3>
+      <p class="block-label">Focus Walked</p>
+      <h3>${escapeHtml(focus.title)} walked through</h3>
       <p>You walked through every day of this focus. Pause, breathe, and thank God for the Scripture, practice, and obedience He has been forming in you.</p>
       <p>Lord, help this focus become lived faith. Let Your word keep shaping my attention, choices, relationships, and obedience. Amen.</p>
-      <a class="secondary-link" href="#themes">Choose Next Focus</a>
+      <a class="secondary-link" href="#themes">Choose Next Step</a>
     </div>
   `;
 }
@@ -2267,8 +2267,8 @@ function isFocusComplete(focus) {
 
 function showFocusCelebration(focus) {
   if (!focusCelebrationOverlay || !focusCelebrationTitle || !focusCelebrationCopy) return;
-  focusCelebrationTitle.textContent = `${focus.title} completed`;
-  focusCelebrationCopy.textContent = `You completed all ${focus.days.length} days. Take a quiet moment to thank God for meeting you in this focus, then choose your next faithful step.`;
+  focusCelebrationTitle.textContent = `${focus.title} walked through`;
+  focusCelebrationCopy.textContent = `You walked all ${focus.days.length} days with God in this focus. Take a quiet moment to thank Him for meeting you here, then choose your next faithful step.`;
   focusCelebrationOverlay.hidden = false;
   document.body.classList.add("celebration-open");
 }
@@ -2342,7 +2342,7 @@ function renderFocusList() {
     if (focus) {
       const completeCount = completedSet(focus.id).size;
       activeFocusSummaryTitle.textContent = focus.title;
-      activeFocusSummaryCopy.textContent = `${completeCount} of ${focus.days.length} days complete. ${focus.description}`;
+      activeFocusSummaryCopy.textContent = `${completeCount} of ${focus.days.length} steps walked. ${focus.description}`;
     } else {
       activeFocusSummaryTitle.textContent = "Choose a focus";
       activeFocusSummaryCopy.textContent = "Open the focus library to choose a Scripture theme.";
@@ -2358,7 +2358,7 @@ function renderFocusList() {
           <span>
             <span class="theme-name">${focus.title}</span>
             <span class="theme-purpose">${escapeHtml(focus.description)}</span>
-            <span class="theme-count">${completeCount}/${focus.days.length} days complete</span>
+            <span class="theme-count">${completeCount}/${focus.days.length} steps walked</span>
             <span class="theme-progress-mini" aria-hidden="true"><span style="width: ${progressPercent}%"></span></span>
           </span>
         </button>
@@ -2769,7 +2769,7 @@ function renderAdminDashboard(data = null) {
         .map((user) => `
           <button class="admin-row" type="button" data-user-id="${escapeHtml(user.id)}">
             <strong>${escapeHtml(user.name)}</strong>
-            <span>${escapeHtml(user.email)} - ${escapeHtml(user.role)} - ${user.metrics.completedDays} days complete</span>
+            <span>${escapeHtml(user.email)} - ${escapeHtml(user.role)} - ${user.metrics.completedDays} steps walked</span>
           </button>
         `)
         .join("")
@@ -2901,8 +2901,8 @@ function render() {
   activeTitle.textContent = focus.title;
   activePurpose.textContent = focus.description;
   daysPill.textContent = `${focus.days.length} days`;
-  progressText.textContent = `${completed.size} of ${focus.days.length} days complete`;
-  encouragementText.textContent = isFocusComplete ? "Focus complete. Add another focus when you are ready." : `Complete this focus in ${focus.days.length} days.`;
+  progressText.textContent = `${completed.size} of ${focus.days.length} steps walked`;
+  encouragementText.textContent = isFocusComplete ? "This focus has been walked through. Choose another next step when you are ready." : `Walk this focus over ${focus.days.length} days.`;
   progressFill.style.width = `${progress}%`;
   if (currentDayShortcut) {
     currentDayShortcut.textContent = `${day[0]} open: ${day[1]}`;
@@ -2935,7 +2935,7 @@ function render() {
   invitationInput.value = checkin.invitation || "";
   blessInput.value = checkin.bless || "";
   noteStatus.textContent = "";
-  completeButton.textContent = isDayComplete ? "Day Complete" : "Mark Day Complete";
+  completeButton.textContent = isDayComplete ? "Step Taken" : "Mark Step Taken";
   completeButton.classList.toggle("is-complete", isDayComplete);
   nextButton.disabled = state.activeDayIndex === focus.days.length - 1;
   completionContainer.innerHTML = renderCompletion(focus, isFocusComplete);
@@ -3140,8 +3140,8 @@ quickCompleteButton.addEventListener("click", () => {
   const result = markDayComplete(focus, state.activeDayIndex, todayStatus);
   if (!result.becameFocusComplete) state.activeDayIndex = nextOpenDay(focus);
   todayStatus.textContent = result.becameFocusComplete
-    ? `${focus.title} completed. Take a moment to celebrate what God has walked you through.`
-    : "Completed for today. Welcome back whenever you are ready for the next step.";
+    ? `${focus.title} walked through. Take a moment to celebrate what God has walked you through.`
+    : "Step marked for today. Welcome back whenever you are ready for the next step.";
   render();
   if (result.becameFocusComplete) showFocusCelebration(focus);
 });
@@ -3484,7 +3484,7 @@ function openAuthForm(mode) {
   reminderSettingsPanel.hidden = true;
   authName.closest("label").hidden = mode === "login";
   submitAuthButton.textContent = mode === "signup" ? "Create Account" : "Log In";
-  authMessage.textContent = mode === "signup" ? "Create your account to save progress and join community." : "Log in to continue.";
+  authMessage.textContent = mode === "signup" ? "Create your account to save your path rhythm and join community." : "Log in to continue.";
 }
 
 showSignupButton.addEventListener("click", () => openAuthForm("signup"));
@@ -3787,7 +3787,7 @@ adminUserList.addEventListener("click", (event) => {
       adminUserDetail.innerHTML = `
         <p><strong>${escapeHtml(user.name)}</strong></p>
         <p>${escapeHtml(user.email)} - ${escapeHtml(user.role)}</p>
-        <p>${user.metrics.completedDays} completed days, ${user.metrics.communityPosts} community posts, ${user.metrics.privateNotes} private notes.</p>
+        <p>${user.metrics.completedDays} steps walked, ${user.metrics.communityPosts} community posts, ${user.metrics.privateNotes} private notes.</p>
         <p>Reminder: ${escapeHtml(user.metrics.reminder?.time || "not set")} - Push devices: ${user.metrics.pushSubscriptions}</p>
       `;
       adminSupportForm.hidden = false;

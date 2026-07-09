@@ -10,11 +10,11 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260709-focus-popup" />
+    <link rel="stylesheet" href="styles.css?v=20260709-next-step-language" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
-      Accounts, community, progress sync, and reminders require the server version:
+      Accounts, community, path rhythm sync, and reminders require the server version:
       <a href="http://127.0.0.1:4173">open http://127.0.0.1:4173</a>.
     </div>
     <main class="app-shell">
@@ -47,7 +47,7 @@
         <div class="public-info-grid">
           <article>
             <strong>Free daily faith tools</strong>
-            <p>Create a free account to choose a focus, read Scripture, save notes, track progress, and join prayer/community features.</p>
+            <p>Create a free account to choose a focus, read Scripture, save notes, follow your path rhythm, and join prayer/community features.</p>
           </article>
           <article>
             <strong>Optional reminders</strong>
@@ -68,7 +68,7 @@
           <p class="eyebrow">Account</p>
           <h2 id="accountHeading">Start with a free account</h2>
           <p class="section-copy" id="accountCopy">
-            Create an account or log in to open your daily focuses, prayer library, prayer requests, community, notes, progress, and reminders.
+            Create an account or log in to open your daily focuses, prayer library, prayer requests, community, notes, path rhythm, and reminders.
           </p>
         </div>
 
@@ -189,7 +189,7 @@
           </div>
           <div class="reflection-actions">
             <button class="copy-button" id="continueTodayButton" type="button">Continue Today</button>
-            <button class="quiet-button" id="quickCompleteButton" type="button">Mark Complete</button>
+            <button class="quiet-button" id="quickCompleteButton" type="button">Mark Step Taken</button>
           </div>
           <p class="copy-status" id="todayStatus" role="status" aria-live="polite"></p>
         </div>
@@ -207,14 +207,14 @@
               <button class="copy-button" type="button" data-open-choices>Open Daily Tools</button>
             </div>
           </div>
-          <div class="home-dashboard-metrics" aria-label="Daily progress snapshot">
+          <div class="home-dashboard-metrics" aria-label="Daily walk snapshot">
             <div>
               <strong id="dashboardStreak">0</strong>
               <span>day rhythm</span>
             </div>
             <div>
               <strong id="dashboardProgress">0%</strong>
-              <span>focus progress</span>
+              <span>focus path</span>
             </div>
             <div>
               <strong id="dashboardNotes">0</strong>
@@ -229,7 +229,7 @@
           <p class="eyebrow">The Walk With God Path</p>
           <h2>Take your next step with God today</h2>
           <p class="section-copy">
-            A gentle rhythm for discipleship: not a pass/fail checklist, but a simple way to follow Jesus one faithful step at a time.
+            A gentle rhythm for discipleship: not a pressure system, but a simple way to follow Jesus one faithful step at a time.
           </p>
         </div>
         <div class="path-steps" id="pathSteps" aria-label="Seven steps in the Walk With God Path"></div>
@@ -240,7 +240,7 @@
           <p class="eyebrow">Free Account Required</p>
           <h2>Create an account to begin your walk</h2>
           <p class="section-copy">
-            Themes, daily progress, notes, prayer library, prayer requests, community encouragement, reminders, and favorites are free after sign in.
+            Themes, daily path tracking, notes, prayer library, prayer requests, community encouragement, reminders, and favorites are free after sign in.
           </p>
         </div>
         <div class="locked-benefits-grid">
@@ -292,7 +292,7 @@
             <p class="eyebrow">Select a Theme</p>
             <h2>Choose a focus to begin</h2>
             <p class="theme-purpose-intro">
-              Pick a theme from the library to open its daily progress, Scripture readings, active time with God, application question, deed of the day, and check-in notes.
+              Pick a theme from the library to open its daily path, Scripture readings, active time with God, application question, deed of the day, and check-in notes.
             </p>
           </div>
 
@@ -309,8 +309,8 @@
 
           <div class="progress-wrap">
             <div class="progress-copy">
-              <span id="progressText">0 of 14 days complete</span>
-              <span id="encouragementText">Complete this focus in 14 days.</span>
+              <span id="progressText">0 of 14 steps walked</span>
+              <span id="encouragementText">Walk this focus over 14 days.</span>
             </div>
             <div class="progress-track" aria-hidden="true">
               <div class="progress-fill" id="progressFill"></div>
@@ -398,7 +398,7 @@
               </div>
               <div id="completionContainer"></div>
               <div class="reader-actions">
-                <button class="complete-button" id="completeButton" type="button">Mark Day Complete</button>
+                <button class="complete-button" id="completeButton" type="button">Mark Step Taken</button>
                 <button class="quiet-button" id="nextButton" type="button">Next Day</button>
               </div>
             </article>
@@ -883,13 +883,13 @@
           <span></span>
           <span></span>
         </div>
-        <p class="eyebrow">Focus Complete</p>
-        <h2 id="focusCelebrationTitle">You completed this focus</h2>
+        <p class="eyebrow">Focus Walked</p>
+        <h2 id="focusCelebrationTitle">You walked through this focus</h2>
         <p id="focusCelebrationCopy">
           Take a moment to thank God for the time, attention, and obedience you offered one day at a time.
         </p>
         <div class="reflection-actions">
-          <button class="copy-button" id="celebrationNextFocusButton" type="button">Choose Next Focus</button>
+          <button class="copy-button" id="celebrationNextFocusButton" type="button">Choose Next Step</button>
           <button class="quiet-button" id="celebrationCloseButton" type="button">Keep Reflecting</button>
         </div>
       </div>
@@ -906,7 +906,7 @@
         <div class="choice-grid" id="choiceGrid">
           <a class="choice-card" href="#themes" data-choice-link>
             <strong>Continue a Focus</strong>
-            <span>Open your theme, progress, daily verses, notes, and deed.</span>
+            <span>Open your theme, daily path, verses, notes, and deed.</span>
           </a>
           <a class="choice-card" href="#walkPath" data-choice-link>
             <strong>Seven-Step Path</strong>
@@ -986,6 +986,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260709-focus-popup"></script>
+    <script src="app.js?v=20260709-next-step-language"></script>
   </body>
 </html>
