@@ -85,9 +85,9 @@ function defaultPremiumContent() {
   return [
     {
       id: "premium-bible-class-foundations",
-      type: "Bible Class",
+      type: "Scripture Journey",
       title: "Foundations of Walking With God",
-      description: "A guided class path for learning how Scripture, prayer, obedience, and daily habits work together.",
+      description: "A guided Scripture journey for learning how prayer, obedience, community, and daily habits work together.",
       length: "4 lessons",
       scripture: "Micah 6:8",
       access: "premium",
@@ -95,9 +95,9 @@ function defaultPremiumContent() {
     },
     {
       id: "premium-movement-prayer-walk",
-      type: "Movement With God",
+      type: "Faith in Practice",
       title: "Prayer Walk Practice",
-      description: "A gentle outdoor walking session built around breath, gratitude, intercession, and listening prayer.",
+      description: "A gentle outdoor Abide practice built around breath, gratitude, intercession, and listening prayer.",
       length: "20 minutes",
       scripture: "Psalm 23:3",
       access: "premium",
@@ -107,7 +107,7 @@ function defaultPremiumContent() {
       id: "premium-breathwork-peace",
       type: "Breathwork Prayer",
       title: "Peace Before the Lord",
-      description: "A slow Scripture-based breathing practice for releasing hurry and returning your attention to God's presence.",
+      description: "A slow Scripture-rooted breath prayer for releasing hurry and returning your attention to God's presence.",
       length: "12 minutes",
       scripture: "John 14:27",
       access: "premium",
@@ -115,9 +115,9 @@ function defaultPremiumContent() {
     },
     {
       id: "premium-study-temple",
-      type: "Premium Study",
+      type: "Guided Reflection",
       title: "Honoring the Temple God Gave You",
-      description: "A deeper study on whole-person faith, body stewardship, rest, food, movement, and worship.",
+      description: "A whole-person Abide journey on body stewardship, rest, food, movement, and worship.",
       length: "7 days",
       scripture: "1 Corinthians 6:19-20",
       access: "premium",
@@ -133,6 +133,12 @@ function normalizeDb(db) {
   }
   if (!normalized.premiumContent.length) {
     normalized.premiumContent = defaultPremiumContent();
+  } else {
+    const refreshedDefaults = new Map(defaultPremiumContent().map((item) => [item.id, item]));
+    normalized.premiumContent = normalized.premiumContent.map((item) => {
+      const refreshed = refreshedDefaults.get(item.id);
+      return refreshed ? { ...item, ...refreshed } : item;
+    });
   }
   return normalized;
 }
@@ -877,13 +883,13 @@ async function handleApi(request, response) {
     const user = requireUser(request, response, db);
     if (!user) return;
     const isPremium = user.role === "admin" || user.subscriptionStatus === "premium";
-    if (!isPremium) return json(response, 403, { error: "Premium access is required." });
+    if (!isPremium) return json(response, 403, { error: "Abide access is required." });
     const mediaId = url.pathname.replace("/api/premium-media/", "");
     const filename = premiumMedia[mediaId];
-    if (!filename) return json(response, 404, { error: "Premium media not found." });
+    if (!filename) return json(response, 404, { error: "Abide media not found." });
     const filePath = path.join(root, "premium-media", filename);
     fs.readFile(filePath, (error, data) => {
-      if (error) return json(response, 404, { error: "Premium media not found." });
+      if (error) return json(response, 404, { error: "Abide media not found." });
       response.writeHead(200, {
         "Content-Type": types[path.extname(filePath)] || "application/octet-stream",
         "Content-Length": data.length,
@@ -919,7 +925,7 @@ async function handleApi(request, response) {
       const scripture = normalizeText(body.scripture, 160);
       const urlValue = normalizeText(body.url, 500);
       if (!type || !title || !description) {
-        return json(response, 400, { error: "Premium type, title, and description are required." });
+        return json(response, 400, { error: "Abide type, title, and description are required." });
       }
       const content = {
         id: crypto.randomUUID(),

@@ -17,7 +17,7 @@ That document defines:
 - Theology and safety boundaries
 - Language to use and avoid
 - Community and prayer standards
-- Premium content standards
+- Abide Membership and journey standards
 - Living Stones future-phase guidance
 - The decision filter for new features
 
@@ -35,7 +35,7 @@ The current app includes:
 - Community posts, comments, reactions, and prayer requests
 - Reminder settings for app notification, text, and email infrastructure
 - Admin support, feedback, reporting, and moderation
-- Premium previews for breathwork, faith-led yoga, walking sessions, and Bible study
+- Abide previews for breath prayer, faith-led movement, walking sessions, and Scripture journeys
 
 ## Local Run
 

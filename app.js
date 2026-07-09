@@ -530,7 +530,7 @@ const premiumYogaSessions = [
   ["Session 18", "Listen and Follow", "20 minutes", "Slow intuitive flow", "John 10:27", "Practice listening to God and noticing what your body needs today.", "Seated listening prayer, gentle neck release, cat-cow, choose child's pose or lunge, seated fold, stillness.", "Quiet path, open Bible nearby, natural light", "Reflective, spacious, inviting users to pause and choose wisely.", "Good Shepherd, help me hear Your voice and follow."],
   ["Session 19", "Grief and Comfort", "28 minutes", "Restorative comfort", "Psalm 34:18", "Create a gentle place for sadness, grief, or heaviness in God's nearness.", "Supported child's pose, reclined side rest, hand-on-heart breathing, gentle twist, legs supported, long prayer rest.", "Soft rain, blanket, muted greens", "Tender and slow, with no pressure to feel better quickly.", "Stay near to the brokenhearted, Lord, and comfort me with Your presence."],
   ["Session 20", "Faithful Finish", "20 minutes", "Gentle closing flow", "Hebrews 12:1-2", "Release distractions and finish the day or week with eyes fixed on Jesus.", "Breath prayer, standing fold, low lunge, warrior two, seated twist, forward fold, final rest.", "Trail finish line, sunset, peaceful road", "Steady, hopeful, reflective.", "Help me lay aside what weighs me down and keep my eyes on Jesus."],
-  ["Session 21", "Renewed Commitment", "30 minutes", "Full gentle practice", "Romans 12:1", "Offer your whole self to God through prayerful movement, breath, gratitude, and rest.", "Opening prayer, seated breath, cat-cow, low lunge, warrior flow, balance, bridge, reclined twist, extended rest and dedication prayer.", "Beautiful natural studio, greenery, warm sunrise", "Premium finale tone: reverent, encouraging, complete.", "Lord, I offer my body, mind, time, and choices to You as worship."]
+  ["Session 21", "Renewed Commitment", "30 minutes", "Full gentle practice", "Romans 12:1", "Offer your whole self to God through prayerful movement, breath, gratitude, and rest.", "Opening prayer, seated breath, cat-cow, low lunge, warrior flow, balance, bridge, reclined twist, extended rest and dedication prayer.", "Beautiful natural studio, greenery, warm sunrise", "Abide finale tone: reverent, encouraging, complete.", "Lord, I offer my body, mind, time, and choices to You as worship."]
 ].map(([session, title, duration, style, scripture, intention, flow, visual, voice, prayer], index) => ({
   id: `faith-yoga-${index + 1}`,
   session,
@@ -973,10 +973,10 @@ const adminReportList = document.querySelector("#adminReportList");
 const adminCommunityList = document.querySelector("#adminCommunityList");
 const adminPrayerList = document.querySelector("#adminPrayerList");
 const premiumPanelLabels = {
-  premiumOverview: "Premium Preview",
+  premiumOverview: "Abide Preview",
   breathwork: "Breathwork Prayer",
   faithYoga: "Faith-Led Yoga",
-  bibleStudy: "Bible Study",
+  bibleStudy: "Scripture Journey",
   walking: "Walking Sessions"
 };
 
@@ -2551,7 +2551,7 @@ function renderPremiumPanels() {
     const panelId = button.dataset.premiumToggle;
     const panel = document.querySelector(`#${panelId}Panel`);
     const isOpen = Boolean(state.premiumPanels[panelId]);
-    const label = premiumPanelLabels[panelId] || "Premium Section";
+    const label = premiumPanelLabels[panelId] || "Abide Section";
     if (panel) panel.hidden = !isOpen;
     button.textContent = `${isOpen ? "Hide" : "Open"} ${label}`;
     button.setAttribute("aria-expanded", String(isOpen));
@@ -2571,8 +2571,8 @@ function renderPremium() {
   if (!premiumGrid) return;
   const isUnlocked = state.isPremium || state.user?.role === "admin";
   premiumStatus.textContent = isUnlocked
-    ? "Premium preview is unlocked for this account."
-    : "These are future premium options. Your daily focuses, notes, prayer requests, reminders, and community stay free.";
+    ? "Abide preview is open for this account."
+    : "These are future Abide Membership journeys. Your daily focuses, notes, prayer requests, reminders, and community stay free.";
   premiumGrid.innerHTML = state.premiumContent.length
     ? state.premiumContent
         .map((item) => {
@@ -2581,7 +2581,7 @@ function renderPremium() {
           return `
             <article class="premium-card premium-${typeClass}">
               <div class="premium-card-top">
-                <span>${escapeHtml(item.type || "Premium")}</span>
+                <span>${escapeHtml(item.type || "Abide Journey")}</span>
                 <strong>${locked ? "Locked" : "Preview"}</strong>
               </div>
               <h3>${escapeHtml(item.title)}</h3>
@@ -2593,13 +2593,13 @@ function renderPremium() {
               ${
                 item.url && !locked
                   ? `<a class="secondary-link" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">Open Resource</a>`
-                  : `<button class="quiet-button" type="button" disabled>${locked ? "Premium Coming Soon" : "Admin Preview"}</button>`
+                  : `<button class="quiet-button" type="button" disabled>${locked ? "Abide Coming Later" : "Admin Preview"}</button>`
               }
             </article>
           `;
         })
         .join("")
-    : '<p class="empty-feed">Premium previews will appear here.</p>';
+    : '<p class="empty-feed">Abide journey previews will appear here.</p>';
 }
 
 function renderBreathwork() {
@@ -2608,8 +2608,8 @@ function renderBreathwork() {
   state.activeBreathworkIndex = Math.max(0, Math.min(state.activeBreathworkIndex, premiumBreathworkRoutines.length - 1));
   const routine = premiumBreathworkRoutines[state.activeBreathworkIndex];
   breathworkLockNote.textContent = isUnlocked
-    ? "Admin preview is open. These routines are ready to become future video or audio sessions."
-    : "Premium coming soon. Free accounts can preview the series titles, while full guided scripts will unlock with a future premium plan.";
+    ? "Admin preview is open. These routines are ready to become future Abide audio or video sessions."
+    : "Abide Membership coming later. Free accounts can preview the series titles, while full guided scripts will unlock with a future Abide plan.";
   breathworkList.innerHTML = premiumBreathworkRoutines
     .map((item, index) => `
       <button class="breathwork-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBreathworkIndex}">
@@ -2624,10 +2624,10 @@ function renderBreathwork() {
   breathworkDuration.textContent = routine.duration;
   breathworkTechnique.textContent = routine.technique;
   breathworkScripture.textContent = routine.scripture;
-  breathworkPurpose.textContent = `${routine.purpose} - ${isUnlocked ? "Full premium preview." : "Premium preview."}`;
+  breathworkPurpose.textContent = `${routine.purpose} - ${isUnlocked ? "Full Abide preview." : "Abide preview."}`;
   breathworkScript.innerHTML = isUnlocked
     ? `<p>${escapeHtml(routine.script)}</p>`
-    : `<p>This guided script is part of the future premium breathwork prayer library.</p><small>Preview: ${escapeHtml(routine.purpose)} with ${escapeHtml(routine.technique)}.</small>`;
+    : `<p>This guided script is part of the future Abide breath prayer library.</p><small>Preview: ${escapeHtml(routine.purpose)} with ${escapeHtml(routine.technique)}.</small>`;
   if (breathworkMediaCard && breathworkAudio && breathworkAudioNote) {
     const canPlayMedia = isUnlocked && Boolean(routine.audioSrc);
     breathworkMediaCard.hidden = !canPlayMedia;
@@ -2636,16 +2636,16 @@ function renderBreathwork() {
         breathworkAudio.src = routine.audioSrc;
         breathworkAudio.load();
       }
-      breathworkAudioNote.textContent = "Admin/premium-only audio for building the first finished breathwork video.";
+      breathworkAudioNote.textContent = "Admin/Abide-only audio for building the first finished breathwork video.";
     } else {
       breathworkAudio.removeAttribute("src");
       breathworkAudio.load();
       breathworkAudioNote.textContent = "";
     }
   }
-  breathworkVisual.textContent = isUnlocked ? routine.visual : "Visual direction unlocks with the premium production plan.";
-  breathworkVoice.textContent = isUnlocked ? routine.voice : "Voiceover direction unlocks with the full premium script.";
-  breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Closing prayer unlocks with the full premium routine.";
+  breathworkVisual.textContent = isUnlocked ? routine.visual : "Visual direction unlocks with the Abide production plan.";
+  breathworkVoice.textContent = isUnlocked ? routine.voice : "Voiceover direction unlocks with the full Abide script.";
+  breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Closing prayer unlocks with the full Abide routine.";
 }
 
 function renderYoga() {
@@ -2654,8 +2654,8 @@ function renderYoga() {
   state.activeYogaIndex = Math.max(0, Math.min(state.activeYogaIndex, premiumYogaSessions.length - 1));
   const session = premiumYogaSessions[state.activeYogaIndex];
   yogaLockNote.textContent = isUnlocked
-    ? "Admin preview is open. These faith-led yoga sessions are ready to become future premium videos."
-    : "Premium coming soon. Free accounts can preview the session titles, while full flows and prayers will unlock with a future premium plan.";
+    ? "Admin preview is open. These faith-led movement sessions are ready to become future Abide videos."
+    : "Abide Membership coming later. Free accounts can preview the session titles, while full flows and prayers will unlock with a future Abide plan.";
   yogaList.innerHTML = premiumYogaSessions
     .map((item, index) => `
       <button class="yoga-button" type="button" data-index="${index}" aria-pressed="${index === state.activeYogaIndex}">
@@ -2670,13 +2670,13 @@ function renderYoga() {
   yogaDuration.textContent = session.duration;
   yogaStyle.textContent = session.style;
   yogaScripture.textContent = session.scripture;
-  yogaIntention.textContent = `${session.intention} ${isUnlocked ? "Modify any pose and rest whenever needed." : "Premium preview."}`;
+  yogaIntention.textContent = `${session.intention} ${isUnlocked ? "Modify any pose and rest whenever needed." : "Abide preview."}`;
   yogaFlow.innerHTML = isUnlocked
     ? `<p>${escapeHtml(session.flow)}</p>`
-    : `<p>This movement flow is part of the future premium faith-led yoga library.</p><small>Preview: ${escapeHtml(session.style)} around ${escapeHtml(session.scripture)}.</small>`;
-  yogaVisual.textContent = isUnlocked ? session.visual : "Visual direction unlocks with the premium production plan.";
-  yogaVoice.textContent = isUnlocked ? session.voice : "Voiceover direction unlocks with the full premium session.";
-  yogaPrayer.textContent = isUnlocked ? session.prayer : "Closing prayer unlocks with the full premium session.";
+    : `<p>This movement flow is part of the future Abide faith-led movement library.</p><small>Preview: ${escapeHtml(session.style)} around ${escapeHtml(session.scripture)}.</small>`;
+  yogaVisual.textContent = isUnlocked ? session.visual : "Visual direction unlocks with the Abide production plan.";
+  yogaVoice.textContent = isUnlocked ? session.voice : "Voiceover direction unlocks with the full Abide session.";
+  yogaPrayer.textContent = isUnlocked ? session.prayer : "Closing prayer unlocks with the full Abide session.";
 }
 
 function renderBibleStudy() {
@@ -2685,8 +2685,8 @@ function renderBibleStudy() {
   state.activeBibleStudyIndex = Math.max(0, Math.min(state.activeBibleStudyIndex, premiumBibleStudySessions.length - 1));
   const study = premiumBibleStudySessions[state.activeBibleStudyIndex];
   bibleStudyLockNote.textContent = isUnlocked
-    ? "Admin preview is open. These in-depth sessions are ready to become future premium classes."
-    : "Premium coming soon. Free accounts can preview the study titles, while full outlines, questions, and assignments will unlock with a future premium plan.";
+    ? "Admin preview is open. These in-depth sessions are ready to become future Abide Scripture journeys."
+    : "Abide Membership coming later. Free accounts can preview the journey titles, while full outlines, questions, and practices will unlock with a future Abide plan.";
   bibleStudyList.innerHTML = premiumBibleStudySessions
     .map((item, index) => `
       <button class="bible-study-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBibleStudyIndex}">
@@ -2701,13 +2701,13 @@ function renderBibleStudy() {
   bibleStudyDuration.textContent = study.duration;
   bibleStudyFormat.textContent = study.format;
   bibleStudyScripture.textContent = study.scripture;
-  bibleStudyAim.textContent = `${study.aim} ${isUnlocked ? "Full premium class preview." : "Premium preview."}`;
+  bibleStudyAim.textContent = `${study.aim} ${isUnlocked ? "Full Abide Scripture preview." : "Abide preview."}`;
   bibleStudyOutline.innerHTML = isUnlocked
     ? `<p>${escapeHtml(study.outline)}</p>`
-    : `<p>This teaching outline is part of the future premium Bible study class library.</p><small>Preview: ${escapeHtml(study.aim)}</small>`;
-  bibleStudyQuestions.textContent = isUnlocked ? study.questions : "Discussion questions unlock with the full premium study.";
-  bibleStudyPractice.textContent = isUnlocked ? study.practice : "Practice assignments unlock with the full premium study.";
-  bibleStudyPrayer.textContent = isUnlocked ? study.prayer : "Closing prayer unlocks with the full premium study.";
+    : `<p>This teaching outline is part of the future Abide Scripture journey library.</p><small>Preview: ${escapeHtml(study.aim)}</small>`;
+  bibleStudyQuestions.textContent = isUnlocked ? study.questions : "Discussion questions unlock with the full Abide Scripture journey.";
+  bibleStudyPractice.textContent = isUnlocked ? study.practice : "Faith-in-practice steps unlock with the full Abide Scripture journey.";
+  bibleStudyPrayer.textContent = isUnlocked ? study.prayer : "Closing prayer unlocks with the full Abide Scripture journey.";
 }
 
 function renderWalking() {
@@ -2716,8 +2716,8 @@ function renderWalking() {
   state.activeWalkingIndex = Math.max(0, Math.min(state.activeWalkingIndex, premiumWalkingSessions.length - 1));
   const walk = premiumWalkingSessions[state.activeWalkingIndex];
   walkingLockNote.textContent = isUnlocked
-    ? "Admin preview is open. These guided walks are ready to become future premium audio or video sessions."
-    : "Premium coming soon. Free accounts can preview the walking session titles, while full guides and prayer prompts will unlock with a future premium plan.";
+    ? "Admin preview is open. These guided walks are ready to become future Abide audio or video sessions."
+    : "Abide Membership coming later. Free accounts can preview the walking session titles, while full guides and prayer prompts will unlock with a future Abide plan.";
   walkingList.innerHTML = premiumWalkingSessions
     .map((item, index) => `
       <button class="walking-button" type="button" data-index="${index}" aria-pressed="${index === state.activeWalkingIndex}">
@@ -2732,13 +2732,13 @@ function renderWalking() {
   walkingDuration.textContent = walk.duration;
   walkingPace.textContent = walk.pace;
   walkingScripture.textContent = walk.scripture;
-  walkingIntention.textContent = `${walk.intention} ${isUnlocked ? "Choose a safe route and adjust pace as needed." : "Premium preview."}`;
+  walkingIntention.textContent = `${walk.intention} ${isUnlocked ? "Choose a safe route and adjust pace as needed." : "Abide preview."}`;
   walkingGuide.innerHTML = isUnlocked
     ? `<p>${escapeHtml(walk.guide)}</p>`
-    : `<p>This guided walk is part of the future premium Walking With God library.</p><small>Preview: ${escapeHtml(walk.duration)} at ${escapeHtml(walk.pace)} around ${escapeHtml(walk.scripture)}.</small>`;
-  walkingPrompts.textContent = isUnlocked ? walk.prompts : "Prayer prompts unlock with the full premium walking session.";
-  walkingVisual.textContent = isUnlocked ? walk.visual : "Audio and visual direction unlocks with the premium production plan.";
-  walkingPrayer.textContent = isUnlocked ? walk.prayer : "Closing prayer unlocks with the full premium walking session.";
+    : `<p>This guided walk is part of the future Abide Walking With God library.</p><small>Preview: ${escapeHtml(walk.duration)} at ${escapeHtml(walk.pace)} around ${escapeHtml(walk.scripture)}.</small>`;
+  walkingPrompts.textContent = isUnlocked ? walk.prompts : "Prayer prompts unlock with the full Abide walking session.";
+  walkingVisual.textContent = isUnlocked ? walk.visual : "Audio and visual direction unlocks with the Abide production plan.";
+  walkingPrayer.textContent = isUnlocked ? walk.prayer : "Closing prayer unlocks with the full Abide walking session.";
 }
 
 function renderAdmin() {
@@ -2761,7 +2761,7 @@ function renderAdminDashboard(data = null) {
     <div><strong>${data.summary.communityPosts}</strong><span>Posts</span></div>
     <div><strong>${data.summary.openFeedback}</strong><span>Open feedback</span></div>
     <div><strong>${data.summary.openReports}</strong><span>Open reports</span></div>
-    <div><strong>${data.summary.premiumContent || 0}</strong><span>Premium previews</span></div>
+    <div><strong>${data.summary.premiumContent || 0}</strong><span>Abide previews</span></div>
   `;
 
   adminUserList.innerHTML = data.users.length
@@ -3737,7 +3737,7 @@ if (premiumContentForm) {
   premiumContentForm.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!state.adminUnlocked) {
-      premiumContentStatus.textContent = "Unlock admin before adding premium content.";
+      premiumContentStatus.textContent = "Unlock admin before adding Abide content.";
       return;
     }
     apiFetch("/api/admin/premium-content", {
@@ -3753,7 +3753,7 @@ if (premiumContentForm) {
     })
       .then(async () => {
         premiumContentForm.reset();
-        premiumContentStatus.textContent = "Premium preview added.";
+        premiumContentStatus.textContent = "Abide preview added.";
         await loadPremiumContent();
         await loadAdminDashboard();
         renderPremium();

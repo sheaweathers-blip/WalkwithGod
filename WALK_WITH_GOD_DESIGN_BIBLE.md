@@ -55,7 +55,7 @@ These are not performance steps. They are a gentle formation rhythm.
 - Faithfulness over engagement metrics.
 - Curated ministry content over user-generated AI prompts.
 - Free experience should feel meaningful and complete.
-- Premium should deepen formation, not make the free app feel empty.
+- Abide Membership should deepen formation, not make the free app feel empty.
 - Community should feel grace-filled, not like a busy social feed.
 
 ## What The App Should Feel Like
@@ -249,11 +249,17 @@ Community should avoid:
 - Unmoderated advice on sensitive issues
 - Political or divisive drift
 
-## Premium Standards
+## Abide Membership Standards
 
-Premium content should deepen the same mission, not create a separate identity.
+Future paid content should be framed as Abide Membership, not merely "premium."
 
-Premium may include:
+The invitation is not "pay more and get more." The invitation is:
+
+Come deeper.
+
+Abide Membership should deepen the same mission, not create a separate identity.
+
+Abide Membership may include:
 
 - Deeper Scripture studies
 - Guided prayer walks
@@ -264,12 +270,51 @@ Premium may include:
 - Virtual Bible classes
 - Collection-based growth resources
 
-Premium should not:
+Abide Membership should not:
 
 - Make the free experience feel spiritually incomplete.
 - Promise transformation through payment.
 - Use wellness language detached from Scripture.
 - Replace church, pastoral care, therapy, or medical support.
+
+## The Four Pillars Of Abiding
+
+Future journeys, content, products, and collections should fit one or more of these pillars:
+
+1. Truth - Knowing God through Scripture.
+2. Presence - Meeting with God in prayer, stillness, and worship.
+3. Practice - Living out faith through daily rhythms, movement, breath prayer, guided walks, Sabbath, journaling, and obedience.
+4. Community - Encouraging one another, sharing testimonies, praying together, and serving others.
+
+## Walk With God Journey Framework
+
+People do not merely consume content. They commit to journeys.
+
+Future Abide journeys may include:
+
+- Scripture
+- Prayer
+- Breath prayer
+- Guided walk
+- Journal prompt
+- Action step
+- Audio or video
+- Optional Living Stones reflection
+
+Example future journeys:
+
+- 7-Day Peace Journey
+- 21-Day Prayer Journey
+- 40-Day Walking With Jesus
+- Anxiety Journey
+- Grief Journey
+- New Believer Journey
+- Marriage Journey
+- Forgiveness Journey
+- Advent Journey
+- Lent Journey
+
+Every journey should help the user take one more faithful step with God.
 
 ## Living Stones And Physical Products
 
@@ -336,7 +381,7 @@ Use pop-up choices when a section offers many options:
 - Focus Library
 - Choose Day
 - Prayer Library
-- Premium previews
+- Abide previews
 
 This keeps the main screen simple while still giving users access to depth.
 
@@ -366,7 +411,7 @@ Before adding a feature, ask:
 3. Does this make the app calmer or more cluttered?
 4. Is this spiritually safe and biblically grounded?
 5. Can this be simpler?
-6. Should this be free, premium, or later?
+6. Should this be free, Abide Membership, or later?
 7. Does it reinforce the same invitation: Take your next step with God today?
 
 ## Current Phase 1 Alignment
@@ -380,7 +425,7 @@ Phase 1 should prioritize:
 - Community and prayer requests
 - Reminder settings
 - Gentle path rhythm
-- Premium previews
+- Abide previews
 - Admin moderation and support
 
 Phase 1 may defer:
@@ -388,7 +433,7 @@ Phase 1 may defer:
 - Living Stones product system
 - QR devotional journeys
 - Walk Cards
-- Full premium subscriptions
+- Full Abide Membership subscriptions
 - App store packaging
 - Large devotional collections
 
