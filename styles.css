@@ -861,6 +861,60 @@ button:hover {
   margin-top: 22px;
 }
 
+.prayer-library-section {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(205, 161, 72, 0.16), transparent 28%),
+    radial-gradient(circle at 88% 80%, rgba(48, 109, 82, 0.16), transparent 32%),
+    linear-gradient(135deg, rgba(245, 250, 239, 0.98), rgba(225, 240, 222, 0.96));
+}
+
+.prayer-library-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.prayer-library-card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 16px;
+  align-content: space-between;
+  min-height: 260px;
+  padding: 18px;
+  border: 1px solid rgba(36, 90, 66, 0.16);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(205, 161, 72, 0.14), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(245, 241, 222, 0.74));
+  box-shadow: 0 12px 28px rgba(36, 90, 66, 0.08);
+}
+
+.prayer-library-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(125deg, transparent 0 58%, rgba(36, 90, 66, 0.06) 58% 61%, transparent 61% 100%);
+}
+
+.prayer-library-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.prayer-library-card h3 {
+  margin: 4px 0 10px;
+  color: var(--deep-green);
+}
+
+.prayer-library-card p:not(.block-label) {
+  color: #33423a;
+  line-height: 1.62;
+}
+
 .note-library-item {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -2826,6 +2880,10 @@ select:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .prayer-library-grid {
+    grid-template-columns: 1fr;
+  }
+
   .path-step {
     min-height: 0;
   }
@@ -2886,7 +2944,7 @@ select:focus {
     bottom: 10px;
     z-index: 20;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 6px;
     padding: 8px;
     border: 1px solid rgba(36, 90, 66, 0.2);
@@ -2904,7 +2962,7 @@ select:focus {
     border-radius: 10px;
     color: var(--deep-green);
     text-decoration: none;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 900;
     background: rgba(255, 255, 255, 0.58);
   }

@@ -617,6 +617,81 @@ const walkPathSteps = [
   ["Share", "Matthew 28:19-20", "Encourage, pray with, serve, testify, invite, or bless someone else.", "Jesus sent His followers to make disciples.", "Matthew 28:19-20"]
 ].map(([name, verse, summary, jesus, jesusReference], index) => ({ name, verse, summary, jesus, jesusReference, index }));
 
+const prayerLibrary = [
+  {
+    title: "Morning Surrender",
+    category: "Begin",
+    scripture: "Psalm 143:8",
+    text: "Father, let me hear of Your steadfast love this morning. I give You my attention, my plans, my pace, and my relationships today. Show me the way I should go, because I lift my soul to You. Help me take the next faithful step with You. Amen."
+  },
+  {
+    title: "When I Feel Anxious",
+    category: "Peace",
+    scripture: "Philippians 4:6-7",
+    text: "God of peace, I bring this worry to You instead of carrying it alone. Guard my heart and mind in Christ Jesus. Help me breathe, slow down, and remember that You are near. Give me wisdom for what is mine to do and trust for what belongs in Your hands. Amen."
+  },
+  {
+    title: "Before Making a Decision",
+    category: "Wisdom",
+    scripture: "James 1:5",
+    text: "Lord, You give wisdom generously. I do not want to be led by fear, pressure, pride, or hurry. Guide me through Your Word, Your Spirit, wise counsel, and the fruit of peace and obedience. Make the next faithful step clear enough for today. Amen."
+  },
+  {
+    title: "Repentance and Return",
+    category: "Return",
+    scripture: "Acts 3:19",
+    text: "Merciful God, I turn back to You. I confess what has pulled my heart, words, or actions away from Your way. Thank You that repentance is a return to life, not a sentence of shame. Refresh me in Your presence and help me walk differently today. Amen."
+  },
+  {
+    title: "When I Am Hurting",
+    category: "Hardship",
+    scripture: "Psalm 34:18",
+    text: "Lord, You are near to the brokenhearted. I do not have to pretend with You. Meet me in this pain with comfort, wisdom, and steady hope. Help me receive support where I need it, and keep my heart tender without leaving me unprotected. Amen."
+  },
+  {
+    title: "Healing and Restoration",
+    category: "Healing",
+    scripture: "Psalm 23:3",
+    text: "Shepherd of my soul, restore what is weary, wounded, confused, or afraid in me. Lead me beside still waters and guide me in paths of righteousness. Help me take healing one faithful step at a time, trusting Your presence along the way. Amen."
+  },
+  {
+    title: "Gratitude",
+    category: "Remember",
+    scripture: "Psalm 107:1",
+    text: "Thank You, Lord, for Your steadfast love. Open my eyes to the gifts I have rushed past: breath, mercy, provision, people, beauty, and grace. Let gratitude soften my heart and help me remember that every good gift comes from You. Amen."
+  },
+  {
+    title: "For Family and Loved Ones",
+    category: "Intercession",
+    scripture: "Numbers 6:24-26",
+    text: "Lord, bless the people I love and keep them. Make Your face shine upon them and be gracious to them. Give wisdom, protection, healing, salvation, peace, and courage where each one needs it most. Teach me to love them with patience and truth. Amen."
+  },
+  {
+    title: "Forgiveness",
+    category: "Live",
+    scripture: "Ephesians 4:32",
+    text: "Jesus, You have forgiven me with mercy I could never earn. Help me release bitterness without pretending the hurt did not matter. Give me wisdom, boundaries, courage, and compassion. Lead me toward freedom one obedient step at a time. Amen."
+  },
+  {
+    title: "Purpose and Calling",
+    category: "Purpose",
+    scripture: "Ephesians 2:10",
+    text: "God, I am Your workmanship, created in Christ Jesus for good works You prepared. Free me from comparison and striving. Show me the faithful work in front of me today, and help me serve with humility, courage, and love. Amen."
+  },
+  {
+    title: "Before Active Time With God",
+    category: "Walk",
+    scripture: "Micah 6:8",
+    text: "Lord, as I move, help me walk humbly with You. Let this activity become prayer, not performance. Care for the body You created, quiet my thoughts, and help me listen for Your invitation in this moment. Amen."
+  },
+  {
+    title: "For Community",
+    category: "Share",
+    scripture: "Hebrews 10:24-25",
+    text: "Father, help this community stir one another toward love and good works. Make our words gentle, honest, prayerful, and encouraging. Help each person feel seen without replacing the deeper care of Scripture, prayer, wise counsel, and real-life support. Amen."
+  }
+];
+
 const state = {
   focuses: [...defaultFocuses, ...loadAddedFocuses()],
   activeId: localStorage.getItem("walkWithGodActiveFocus") || "",
@@ -664,6 +739,7 @@ const gatedSections = [
   document.querySelector("#walkPath"),
   document.querySelector("#themes"),
   document.querySelector("#notesLibrary"),
+  document.querySelector("#prayerLibrary"),
   document.querySelector("#community"),
   document.querySelector("#premium"),
   document.querySelector("#breathwork"),
@@ -750,6 +826,8 @@ const noteStatus = document.querySelector("#noteStatus");
 const favoriteVersesList = document.querySelector("#favoriteVersesList");
 const completionContainer = document.querySelector("#completionContainer");
 const notesLibraryList = document.querySelector("#notesLibraryList");
+const prayerLibraryList = document.querySelector("#prayerLibraryList");
+const prayerLibraryStatus = document.querySelector("#prayerLibraryStatus");
 const completeButton = document.querySelector("#completeButton");
 const nextButton = document.querySelector("#nextButton");
 const focusCelebrationOverlay = document.querySelector("#focusCelebrationOverlay");
@@ -1347,6 +1425,34 @@ function renderNotesLibrary() {
         `)
         .join("")
     : '<p class="empty-feed">Saved private notes will appear here.</p>';
+}
+
+function renderPrayerLibrary() {
+  if (!prayerLibraryList) return;
+  prayerLibraryList.innerHTML = prayerLibrary
+    .map((prayer, index) => `
+      <article class="prayer-library-card">
+        <div>
+          <p class="block-label">${escapeHtml(prayer.category)} - ${escapeHtml(prayer.scripture)}</p>
+          <h3>${escapeHtml(prayer.title)}</h3>
+          <p>${escapeHtml(prayer.text)}</p>
+        </div>
+        <button class="quiet-button copy-prayer-button" type="button" data-prayer-index="${index}">Copy Prayer</button>
+      </article>
+    `)
+    .join("");
+}
+
+async function copyPrayerText(index) {
+  const prayer = prayerLibrary[index];
+  if (!prayer) return;
+  const text = `${prayer.title}\n${prayer.scripture}\n\n${prayer.text}`;
+  try {
+    await navigator.clipboard.writeText(text);
+    prayerLibraryStatus.textContent = `${prayer.title} copied.`;
+  } catch {
+    prayerLibraryStatus.textContent = "Copy was blocked by this browser. You can still select and copy the prayer text.";
+  }
 }
 
 function renderCompletion(focus, isFocusComplete) {
@@ -2679,6 +2785,7 @@ function render() {
   renderBibleStudy();
   renderWalking();
   renderNotesLibrary();
+  renderPrayerLibrary();
   renderAdmin();
   if (!focus) {
     progressFill.style.width = "0%";
@@ -2752,6 +2859,7 @@ function render() {
   renderBibleStudy();
   renderWalking();
   renderNotesLibrary();
+  renderPrayerLibrary();
   renderAdmin();
   saveActivePosition();
 }
@@ -2780,6 +2888,14 @@ notesLibraryList.addEventListener("click", (event) => {
   document.querySelector("#themes").scrollIntoView({ behavior: "smooth" });
   loadCommunity().finally(render);
 });
+
+if (prayerLibraryList) {
+  prayerLibraryList.addEventListener("click", (event) => {
+    const button = event.target.closest(".copy-prayer-button");
+    if (!button) return;
+    copyPrayerText(Number(button.dataset.prayerIndex));
+  });
+}
 
 if (breathworkList) {
   breathworkList.addEventListener("click", (event) => {

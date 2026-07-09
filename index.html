@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260709-path-framework" />
+    <link rel="stylesheet" href="styles.css?v=20260709-prayer-library" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -68,7 +68,7 @@
           <p class="eyebrow">Account</p>
           <h2 id="accountHeading">Start with a free account</h2>
           <p class="section-copy" id="accountCopy">
-            Create an account or log in to open your daily focuses, prayer requests, community, notes, progress, and reminders.
+            Create an account or log in to open your daily focuses, prayer library, prayer requests, community, notes, progress, and reminders.
           </p>
         </div>
 
@@ -88,6 +88,7 @@
             <a href="#walkPath">Path</a>
             <a href="#themes">Focus Library</a>
             <a href="#notesLibrary">Private Notes</a>
+            <a href="#prayerLibrary">Prayer Library</a>
             <a href="#community">Community</a>
             <a href="#premium">Premium Preview</a>
             <a href="#install">Install App</a>
@@ -250,7 +251,7 @@
           <p class="eyebrow">Free Account Required</p>
           <h2>Create an account to begin your walk</h2>
           <p class="section-copy">
-            Themes, daily progress, notes, prayer requests, community encouragement, reminders, and favorites are free after sign in.
+            Themes, daily progress, notes, prayer library, prayer requests, community encouragement, reminders, and favorites are free after sign in.
           </p>
         </div>
         <div class="locked-benefits-grid">
@@ -418,6 +419,18 @@
           </p>
         </div>
         <div class="notes-library-list" id="notesLibraryList"></div>
+      </section>
+
+      <section class="daily prayer-library-section" id="prayerLibrary" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Prayer Library</p>
+          <h2>When it is hard to know what to say</h2>
+          <p class="section-copy">
+            Simple, Scripture-shaped prayers for beginning, surrendering, asking, healing, and taking your next step with God.
+          </p>
+        </div>
+        <div class="prayer-library-grid" id="prayerLibraryList"></div>
+        <p class="copy-status" id="prayerLibraryStatus" role="status" aria-live="polite"></p>
       </section>
 
       <section class="daily" id="community" hidden>
@@ -685,6 +698,7 @@
         <a href="#walkPath">Path</a>
         <a href="#themes">Themes</a>
         <a href="#notesLibrary">Notes</a>
+        <a href="#prayerLibrary">Prayers</a>
         <a href="#community">Community</a>
         <a href="#premium">Premium</a>
       </nav>
@@ -898,6 +912,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260709-path-framework"></script>
+    <script src="app.js?v=20260709-prayer-library"></script>
   </body>
 </html>
