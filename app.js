@@ -637,7 +637,8 @@ const state = {
   user: null,
   supportMessages: [],
   selectedAdminUserId: "",
-  authMode: "login"
+  authMode: "login",
+  lastSyncedActivePosition: ""
 };
 
 const themeList = document.querySelector("#themeList");
@@ -935,6 +936,29 @@ function applyServerProgress(progress) {
     if (!state.completed[item.focusId]) state.completed[item.focusId] = new Set();
     state.completed[item.focusId].add(item.dayIndex);
   }
+  saveCompleted();
+}
+
+function focusById(focusId) {
+  return state.focuses.find((focus) => focus.id === focusId) || null;
+}
+
+function chooseFallbackActiveFocus() {
+  return activeFocus() || state.focuses.find((focus) => completedSet(focus.id).size < focus.days.length) || state.focuses[0] || null;
+}
+
+function applyServerActivePosition(activePosition) {
+  const serverFocus = focusById(activePosition?.focusId);
+  if (serverFocus) {
+    state.activeId = serverFocus.id;
+    state.activeDayIndex = Math.max(0, Math.min(Number(activePosition.dayIndex) || 0, serverFocus.days.length - 1));
+  } else {
+    const fallbackFocus = chooseFallbackActiveFocus();
+    if (!fallbackFocus) return;
+    state.activeId = fallbackFocus.id;
+    state.activeDayIndex = nextOpenDay(fallbackFocus);
+  }
+  saveActivePosition({ sync: false });
 }
 
 function applyServerNotes(notes) {
@@ -948,13 +972,15 @@ function applyServerNotes(notes) {
 
 async function loadServerState() {
   if (!state.user) return;
-  const [progressResult, notesResult, reminderResult, premiumResult] = await Promise.all([
+  const [progressResult, notesResult, reminderResult, premiumResult, activePositionResult] = await Promise.all([
     apiFetch("/api/progress"),
     apiFetch("/api/notes"),
     apiFetch("/api/reminder"),
-    apiFetch("/api/premium-content")
+    apiFetch("/api/premium-content"),
+    apiFetch("/api/active-position")
   ]);
   applyServerProgress(progressResult.progress);
+  applyServerActivePosition(activePositionResult.activePosition);
   applyServerNotes(notesResult.notes);
   state.premiumContent = premiumResult.content || [];
   state.isPremium = Boolean(premiumResult.isPremium);
@@ -1829,9 +1855,20 @@ function clampActiveDay(focus) {
   state.activeDayIndex = Math.max(0, Math.min(state.activeDayIndex, focus.days.length - 1));
 }
 
-function saveActivePosition() {
+function saveActivePosition(options = {}) {
+  if (!state.activeId) return;
+  const dayIndex = Number(state.activeDayIndex) || 0;
+  const key = `${state.activeId}:${dayIndex}`;
   localStorage.setItem("walkWithGodActiveFocus", state.activeId);
-  localStorage.setItem("walkWithGodActiveDay", String(state.activeDayIndex));
+  localStorage.setItem("walkWithGodActiveDay", String(dayIndex));
+  if (options.sync === false || !state.user || state.lastSyncedActivePosition === key) return;
+  state.lastSyncedActivePosition = key;
+  apiFetch("/api/active-position", {
+    method: "POST",
+    body: JSON.stringify({ focusId: state.activeId, dayIndex })
+  }).catch(() => {
+    state.lastSyncedActivePosition = "";
+  });
 }
 
 function renderFocusList() {
@@ -2435,7 +2472,8 @@ themeList.addEventListener("click", (event) => {
   const button = event.target.closest(".theme-button");
   if (!button) return;
   state.activeId = button.dataset.id;
-  state.activeDayIndex = 0;
+  const focus = activeFocus();
+  state.activeDayIndex = focus ? nextOpenDay(focus) : 0;
   loadCommunity().finally(render);
 });
 
@@ -2528,6 +2566,7 @@ document.addEventListener("click", (event) => {
 completeButton.addEventListener("click", () => {
   const focus = activeFocus();
   const result = markDayComplete(focus, state.activeDayIndex, noteStatus);
+  if (!result.becameFocusComplete) state.activeDayIndex = nextOpenDay(focus);
   render();
   if (result.becameFocusComplete) showFocusCelebration(focus);
 });
@@ -2545,6 +2584,7 @@ quickCompleteButton.addEventListener("click", () => {
   state.activeId = focus.id;
   state.activeDayIndex = nextOpenDay(focus);
   const result = markDayComplete(focus, state.activeDayIndex, todayStatus);
+  if (!result.becameFocusComplete) state.activeDayIndex = nextOpenDay(focus);
   todayStatus.textContent = result.becameFocusComplete
     ? `${focus.title} completed. Take a moment to celebrate what God has walked you through.`
     : "Completed for today. Welcome back whenever you are ready for the next step.";
@@ -2863,7 +2903,8 @@ onboardingOptions.addEventListener("click", (event) => {
   const button = event.target.closest("[data-suggest-focus]");
   if (!button) return;
   state.activeId = button.dataset.suggestFocus;
-  state.activeDayIndex = 0;
+  const focus = activeFocus();
+  state.activeDayIndex = focus ? nextOpenDay(focus) : 0;
   onboardingPanel.hidden = true;
   document.querySelector("#themes").scrollIntoView({ behavior: "smooth" });
   loadCommunity().finally(render);

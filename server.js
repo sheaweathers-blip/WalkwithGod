@@ -742,6 +742,24 @@ async function handleApi(request, response) {
     return json(response, 200, { progress: db.progress.filter((item) => item.userId === user.id) });
   }
 
+  if (request.method === "GET" && url.pathname === "/api/active-position") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    return json(response, 200, { activePosition: user.activePosition || null });
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/active-position") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const body = await readBody(request);
+    const focusId = normalizeText(body.focusId, 120);
+    const dayIndex = Number(body.dayIndex);
+    if (!focusId || !Number.isInteger(dayIndex)) return json(response, 400, { error: "focusId and dayIndex are required." });
+    user.activePosition = { focusId, dayIndex, updatedAt: new Date().toISOString() };
+    await writeDb(db);
+    return json(response, 200, { activePosition: user.activePosition });
+  }
+
   if (request.method === "POST" && url.pathname === "/api/progress") {
     const user = requireUser(request, response, db);
     if (!user) return;
