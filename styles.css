@@ -371,6 +371,32 @@ button:hover {
   margin-top: 20px;
 }
 
+.focus-summary-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 90% 12%, rgba(205, 161, 72, 0.18), transparent 28%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(229, 241, 224, 0.82));
+}
+
+.focus-summary-card h3 {
+  margin: 0;
+  color: var(--deep-green);
+  font-size: 1.25rem;
+}
+
+.focus-summary-card p:not(.block-label) {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.focus-summary-card .copy-button {
+  width: 100%;
+}
+
 .prayer-breath-panel {
   margin-top: 20px;
   padding: 18px;
@@ -2425,8 +2451,20 @@ select:focus {
 }
 
 .prayer-dialog,
-.day-dialog {
+.day-dialog,
+.focus-dialog {
   width: min(760px, 100%);
+}
+
+.focus-dialog {
+  width: min(980px, 100%);
+}
+
+.focus-choice-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-height: min(620px, 66vh);
+  overflow: auto;
+  padding-right: 10px;
 }
 
 .modal-prayer-text {
@@ -3105,6 +3143,11 @@ select:focus {
     overflow-y: auto;
     max-height: 62vh;
     padding: 0 8px 0 0;
+  }
+
+  .focus-choice-list {
+    grid-template-columns: 1fr;
+    max-height: 66vh;
   }
 
   .day-button {

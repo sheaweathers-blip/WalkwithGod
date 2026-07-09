@@ -727,6 +727,9 @@ const state = {
 };
 
 const themeList = document.querySelector("#themeList");
+const chooseFocusButton = document.querySelector("#chooseFocusButton");
+const activeFocusSummaryTitle = document.querySelector("#activeFocusSummaryTitle");
+const activeFocusSummaryCopy = document.querySelector("#activeFocusSummaryCopy");
 const breatheInText = document.querySelector("#breatheInText");
 const breatheOutText = document.querySelector("#breatheOutText");
 const serverWarning = document.querySelector("#serverWarning");
@@ -841,6 +844,8 @@ const celebrationCloseButton = document.querySelector("#celebrationCloseButton")
 const choiceOverlay = document.querySelector("#choiceOverlay");
 const choiceCloseButton = document.querySelector("#choiceCloseButton");
 const choiceGrid = document.querySelector("#choiceGrid");
+const focusOverlay = document.querySelector("#focusOverlay");
+const focusCloseButton = document.querySelector("#focusCloseButton");
 const prayerOverlay = document.querySelector("#prayerOverlay");
 const prayerCloseButton = document.querySelector("#prayerCloseButton");
 const prayerKeepOpenButton = document.querySelector("#prayerKeepOpenButton");
@@ -1485,6 +1490,18 @@ function showDayOverlay() {
 function hideDayOverlay() {
   if (!dayOverlay) return;
   dayOverlay.hidden = true;
+  document.body.classList.remove("choice-open");
+}
+
+function showFocusOverlay() {
+  if (!focusOverlay) return;
+  focusOverlay.hidden = false;
+  document.body.classList.add("choice-open");
+}
+
+function hideFocusOverlay() {
+  if (!focusOverlay) return;
+  focusOverlay.hidden = true;
   document.body.classList.remove("choice-open");
 }
 
@@ -2320,6 +2337,17 @@ function saveActivePosition(options = {}) {
 }
 
 function renderFocusList() {
+  const focus = activeFocus();
+  if (activeFocusSummaryTitle && activeFocusSummaryCopy) {
+    if (focus) {
+      const completeCount = completedSet(focus.id).size;
+      activeFocusSummaryTitle.textContent = focus.title;
+      activeFocusSummaryCopy.textContent = `${completeCount} of ${focus.days.length} days complete. ${focus.description}`;
+    } else {
+      activeFocusSummaryTitle.textContent = "Choose a focus";
+      activeFocusSummaryCopy.textContent = "Open the focus library to choose a Scripture theme.";
+    }
+  }
   themeList.innerHTML = state.focuses
     .map((focus) => {
       const completeCount = completedSet(focus.id).size;
@@ -2940,8 +2968,23 @@ themeList.addEventListener("click", (event) => {
   state.activeId = button.dataset.id;
   const focus = activeFocus();
   state.activeDayIndex = focus ? nextOpenDay(focus) : 0;
+  hideFocusOverlay();
   loadCommunity().finally(render);
 });
+
+if (chooseFocusButton) {
+  chooseFocusButton.addEventListener("click", showFocusOverlay);
+}
+
+if (focusCloseButton) {
+  focusCloseButton.addEventListener("click", hideFocusOverlay);
+}
+
+if (focusOverlay) {
+  focusOverlay.addEventListener("click", (event) => {
+    if (event.target === focusOverlay) hideFocusOverlay();
+  });
+}
 
 if (chooseDayButton) {
   chooseDayButton.addEventListener("click", showDayOverlay);
@@ -3150,6 +3193,7 @@ if (choiceGrid) {
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
   hideChoiceOverlay();
+  hideFocusOverlay();
   hidePrayerModal();
   hideDayOverlay();
   hideFocusCelebration();

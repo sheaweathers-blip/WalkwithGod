@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260709-popup-prompts" />
+    <link rel="stylesheet" href="styles.css?v=20260709-focus-popup" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -266,9 +266,14 @@
         <aside class="library" aria-label="Daily focus themes">
           <div class="section-heading">
             <p class="eyebrow">Focus Library</p>
-            <h2>Choose a Theme</h2>
+            <h2>Your Focus</h2>
           </div>
-          <div class="theme-list" id="themeList"></div>
+          <div class="focus-summary-card">
+            <p class="block-label">Current Focus</p>
+            <h3 id="activeFocusSummaryTitle">Choose a focus</h3>
+            <p id="activeFocusSummaryCopy">Open the focus library to choose a Scripture theme.</p>
+            <button class="copy-button" id="chooseFocusButton" type="button">Choose Focus</button>
+          </div>
           <div class="prayer-breath-panel" id="prayerBreathPanel">
             <p class="eyebrow">Prayer Breath</p>
             <div class="breath-line">
@@ -935,6 +940,16 @@
       </div>
     </div>
 
+    <div class="choice-overlay" id="focusOverlay" hidden>
+      <div class="choice-dialog focus-dialog" role="dialog" aria-modal="true" aria-labelledby="focusModalTitle">
+        <button class="choice-close-button" id="focusCloseButton" type="button" aria-label="Close focus library">Close</button>
+        <p class="eyebrow">Focus Library</p>
+        <h2 id="focusModalTitle">Choose a focus</h2>
+        <p class="section-copy">Pick a Scripture theme and continue one guided day at a time.</p>
+        <div class="theme-list focus-choice-list" id="themeList"></div>
+      </div>
+    </div>
+
     <div class="choice-overlay" id="prayerOverlay" hidden>
       <div class="choice-dialog prayer-dialog" role="dialog" aria-modal="true" aria-labelledby="prayerModalTitle">
         <button class="choice-close-button" id="prayerCloseButton" type="button" aria-label="Close prayer">Close</button>
@@ -971,6 +986,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260709-popup-prompts"></script>
+    <script src="app.js?v=20260709-focus-popup"></script>
   </body>
 </html>
