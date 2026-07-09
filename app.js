@@ -431,6 +431,29 @@ const defaultFocuses = [
       ["Day 13", "Quieted by Love", "Zephaniah 3:17", "God is present, mighty to save, rejoices over His people, and quiets them by His love."],
       ["Day 14", "Mercy Made New", "Lamentations 3:22-24", "God's steadfast love does not cease, and His mercies are new every morning."]
     ]
+  },
+  {
+    id: "purpose",
+    label: "Theme 20",
+    mark: "PU",
+    title: "Purpose",
+    description: "A 14-day focus on discovering and living God-given purpose through identity, calling, gifts, obedience, service, work, and faithful daily surrender.",
+    days: [
+      ["Day 1", "Created With Intention", "Genesis 1:26-28", "God creates humanity in His image and gives people meaningful responsibility in His good world."],
+      ["Day 2", "Known Before You Began", "Jeremiah 1:4-8", "God knows Jeremiah before birth and calls him beyond his fear and inexperience."],
+      ["Day 3", "God's Workmanship", "Ephesians 2:10", "In Christ, believers are God's workmanship, created for good works prepared by Him."],
+      ["Day 4", "Called According to His Purpose", "Romans 8:28-30", "God works through every season to conform His people to the image of Christ."],
+      ["Day 5", "Seek First the Kingdom", "Matthew 6:31-34", "Jesus redirects anxious striving toward God's kingdom and daily trust."],
+      ["Day 6", "Different Gifts, One Body", "Romans 12:4-8", "God gives different gifts so His people can serve faithfully together."],
+      ["Day 7", "A Light That Points to God", "Matthew 5:14-16", "Jesus calls His people to live visibly so others may glorify the Father."],
+      ["Day 8", "Faithful in Small Things", "Luke 16:10", "Purpose grows through faithfulness in ordinary, hidden, and seemingly small responsibilities."],
+      ["Day 9", "Work With Your Whole Heart", "Colossians 3:23-24", "Daily work becomes worship when done for the Lord rather than only for human approval."],
+      ["Day 10", "Use What Is in Your Hand", "Exodus 4:1-5", "God asks Moses to offer what he already has, then uses it for His purposes."],
+      ["Day 11", "For Such a Time as This", "Esther 4:13-16", "Esther faces a costly moment where courage and calling meet."],
+      ["Day 12", "Sent to Serve", "Mark 10:43-45", "Jesus defines greatness through service and gives His own life as the pattern."],
+      ["Day 13", "Run Your Race", "Hebrews 12:1-2", "Believers are called to lay aside what hinders and run with endurance while looking to Jesus."],
+      ["Day 14", "Finish the Assignment", "2 Timothy 4:6-8", "Paul reflects on a faithful life poured out for God and looks toward the crown of righteousness."]
+    ]
   }
 ];
 
@@ -1445,6 +1468,45 @@ function themedApplicationAndDeed(focus, dayNumber) {
       "When fear rises today, answer it with: 'This cannot separate me from God's love.'",
       "Let God quiet you by love: sit still for three minutes with no fixing, explaining, or striving.",
       "Mark a fresh start today by receiving mercy and then extending mercy to yourself or someone else."
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
+  if (focus.id === "purpose") {
+    const applications = [
+      "Where have I been looking for purpose in achievement, approval, or productivity instead of beginning with being made in God's image?",
+      "What fear, insecurity, or excuse sounds loudest when I imagine God calling me into something meaningful?",
+      "Which good work might already be in front of me, prepared by God, but easy to overlook because it feels ordinary?",
+      "How might this season, even the hard or confusing parts, be forming Christlike character in me?",
+      "What anxious striving is distracting me from seeking God's kingdom first today?",
+      "Which gift, experience, skill, or burden has God given me that could strengthen someone else?",
+      "Where can my life point quietly but clearly back to God instead of drawing attention only to myself?",
+      "What small responsibility needs my faithfulness today because it may be part of a larger work God is shaping?",
+      "How would my work, chores, caregiving, or daily tasks change if I did them directly for the Lord?",
+      "What is already in my hand that I keep dismissing as too simple for God to use?",
+      "Where might God be asking for courage, timing, and surrender instead of comfort?",
+      "Who can I serve today in a way that reflects Jesus' definition of greatness?",
+      "What weight, distraction, comparison, or sin is slowing my race with God right now?",
+      "What would it look like to finish this focus by naming one assignment God has placed in front of me for this season?"
+    ];
+    const deeds = [
+      "Take a 15-minute walk and thank God for creating you with intention; name one responsibility you can steward with love today.",
+      "Write one honest sentence that begins, 'God, I feel unqualified because...' then answer it with: 'But You are with me.'",
+      "Do one prepared good work today without announcing it: encourage, help, repair, organize, pray, give, or show up faithfully.",
+      "List one way God has used a difficult season to grow compassion, endurance, humility, wisdom, or dependence in you.",
+      "Before your next task, pray: 'Your kingdom first.' Then choose one action that reflects trust instead of hurry.",
+      "Offer one gift today in a practical way: teach, listen, create, organize, serve, lead, comfort, or give.",
+      "Let your light show through one visible act of goodness that gives God glory rather than seeking praise.",
+      "Choose one small task you normally rush through and do it with care as an act of faithfulness to God.",
+      "Turn one ordinary work block into worship by beginning with prayer and ending with gratitude.",
+      "Hold or name something already in your hand: a skill, contact, resource, story, or opportunity. Ask God how to use it.",
+      "Take one courageous step you have been delaying: make the call, ask the question, apologize, volunteer, apply, or begin.",
+      "Serve someone today in a low-status way, choosing humility over recognition.",
+      "During active time with God, name one weight to lay down and one next step to run with endurance.",
+      "Write a one-sentence purpose prayer for this season: 'Lord, help me faithfully...' and place it where you will see it."
     ];
     return {
       application: applications[(dayNumber - 1) % applications.length],
