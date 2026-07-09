@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260709-hide-shortcuts" />
+    <link rel="stylesheet" href="styles.css?v=20260709-popup-prompts" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -312,9 +312,12 @@
             </div>
           </div>
 
-          <div class="day-layout">
-            <div class="day-list" id="dayList" aria-label="Days in this focus"></div>
+          <div class="reader-toolbar">
+            <button class="copy-button" id="chooseDayButton" type="button">Choose Day</button>
+            <span id="currentDayShortcut">Day 1 is open</span>
+          </div>
 
+          <div class="day-layout">
             <article class="day-reader">
               <p class="block-label" id="dayLabel">Day 1</p>
               <h3 id="dayTitle">Creation of light</h3>
@@ -932,6 +935,30 @@
       </div>
     </div>
 
+    <div class="choice-overlay" id="prayerOverlay" hidden>
+      <div class="choice-dialog prayer-dialog" role="dialog" aria-modal="true" aria-labelledby="prayerModalTitle">
+        <button class="choice-close-button" id="prayerCloseButton" type="button" aria-label="Close prayer">Close</button>
+        <p class="eyebrow" id="prayerModalCategory">Prayer</p>
+        <h2 id="prayerModalTitle">Prayer</h2>
+        <p class="scripture-reference" id="prayerModalScripture"></p>
+        <div class="modal-prayer-text" id="prayerModalText"></div>
+        <div class="reflection-actions">
+          <button class="copy-button" id="copyPrayerModalButton" type="button">Copy Prayer</button>
+          <button class="quiet-button" id="prayerKeepOpenButton" type="button">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="choice-overlay" id="dayOverlay" hidden>
+      <div class="choice-dialog day-dialog" role="dialog" aria-modal="true" aria-labelledby="dayModalTitle">
+        <button class="choice-close-button" id="dayCloseButton" type="button" aria-label="Close day chooser">Close</button>
+        <p class="eyebrow">Focus Days</p>
+        <h2 id="dayModalTitle">Choose a day</h2>
+        <p class="section-copy">Open a different day without keeping the full list on the reading screen.</p>
+        <div class="day-list day-choice-list" id="dayChoiceList" aria-label="Days in this focus"></div>
+      </div>
+    </div>
+
     <footer class="site-footer">
       <strong>Walk With God</strong>
       <span>Contact: <a href="mailto:walkedwithgodtoday@gmail.com">walkedwithgodtoday@gmail.com</a></span>
@@ -944,6 +971,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260709-hide-shortcuts"></script>
+    <script src="app.js?v=20260709-popup-prompts"></script>
   </body>
 </html>

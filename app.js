@@ -803,7 +803,9 @@ const daysPill = document.querySelector("#daysPill");
 const progressText = document.querySelector("#progressText");
 const encouragementText = document.querySelector("#encouragementText");
 const progressFill = document.querySelector("#progressFill");
-const dayList = document.querySelector("#dayList");
+const chooseDayButton = document.querySelector("#chooseDayButton");
+const currentDayShortcut = document.querySelector("#currentDayShortcut");
+const dayChoiceList = document.querySelector("#dayChoiceList");
 const dayLabel = document.querySelector("#dayLabel");
 const dayTitle = document.querySelector("#dayTitle");
 const scriptureText = document.querySelector("#scriptureText");
@@ -839,6 +841,16 @@ const celebrationCloseButton = document.querySelector("#celebrationCloseButton")
 const choiceOverlay = document.querySelector("#choiceOverlay");
 const choiceCloseButton = document.querySelector("#choiceCloseButton");
 const choiceGrid = document.querySelector("#choiceGrid");
+const prayerOverlay = document.querySelector("#prayerOverlay");
+const prayerCloseButton = document.querySelector("#prayerCloseButton");
+const prayerKeepOpenButton = document.querySelector("#prayerKeepOpenButton");
+const prayerModalCategory = document.querySelector("#prayerModalCategory");
+const prayerModalTitle = document.querySelector("#prayerModalTitle");
+const prayerModalScripture = document.querySelector("#prayerModalScripture");
+const prayerModalText = document.querySelector("#prayerModalText");
+const copyPrayerModalButton = document.querySelector("#copyPrayerModalButton");
+const dayOverlay = document.querySelector("#dayOverlay");
+const dayCloseButton = document.querySelector("#dayCloseButton");
 const reminderForm = document.querySelector("#reminderForm");
 const reminderTime = document.querySelector("#reminderTime");
 const reminderMessage = document.querySelector("#reminderMessage");
@@ -1437,16 +1449,43 @@ function renderPrayerLibrary() {
   if (!prayerLibraryList) return;
   prayerLibraryList.innerHTML = prayerLibrary
     .map((prayer, index) => `
-      <article class="prayer-library-card">
-        <div>
-          <p class="block-label">${escapeHtml(prayer.category)} - ${escapeHtml(prayer.scripture)}</p>
-          <h3>${escapeHtml(prayer.title)}</h3>
-          <p>${escapeHtml(prayer.text)}</p>
-        </div>
-        <button class="quiet-button copy-prayer-button" type="button" data-prayer-index="${index}">Copy Prayer</button>
-      </article>
+      <button class="prayer-library-card" type="button" data-prayer-index="${index}">
+        <span class="block-label">${escapeHtml(prayer.category)} - ${escapeHtml(prayer.scripture)}</span>
+        <strong>${escapeHtml(prayer.title)}</strong>
+        <span>Open prayer</span>
+      </button>
     `)
     .join("");
+}
+
+function openPrayerModal(index) {
+  const prayer = prayerLibrary[index];
+  if (!prayer || !prayerOverlay) return;
+  prayerOverlay.dataset.prayerIndex = String(index);
+  prayerModalCategory.textContent = prayer.category;
+  prayerModalTitle.textContent = prayer.title;
+  prayerModalScripture.textContent = prayer.scripture;
+  prayerModalText.textContent = prayer.text;
+  prayerOverlay.hidden = false;
+  document.body.classList.add("choice-open");
+}
+
+function hidePrayerModal() {
+  if (!prayerOverlay) return;
+  prayerOverlay.hidden = true;
+  document.body.classList.remove("choice-open");
+}
+
+function showDayOverlay() {
+  if (!dayOverlay) return;
+  dayOverlay.hidden = false;
+  document.body.classList.add("choice-open");
+}
+
+function hideDayOverlay() {
+  if (!dayOverlay) return;
+  dayOverlay.hidden = true;
+  document.body.classList.remove("choice-open");
 }
 
 async function copyPrayerText(index) {
@@ -2320,7 +2359,8 @@ function renderPrayerBreath() {
 
 function renderDayList(focus) {
   const completed = completedSet(focus.id);
-  dayList.innerHTML = focus.days
+  if (!dayChoiceList) return;
+  dayChoiceList.innerHTML = focus.days
     .map((day, index) => `
       <button class="day-button ${completed.has(index) ? "is-complete" : ""}" type="button" data-index="${index}" aria-pressed="${index === state.activeDayIndex}">
         <span>${day[0]}</span>
@@ -2836,6 +2876,9 @@ function render() {
   progressText.textContent = `${completed.size} of ${focus.days.length} days complete`;
   encouragementText.textContent = isFocusComplete ? "Focus complete. Add another focus when you are ready." : `Complete this focus in ${focus.days.length} days.`;
   progressFill.style.width = `${progress}%`;
+  if (currentDayShortcut) {
+    currentDayShortcut.textContent = `${day[0]} open: ${day[1]}`;
+  }
   dayLabel.textContent = day[0];
   dayTitle.textContent = day[1];
   scriptureText.textContent = day[2];
@@ -2900,12 +2943,29 @@ themeList.addEventListener("click", (event) => {
   loadCommunity().finally(render);
 });
 
-dayList.addEventListener("click", (event) => {
-  const button = event.target.closest(".day-button");
-  if (!button) return;
-  state.activeDayIndex = Number(button.dataset.index);
-  render();
-});
+if (chooseDayButton) {
+  chooseDayButton.addEventListener("click", showDayOverlay);
+}
+
+if (dayCloseButton) {
+  dayCloseButton.addEventListener("click", hideDayOverlay);
+}
+
+if (dayOverlay) {
+  dayOverlay.addEventListener("click", (event) => {
+    if (event.target === dayOverlay) hideDayOverlay();
+  });
+}
+
+if (dayChoiceList) {
+  dayChoiceList.addEventListener("click", (event) => {
+    const button = event.target.closest(".day-button");
+    if (!button) return;
+    state.activeDayIndex = Number(button.dataset.index);
+    hideDayOverlay();
+    render();
+  });
+}
 
 notesLibraryList.addEventListener("click", (event) => {
   const button = event.target.closest(".open-note-day");
@@ -2918,9 +2978,29 @@ notesLibraryList.addEventListener("click", (event) => {
 
 if (prayerLibraryList) {
   prayerLibraryList.addEventListener("click", (event) => {
-    const button = event.target.closest(".copy-prayer-button");
+    const button = event.target.closest(".prayer-library-card");
     if (!button) return;
-    copyPrayerText(Number(button.dataset.prayerIndex));
+    openPrayerModal(Number(button.dataset.prayerIndex));
+  });
+}
+
+if (prayerCloseButton) {
+  prayerCloseButton.addEventListener("click", hidePrayerModal);
+}
+
+if (prayerKeepOpenButton) {
+  prayerKeepOpenButton.addEventListener("click", hidePrayerModal);
+}
+
+if (prayerOverlay) {
+  prayerOverlay.addEventListener("click", (event) => {
+    if (event.target === prayerOverlay) hidePrayerModal();
+  });
+}
+
+if (copyPrayerModalButton) {
+  copyPrayerModalButton.addEventListener("click", () => {
+    copyPrayerText(Number(prayerOverlay?.dataset.prayerIndex || 0));
   });
 }
 
@@ -3070,6 +3150,8 @@ if (choiceGrid) {
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
   hideChoiceOverlay();
+  hidePrayerModal();
+  hideDayOverlay();
   hideFocusCelebration();
 });
 
