@@ -298,6 +298,45 @@ function normalizeChannels(value) {
   };
 }
 
+function localReminderInfo(date, timeZone) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: timeZone || "America/New_York",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    })
+      .formatToParts(date)
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
+  );
+  const hour = Number(parts.hour) % 24;
+  const minute = Number(parts.minute);
+  return {
+    dateKey: `${parts.year}-${parts.month}-${parts.day}`,
+    minuteOfDay: hour * 60 + minute
+  };
+}
+
+function reminderTimeToMinutes(value) {
+  const match = String(value || "").match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return 7 * 60;
+  const hour = Math.max(0, Math.min(23, Number(match[1])));
+  const minute = Math.max(0, Math.min(59, Number(match[2])));
+  return hour * 60 + minute;
+}
+
+function shouldSendScheduledReminder(reminder, now = new Date()) {
+  const local = localReminderInfo(now, reminder.timeZone || "America/New_York");
+  if (reminder.lastSentDate === local.dateKey) return false;
+  const scheduledMinute = reminderTimeToMinutes(reminder.time || "07:00");
+  const minutesAfterScheduledTime = local.minuteOfDay - scheduledMinute;
+  return minutesAfterScheduledTime >= 0 && minutesAfterScheduledTime <= 180;
+}
+
 function userMetrics(userId, db) {
   const progress = db.progress.filter((item) => item.userId === userId);
   const notes = db.notes.filter((item) => item.userId === userId);
@@ -746,16 +785,21 @@ async function handleApi(request, response) {
     const user = requireUser(request, response, db);
     if (!user) return;
     const body = await readBody(request);
+    const existingReminder = db.reminders.find((item) => item.userId === user.id);
+    const time = normalizeText(body.time, 10) || "07:00";
+    const timeZone = normalizeText(body.timeZone, 80) || "America/New_York";
+    const local = localReminderInfo(new Date(), timeZone);
+    const scheduledMinute = reminderTimeToMinutes(time);
     const reminder = {
       userId: user.id,
-      time: normalizeText(body.time, 10) || "07:00",
+      time,
       message: normalizeText(body.message, 200) || "Spend uninterrupted time with God today.",
       channels: normalizeChannels(body.channels),
       email: normalizeText(body.email, 160) || user.email,
       phone: normalizeText(body.phone, 32),
-      timeZone: normalizeText(body.timeZone, 80) || "America/New_York",
+      timeZone,
       updatedAt: new Date().toISOString(),
-      lastSentDate: ""
+      lastSentDate: existingReminder?.lastSentDate || (local.minuteOfDay >= scheduledMinute ? local.dateKey : "")
     };
     db.reminders = db.reminders.filter((item) => item.userId !== user.id);
     db.reminders.push(reminder);
@@ -1070,26 +1114,9 @@ function reminderScheduler() {
     const now = new Date();
     let changed = false;
     for (const reminder of db.reminders) {
-      const timeZone = reminder.timeZone || "America/New_York";
-      const localParts = Object.fromEntries(
-        new Intl.DateTimeFormat("en-CA", {
-          timeZone,
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false
-        })
-          .formatToParts(now)
-          .filter((part) => part.type !== "literal")
-          .map((part) => [part.type, part.value])
-      );
-      const hhmm = `${localParts.hour}:${localParts.minute}`;
-      const today = `${localParts.year}-${localParts.month}-${localParts.day}`;
-      if (reminder.time !== hhmm || reminder.lastSentDate === today) continue;
+      if (!shouldSendScheduledReminder(reminder, now)) continue;
       await sendReminderForUser(db, reminder, { title: "Walk With God", body: reminder.message });
-      reminder.lastSentDate = today;
+      reminder.lastSentDate = localReminderInfo(now, reminder.timeZone || "America/New_York").dateKey;
       changed = true;
     }
     if (changed) await writeDb(db);
