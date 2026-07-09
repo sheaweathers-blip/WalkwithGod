@@ -83,15 +83,18 @@ Already strong:
 - Self-Love and Confidence has custom follow-ups.
 - How God Loves You has custom follow-ups.
 - Purpose has custom follow-ups.
+- Manifestation in the Bible has custom follow-ups.
+- Health and Wellness in the Bible has custom follow-ups.
+- The Holy Spirit has custom follow-ups.
+- Prayer and Listening has custom follow-ups.
+- Marriage has custom follow-ups.
+- Divorce and Healing has custom follow-ups.
 - Deed of the day is already tied to many Scripture keywords and rotates across themes.
 
 Recommended future refinement:
 
-- Add custom follow-ups for Prayer and Listening.
-- Add custom follow-ups for Health and Wellness.
-- Add custom follow-ups for The Holy Spirit.
-- Add custom follow-ups for Marriage and Divorce and Healing because those are sensitive and need especially careful tone.
-- Add custom follow-ups for Manifestation in the Bible to keep it clearly biblical.
+- Continue adding custom follow-ups for the remaining themes where a distinct tone would help, especially The Ten Commandments, Women of the Bible, Prophets of the Bible, Angels in the Bible, and Serving and Mission.
+- Review long-term whether each theme should have a written pastoral note or short intro that explains how to approach sensitive material.
 
 ## UX Recommendations
 
@@ -112,7 +115,7 @@ Recommended future refinement:
 
 The next high-value pass is not adding more themes. It is deepening the themes already present.
 
-Priority order:
+Completed priority themes:
 
 1. Manifestation in the Bible
 2. Health and Wellness in the Bible
@@ -120,6 +123,14 @@ Priority order:
 4. Prayer and Listening
 5. Marriage
 6. Divorce and Healing
+
+Suggested next themes:
+
+1. The Ten Commandments
+2. Women of the Bible
+3. Prophets of the Bible
+4. Angels in the Bible
+5. Serving and Mission
 
 For each, create custom application questions and deeds that are:
 

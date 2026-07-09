@@ -1598,6 +1598,224 @@ function themedApplicationAndDeed(focus, dayNumber) {
     };
   }
 
+  if (focus.id === "manifestation-in-the-bible") {
+    const applications = [
+      "What part of God's character is being revealed here, and how does that move me toward worship instead of control?",
+      "Where do I need God's presence to lead me more than I need visible certainty?",
+      "What surrendered place in my life needs to become an altar of trust rather than a place of fear?",
+      "How does this passage correct any desire to chase signs instead of seeking the Lord Himself?",
+      "Where might God be speaking quietly while I am looking for something dramatic?",
+      "How does Jesus as the Word made flesh change what I expect God's revelation to look like?",
+      "What darkness or destructive pattern do I need Christ to confront with His revealed power?",
+      "How can God's love become visible through me today in a way that points back to Him?",
+      "What does Jesus reveal about the Father's heart that I need to trust more deeply?",
+      "Where do I need the Spirit's presence to produce witness, courage, or unity rather than attention for myself?",
+      "How does 'Christ in you' reshape the way I enter ordinary conversations today?",
+      "Which fruit of the Spirit would make God's work most visible in me right now?",
+      "How can my good work help someone glorify the Father instead of simply noticing me?",
+      "What hope rises when I remember Jesus will be fully revealed as Alpha and Omega?"
+    ];
+    const deeds = [
+      "Name one attribute of God from today's passage and worship Him for it during your active time.",
+      "Before making one decision, pause and ask: 'Lord, lead me by Your presence, not my pressure.'",
+      "Offer one need to God with open hands, then take one responsible step of obedience.",
+      "Refuse spiritual spectacle today; choose one quiet act of faithfulness no one has to see.",
+      "Turn off noise for five minutes and write one phrase God brings to your attention through the passage.",
+      "Make grace tangible through one embodied act: show up, listen, help, feed, visit, or encourage.",
+      "Identify one work of darkness to resist today, then replace it with one act of Christlike light.",
+      "Love someone concretely today so God's love is seen in action, not only spoken in words.",
+      "Read one Gospel story of Jesus and write one sentence beginning, 'The Father is...' from what you see in Him.",
+      "Ask the Holy Spirit for power to witness gently, then speak one sentence of truth or encouragement.",
+      "Before your next interaction, pray: 'Christ in me, love through me.'",
+      "Practice one visible fruit of the Spirit in a pressured moment.",
+      "Do one good work quietly and intentionally give God the credit in your own heart.",
+      "End the day by praying: 'Jesus, be revealed in me until I see You face to face.'"
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
+  if (focus.id === "health-and-wellness") {
+    const applications = [
+      "How can I honor my body as a temple without turning health into shame, pressure, or an idol?",
+      "What thought pattern about my body, food, rest, or worth needs to be renewed by God's mercy?",
+      "Where am I resisting rest because I feel responsible for holding everything together?",
+      "How can receiving food or nourishment with gratitude reshape the way I care for myself today?",
+      "What would waiting on the Lord look like in my energy, pace, and limits today?",
+      "Where could joy, laughter, or gratitude become part of healing rather than pretending everything is fine?",
+      "What anxiety about provision, appearance, or control needs to become prayer today?",
+      "How can discipline serve love and worship instead of becoming punishment or pride?",
+      "Who helps me carry burdens wisely, and where do I need to let someone support me?",
+      "What holy rhythm of work and rest would help me trust God with my limits?",
+      "What do I need to guard today: my heart, mind, eyes, words, sleep, or schedule?",
+      "Where is grace training me toward a healthier yes or no?",
+      "What kind of healing do I need to bring honestly to God and trusted community?",
+      "How does loving God, neighbor, and self shape one body-care decision today?"
+    ];
+    const deeds = [
+      "Choose one body-care practice as worship: water, a walk, stretching, rest, or nourishing food.",
+      "Write one Scripture-shaped truth to answer a harsh thought about your body or capacity.",
+      "Protect ten minutes of rest with no productivity goal and receive it as trust.",
+      "Pause before one meal or drink and thank God for provision without rushing.",
+      "Move gently for 15-20 minutes and pray: 'Renew my strength as I wait on You.'",
+      "Notice one gift that brings joy today and thank God for it out loud.",
+      "Trade five minutes of worry for slow breathing and prayer from Matthew 6.",
+      "Practice discipline kindly: choose one healthy action without self-punishment.",
+      "Ask for help, prayer, or companionship in one area where you have been carrying too much alone.",
+      "Create one Sabbath-like boundary today: stop, silence, slow down, or step away.",
+      "Remove one input that agitates your heart and replace it with Scripture or quiet.",
+      "Say a grace-filled no to one thing that would drain obedience, peace, or wisdom.",
+      "Pray for healing honestly, and contact a wise person or professional if support is needed.",
+      "Do one act of care for yourself that helps you love God and others with more presence."
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
+  if (focus.id === "holy-spirit") {
+    const applications = [
+      "Where do I see the Spirit bringing life, order, or attention to what feels empty or unformed?",
+      "What heart of stone response needs to become tender and responsive to God?",
+      "How does new birth by the Spirit challenge my desire to control spiritual growth?",
+      "Where do I need to receive the Spirit as Helper instead of living self-sufficiently?",
+      "What truth from Jesus do I need the Spirit to bring back to my remembrance today?",
+      "Where is the Spirit reminding me that I am God's child rather than an orphan or outsider?",
+      "What conviction might be mercy inviting me back to truth, not condemnation pushing me away?",
+      "How can I let the Spirit guide me into truth instead of being led by impulse, fear, or pressure?",
+      "Where do I need power to witness with courage, gentleness, and love?",
+      "What would a Spirit-filled atmosphere sound like in my words, gratitude, worship, and relationships?",
+      "Which desire is pulling against the Spirit, and what would keeping in step look like today?",
+      "Which fruit of the Spirit is most needed in the situation in front of me?",
+      "Which gift has God given me for the common good rather than my own recognition?",
+      "Where do I need to let the Spirit pray through weakness when I do not have the words?"
+    ];
+    const deeds = [
+      "Begin active time by inviting the Holy Spirit to bring order, life, and attention to your day.",
+      "Ask God for a soft heart, then respond gently in one moment where defensiveness would be easy.",
+      "Thank God for new life in Christ and release one area you cannot transform by willpower.",
+      "Before one task, pray: 'Holy Spirit, help me here.'",
+      "Write one sentence Jesus has taught you and carry it with you today.",
+      "Pray 'Abba, Father' slowly for two minutes, receiving your place as God's child.",
+      "When conviction comes today, respond with confession and return instead of hiding.",
+      "Pause before reacting and ask whether the next step agrees with the truth of Jesus.",
+      "Share one gentle sentence of faith, hope, or testimony with someone as the Spirit leads.",
+      "Replace one complaint with gratitude, worship, or encouragement.",
+      "Say no to one desire that pulls you from God and yes to one Spirit-led response.",
+      "Choose one fruit of the Spirit and practice it deliberately in one relationship.",
+      "Use one gift for someone else's good with no need to be noticed.",
+      "Sit quietly with God in weakness and let your sigh become prayer."
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
+  if (focus.id === "prayer-and-listening") {
+    const applications = [
+      "What do I want Jesus to teach me about prayer beyond simply asking for outcomes?",
+      "Where am I tempted to perform spiritually instead of meeting the Father honestly?",
+      "What noise, hurry, or inner pressure makes stillness with God difficult right now?",
+      "What part of my soul needs to wait quietly for God instead of forcing an answer?",
+      "Which decision needs wisdom, and am I willing to receive it with humility?",
+      "Who is God asking me to carry in prayer beyond my own needs?",
+      "What confession would bring me into the light with God today?",
+      "Where have I grown tired of praying, and what does persistence look like without striving?",
+      "How can joy, prayer, and gratitude become a rhythm in an ordinary day?",
+      "What does abiding in Jesus look like before I try to produce fruit?"
+    ];
+    const deeds = [
+      "Pray the Lord's Prayer slowly, pausing after each phrase to make it personal.",
+      "Pray one honest sentence with no religious polish, then sit quietly for one minute.",
+      "Practice two minutes of stillness with open hands and no phone nearby.",
+      "Write one sentence beginning, 'My soul waits for You because...'",
+      "Ask God for wisdom about one decision, then write the next humble step.",
+      "Pray for three people by name: one close, one difficult, and one in need.",
+      "Confess one specific sin and receive forgiveness without self-punishment.",
+      "Set a reminder to pray again later for one request you are tempted to give up on.",
+      "Name one joy, one need, and one gratitude before the day ends.",
+      "Spend five minutes abiding: no fixing, no producing, just remaining with Jesus."
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
+  if (focus.id === "biblical-marriage") {
+    const applications = [
+      "Where does my closest relationship need companionship, humility, or protection rather than assumption?",
+      "Which description of love in this passage challenges my tone, patience, or expectations today?",
+      "What would mutual submission look like as honor and service, not control or passivity?",
+      "How can steadfast love and faithfulness become visible in one ordinary choice?",
+      "Where do I need to answer gently instead of winning the moment?",
+      "Am I listening to understand or listening to prepare my defense?",
+      "What needs to be clothed in compassion, kindness, humility, meekness, patience, and forgiveness?",
+      "How can I serve like Jesus in a way that is concrete and not performative?",
+      "Where does covenant faithfulness need protection, honesty, repair, or wise counsel?",
+      "What anger needs to be addressed before it turns into bitterness or distance?",
+      "How can prayer become shared dependence rather than a last resort?",
+      "Where does affection, delight, or friendship need to be intentionally renewed?",
+      "What kind of wisdom would help build the home rather than merely manage conflict?",
+      "Who helps strengthen this relationship, and where do we need healthy community?"
+    ];
+    const deeds = [
+      "Do one act of companionship: listen, walk, sit together, or ask a sincere question.",
+      "Practice one phrase from 1 Corinthians 13 in a real interaction today.",
+      "Choose one act of honor or service without keeping score.",
+      "Send or speak one specific word of faithfulness, gratitude, or encouragement.",
+      "Lower your tone in one tense moment and choose a gentle answer.",
+      "Ask one question and listen without interrupting, correcting, or defending.",
+      "Offer a repair: apologize, forgive, clarify, or pray before resentment grows.",
+      "Serve in one practical way that makes another person's burden lighter.",
+      "Protect covenant trust through honesty, a boundary, or seeking wise counsel.",
+      "Address one irritation before bedtime with humility and care.",
+      "Pray together if possible; if not, pray for the relationship by name.",
+      "Plan one small moment of delight, affection, or friendship.",
+      "Do one home-building action: organize, encourage, budget wisely, speak peace, or create beauty.",
+      "Reach toward healthy community through counsel, prayer, friendship, or accountability."
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
+  if (focus.id === "divorce-and-healing") {
+    const applications = [
+      "What grief or tenderness do I need to bring to the Lord without pretending I am fine?",
+      "What would it mean to pour out my heart to God honestly and safely today?",
+      "What wise counsel, legal guidance, pastoral care, or trusted support do I need instead of carrying this alone?",
+      "Where is God inviting peace as far as it depends on me, without ignoring truth, safety, or boundaries?",
+      "Who needs protection, advocacy, or stability in this season, including children or vulnerable people?",
+      "What bitterness, rage, or harshness is harming my healing, and what would a Spirit-led release look like?",
+      "How can hope for a future with God coexist with the real pain of what has happened?",
+      "What mercy is new this morning, even if the whole story is not yet healed?",
+      "What condemnation do I need to refuse while still walking honestly with God?",
+      "Where is God restoring my soul one faithful step at a time?"
+    ];
+    const deeds = [
+      "Take 15 quiet minutes to name your pain to God and receive His nearness without rushing.",
+      "Write a private prayer that begins, 'God, this is what I am carrying...'",
+      "Reach out to one wise, safe person for prayer, counsel, legal support, or practical help.",
+      "Choose one peace-making action that does not violate safety or healthy boundaries.",
+      "Do one stabilizing action for yourself or someone affected: routine, meal, rest, paperwork, or support.",
+      "Release one bitter sentence to God before repeating it to someone else.",
+      "Write one hope-filled truth from Jeremiah 29 without forcing yourself to feel it yet.",
+      "Mark one mercy from today, however small, and save it in your notes.",
+      "Speak Romans 8:1 over yourself and reject one shame-based label.",
+      "Do one soul-restoring action: walk, pray, breathe, meet with support, or rest."
+    ];
+    return {
+      application: applications[(dayNumber - 1) % applications.length],
+      deed: deeds[(dayNumber - 1) % deeds.length]
+    };
+  }
+
   return null;
 }
 
