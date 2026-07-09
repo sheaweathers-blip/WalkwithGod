@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260709-prayer-library" />
+    <link rel="stylesheet" href="styles.css?v=20260709-clean-tools" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -78,6 +78,7 @@
           <div class="account-actions" id="accountActions">
             <button class="copy-button" id="showSignupButton" type="button">Create Account</button>
             <button class="quiet-button" id="showLoginButton" type="button">Log In</button>
+            <button class="quiet-button" id="dailyToolsButton" type="button" data-open-choices hidden>Daily Tools</button>
             <button class="quiet-button" id="showReminderSettingsButton" type="button" hidden>Reminder Settings</button>
             <button class="quiet-button music-toggle-button" id="musicToggleButton" type="button" hidden>Play Music</button>
             <button class="quiet-button music-skip-button" id="musicSkipButton" type="button" hidden>Next Song</button>
@@ -213,9 +214,9 @@
               Continue your focus with Scripture, active time with God, application, and one lived deed.
             </p>
             <div class="dashboard-actions">
-              <a class="primary-link" href="#themes">Open Focus</a>
-              <a class="secondary-link" href="#community">Community</a>
-              <a class="secondary-link" href="#notesLibrary">Notes</a>
+              <button class="copy-button" type="button" data-open-choices>Open Daily Tools</button>
+              <a class="secondary-link" href="#themes">Continue Focus</a>
+              <a class="secondary-link" href="#prayerLibrary">Find a Prayer</a>
             </div>
           </div>
           <div class="home-dashboard-metrics" aria-label="Daily progress snapshot">
@@ -695,12 +696,10 @@
 
       <nav class="mobile-app-nav" id="mobileAppNav" aria-label="App sections" hidden>
         <a href="#today">Today</a>
-        <a href="#walkPath">Path</a>
         <a href="#themes">Themes</a>
-        <a href="#notesLibrary">Notes</a>
+        <a href="#walkPath">Path</a>
         <a href="#prayerLibrary">Prayers</a>
-        <a href="#community">Community</a>
-        <a href="#premium">Premium</a>
+        <button class="mobile-more-button" type="button" data-open-choices>More</button>
       </nav>
 
       <section class="daily" id="feedback" hidden>
@@ -900,6 +899,51 @@
       </div>
     </div>
 
+    <div class="choice-overlay" id="choiceOverlay" hidden>
+      <div class="choice-dialog" role="dialog" aria-modal="true" aria-labelledby="choiceDialogTitle">
+        <button class="choice-close-button" id="choiceCloseButton" type="button" aria-label="Close daily tools">Close</button>
+        <p class="eyebrow">Daily Tools</p>
+        <h2 id="choiceDialogTitle">What would help right now?</h2>
+        <p class="section-copy">
+          Choose one simple next step without having to scroll through the whole page.
+        </p>
+        <div class="choice-grid" id="choiceGrid">
+          <a class="choice-card" href="#themes" data-choice-link>
+            <strong>Continue a Focus</strong>
+            <span>Open your theme, progress, daily verses, notes, and deed.</span>
+          </a>
+          <a class="choice-card" href="#walkPath" data-choice-link>
+            <strong>Seven-Step Path</strong>
+            <span>Return to Pause, Pray, Listen, Walk, Live, Remember, and Share.</span>
+          </a>
+          <a class="choice-card" href="#prayerLibrary" data-choice-link>
+            <strong>Find a Prayer</strong>
+            <span>Use a curated prayer when it is hard to know what to say.</span>
+          </a>
+          <a class="choice-card" href="#notesLibrary" data-choice-link>
+            <strong>Private Notes</strong>
+            <span>Review your reflections, convictions, and next steps.</span>
+          </a>
+          <a class="choice-card" href="#community" data-choice-link>
+            <strong>Community</strong>
+            <span>Share a check-in, pray for someone, or offer encouragement.</span>
+          </a>
+          <button class="choice-card" type="button" data-choice-action="reminders">
+            <strong>Reminder Settings</strong>
+            <span>Adjust app, text, and email reminder preferences.</span>
+          </button>
+          <a class="choice-card" href="#premium" data-choice-link>
+            <strong>Premium Preview</strong>
+            <span>Preview breathwork, yoga, walking sessions, and Bible studies.</span>
+          </a>
+          <a class="choice-card" href="#install" data-choice-link>
+            <strong>Install App</strong>
+            <span>Add Walk With God to your phone for quicker daily access.</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <footer class="site-footer">
       <strong>Walk With God</strong>
       <span>Contact: <a href="mailto:walkedwithgodtoday@gmail.com">walkedwithgodtoday@gmail.com</a></span>
@@ -912,6 +956,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260709-prayer-library"></script>
+    <script src="app.js?v=20260709-clean-tools"></script>
   </body>
 </html>

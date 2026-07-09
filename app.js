@@ -778,6 +778,7 @@ const accountActions = document.querySelector("#accountActions");
 const accountShortcuts = document.querySelector("#accountShortcuts");
 const showSignupButton = document.querySelector("#showSignupButton");
 const showLoginButton = document.querySelector("#showLoginButton");
+const dailyToolsButton = document.querySelector("#dailyToolsButton");
 const showReminderSettingsButton = document.querySelector("#showReminderSettingsButton");
 const musicToggleButton = document.querySelector("#musicToggleButton");
 const musicSkipButton = document.querySelector("#musicSkipButton");
@@ -835,6 +836,9 @@ const focusCelebrationTitle = document.querySelector("#focusCelebrationTitle");
 const focusCelebrationCopy = document.querySelector("#focusCelebrationCopy");
 const celebrationNextFocusButton = document.querySelector("#celebrationNextFocusButton");
 const celebrationCloseButton = document.querySelector("#celebrationCloseButton");
+const choiceOverlay = document.querySelector("#choiceOverlay");
+const choiceCloseButton = document.querySelector("#choiceCloseButton");
+const choiceGrid = document.querySelector("#choiceGrid");
 const reminderForm = document.querySelector("#reminderForm");
 const reminderTime = document.querySelector("#reminderTime");
 const reminderMessage = document.querySelector("#reminderMessage");
@@ -1152,6 +1156,7 @@ function renderAccount() {
     authForm.hidden = true;
     showSignupButton.hidden = true;
     showLoginButton.hidden = true;
+    if (dailyToolsButton) dailyToolsButton.hidden = false;
     showReminderSettingsButton.hidden = false;
     if (musicToggleButton) musicToggleButton.hidden = false;
     if (musicSkipButton) musicSkipButton.hidden = false;
@@ -1163,6 +1168,7 @@ function renderAccount() {
     accountStatus.textContent = "Choose one option below to begin.";
     showSignupButton.hidden = false;
     showLoginButton.hidden = false;
+    if (dailyToolsButton) dailyToolsButton.hidden = true;
     showReminderSettingsButton.hidden = true;
     if (musicToggleButton) musicToggleButton.hidden = true;
     if (musicSkipButton) musicSkipButton.hidden = true;
@@ -2217,6 +2223,27 @@ function hideFocusCelebration() {
   document.body.classList.remove("celebration-open");
 }
 
+function showChoiceOverlay() {
+  if (!choiceOverlay) return;
+  choiceOverlay.hidden = false;
+  document.body.classList.add("choice-open");
+}
+
+function hideChoiceOverlay() {
+  if (!choiceOverlay) return;
+  choiceOverlay.hidden = true;
+  document.body.classList.remove("choice-open");
+}
+
+function openReminderSettingsFromChoices() {
+  hideChoiceOverlay();
+  if (!state.user) return;
+  reminderSettingsPanel.hidden = false;
+  authForm.hidden = true;
+  reminderStatus.textContent = reminderTime.value ? `Reminder set for ${reminderTime.value}.` : "";
+  document.querySelector("#account").scrollIntoView({ behavior: "smooth" });
+}
+
 function markDayComplete(focus, dayIndex, statusElement) {
   const completed = completedSet(focus.id);
   const wasFocusComplete = isFocusComplete(focus);
@@ -3012,6 +3039,39 @@ if (focusCelebrationOverlay) {
     if (event.target === focusCelebrationOverlay) hideFocusCelebration();
   });
 }
+
+document.querySelectorAll("[data-open-choices]").forEach((button) => {
+  button.addEventListener("click", showChoiceOverlay);
+});
+
+if (choiceCloseButton) {
+  choiceCloseButton.addEventListener("click", hideChoiceOverlay);
+}
+
+if (choiceOverlay) {
+  choiceOverlay.addEventListener("click", (event) => {
+    if (event.target === choiceOverlay) hideChoiceOverlay();
+  });
+}
+
+if (choiceGrid) {
+  choiceGrid.addEventListener("click", (event) => {
+    const actionButton = event.target.closest("[data-choice-action]");
+    if (actionButton?.dataset.choiceAction === "reminders") {
+      openReminderSettingsFromChoices();
+      return;
+    }
+    if (event.target.closest("[data-choice-link]")) {
+      hideChoiceOverlay();
+    }
+  });
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  hideChoiceOverlay();
+  hideFocusCelebration();
+});
 
 favoriteVerseButton.addEventListener("click", () => {
   const focus = activeFocus();
