@@ -2300,6 +2300,12 @@ select:focus {
   display: grid;
   gap: 10px;
   margin-top: 16px;
+  max-height: min(560px, 62vh);
+  overflow-y: auto;
+  padding: 4px 8px 4px 0;
+  scroll-behavior: smooth;
+  scrollbar-color: rgba(31, 75, 59, 0.36) rgba(255, 255, 255, 0.34);
+  scrollbar-width: thin;
 }
 
 .community-entry,
@@ -2591,6 +2597,12 @@ select:focus {
   display: grid;
   gap: 10px;
   margin-top: 16px;
+  max-height: min(460px, 56vh);
+  overflow-y: auto;
+  padding: 4px 8px 4px 0;
+  scroll-behavior: smooth;
+  scrollbar-color: rgba(31, 75, 59, 0.36) rgba(255, 255, 255, 0.34);
+  scrollbar-width: thin;
 }
 
 .prayer-entry strong {
