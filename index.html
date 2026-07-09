@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260709-clean-tools" />
+    <link rel="stylesheet" href="styles.css?v=20260709-hide-shortcuts" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -84,16 +84,6 @@
             <button class="quiet-button music-skip-button" id="musicSkipButton" type="button" hidden>Next Song</button>
             <button class="quiet-button" id="logoutButton" type="button" hidden>Sign Out</button>
           </div>
-          <nav class="account-shortcuts" id="accountShortcuts" aria-label="Account shortcuts" hidden>
-            <a href="#today">Today</a>
-            <a href="#walkPath">Path</a>
-            <a href="#themes">Focus Library</a>
-            <a href="#notesLibrary">Private Notes</a>
-            <a href="#prayerLibrary">Prayer Library</a>
-            <a href="#community">Community</a>
-            <a href="#premium">Premium Preview</a>
-            <a href="#install">Install App</a>
-          </nav>
           <p class="copy-status music-status" id="musicStatus" role="status" aria-live="polite"></p>
           <form class="auth-form" id="authForm" hidden>
             <div class="form-grid">
@@ -215,8 +205,6 @@
             </p>
             <div class="dashboard-actions">
               <button class="copy-button" type="button" data-open-choices>Open Daily Tools</button>
-              <a class="secondary-link" href="#themes">Continue Focus</a>
-              <a class="secondary-link" href="#prayerLibrary">Find a Prayer</a>
             </div>
           </div>
           <div class="home-dashboard-metrics" aria-label="Daily progress snapshot">
@@ -956,6 +944,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260709-clean-tools"></script>
+    <script src="app.js?v=20260709-hide-shortcuts"></script>
   </body>
 </html>
