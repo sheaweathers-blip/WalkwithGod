@@ -1,6 +1,6 @@
-# Walk With God Premium Starter Scripts
+# Walk With God Abide Starter Scripts
 
-These are recording-ready starter scripts for the first premium previews.
+These are recording-ready starter scripts for the first Abide previews and future journey content.
 
 Recommended workflow:
 
@@ -17,3 +17,7 @@ Files:
 - `02-faith-led-yoga-begin-in-stillness.txt`
 - `03-walking-with-god-begin-the-day.txt`
 - `04-bible-study-how-to-read-scripture-with-god.txt`
+- `05-breathwork-prayer-receive-peace.txt`
+- `06-breathwork-prayer-when-i-feel-anxious.txt`
+- `07-breathwork-prayer-abide-in-my-love.txt`
+- `08-breathwork-prayer-evening-rest.txt`
