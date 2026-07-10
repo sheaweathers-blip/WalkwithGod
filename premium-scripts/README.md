@@ -5,7 +5,7 @@ These are recording-ready starter scripts for the first Abide previews and futur
 Recommended workflow:
 
 1. Record the voiceover first.
-2. Add the Walk With God logo intro in Canva.
+2. Add the Walk With God Abide logo intro in Canva.
 3. Add peaceful nature or wellness visuals.
 4. Add the Scripture and reflection text as simple slides.
 5. Export as MP4.

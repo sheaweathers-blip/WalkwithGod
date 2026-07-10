@@ -18,7 +18,7 @@ Useful notes:
 - Google Play Console has a one-time developer registration fee.
 - Apple Developer Program has an annual membership fee.
 - Apple may reject apps that feel like only a website wrapper, so the iPhone version should feel app-like and clearly useful.
-- Walk With God already has helpful app-like features: accounts, daily progress, reminders, community, notes, prayer requests, premium previews, and admin tools.
+- Walk With God already has helpful app-like features: accounts, daily progress, reminders, community, notes, prayer requests, Abide previews, and admin tools.
 
 When ready, ask:
 

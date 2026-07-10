@@ -1,9 +1,9 @@
-# Canva Build Plan: Premium Breathwork Video 1
+# Canva Build Plan: Abide Breath Prayer Video 1
 
 ## Video
 
 Title: Be Still and Breathe  
-Category: Premium Breathwork Prayer  
+Category: Abide Breath Prayer  
 Recommended Canva format: Mobile Video, 1080 x 1920  
 Estimated length: 5 to 7 minutes  
 Main Scripture: Psalm 46:10, "Be still, and know that I am God."
@@ -82,7 +82,7 @@ Visual: Soft nature video, such as morning light through trees
 Text overlay:
 
 Be Still and Breathe  
-Premium Breathwork Prayer
+Abide Breath Prayer
 
 Optional small text:
 
@@ -238,7 +238,7 @@ File type: MP4 Video
 Resolution: 1080p  
 File name:
 
-`walk-with-god-premium-breathwork-01-be-still-and-breathe.mp4`
+`walk-with-god-abide-breath-prayer-01-be-still-and-breathe.mp4`
 
 ## Quality Check Before Export
 
@@ -254,8 +254,8 @@ File name:
 
 Be Still and Breathe is a guided breathwork prayer rooted in Psalm 46:10. This session invites you to slow your body, quiet your thoughts, and spend intentional time with God through Scripture, prayer, and gentle breathing.
 
-## Optional Premium Label
+## Optional Abide Label
 
-Premium Breathwork Prayer  
+Abide Breath Prayer  
 5 to 7 minutes  
 Scripture-led breath, reflection, and stillness with God

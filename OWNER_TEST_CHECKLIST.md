@@ -18,8 +18,8 @@ Use this before sending the app link to testers.
 - Comment or react to a community check-in.
 - Open Prayer Requests and submit one test request.
 - Open Reminder Settings and save an app notification reminder preference.
-- Open each Premium preview section:
-  - Premium Preview
+- Open each Abide preview section:
+  - Abide Preview
   - Breathwork Prayer
   - Faith-Led Yoga
   - Bible Study
@@ -30,7 +30,7 @@ Use this before sending the app link to testers.
 
 ## Known Notes For Testers
 
-- Premium is preview-only right now. No payment is active yet.
+- Abide is preview-only right now. No payment is active yet.
 - Text reminders are intentionally paused while Twilio business compliance is being completed.
 - Email reminders are intentionally paused while email setup is being finalized.
 - Browser/app notifications are the only reminder channel to test right now and may vary by device.
@@ -44,5 +44,5 @@ Use this before sending the app link to testers.
 - Did the active time with God idea feel encouraging?
 - Did notes, community, and prayer requests feel useful?
 - Did anything feel too crowded or confusing?
-- What premium sections sound most valuable?
+- What Abide sections sound most valuable?
 - What would make someone return tomorrow?

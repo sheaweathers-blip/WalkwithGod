@@ -1,6 +1,6 @@
 # Walk With God Logo Intro Video
 
-Use this as the opening for premium breathwork, walking, yoga, and Bible study videos.
+Use this as the opening for Abide breathwork, walking, faith-led movement, and Bible study videos.
 
 ## Files To Use
 
@@ -39,8 +39,8 @@ Use this as the opening for premium breathwork, walking, yoga, and Bible study v
 Keep it minimal:
 
 - Walk With God
-- Premium Breathwork Prayer
-- Simply Breathe
+- Abide Breath Prayer
+- Be Still and Breathe
 
 Avoid adding a lot of extra instructions on the intro. Let the session itself teach.
 
@@ -72,4 +72,4 @@ Use:
 
 For the first breathwork video:
 
-`simply-breathe-premium-breathwork.mp4`
+`walk-with-god-abide-breath-prayer-01-be-still-and-breathe.mp4`

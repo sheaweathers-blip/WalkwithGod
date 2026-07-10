@@ -6,7 +6,7 @@ Please use this link:
 
 https://walk-with-god.org
 
-Create a free account, explore the app, and send feedback inside the app using the Feedback section. Premium features are only previews right now, so nothing should ask you to pay.
+Create a free account, explore the app, and send feedback inside the app using the Feedback section. Abide features are only previews right now, so nothing should ask you to pay.
 
 Reminder note: email and text reminders are not active for testing yet. Please only test app/browser notifications for reminders if your device supports them.
 
@@ -24,7 +24,7 @@ Reminder note: email and text reminders are not active for testing yet. Please o
 - Try the Community section.
 - Try Prayer Requests.
 - Review Reminder Settings and test app notifications if your device supports them.
-- Open the Premium preview sections:
+- Open the Abide preview sections:
   - Breathwork Prayer
   - Faith-Led Yoga
   - Bible Study
@@ -41,7 +41,7 @@ Reminder note: email and text reminders are not active for testing yet. Please o
 - Did the daily focus feel spiritually helpful?
 - Did the active time with God idea make sense?
 - Would you use the notes, community, or prayer request features?
-- Which premium preview sounds most useful?
+- Which Abide preview sounds most useful?
 - What would make you come back tomorrow?
 
 ## Helpful Details To Include
