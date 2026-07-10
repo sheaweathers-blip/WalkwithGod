@@ -177,7 +177,7 @@ Time: 4:45 to 5:35
 Visual: Warm sunlight or quiet lake  
 Text overlay:
 
-Inhale: I receive Your peace.  
+Inhale: I receive God's peace.  
 Exhale: I release my hurry.
 
 Then change to:

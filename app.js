@@ -425,7 +425,7 @@ const defaultFocuses = [
       ["Day 7", "Loved as Children", "1 John 3:1", "The Father gives a love so generous that His people are called children of God."],
       ["Day 8", "The Shepherd's Care", "Psalm 23:1-6", "God's love shepherds, restores, guides, comforts, provides, and follows His people."],
       ["Day 9", "Jesus Loves His Own", "John 13:1", "Jesus loves His own to the end with faithful, serving love."],
-      ["Day 10", "Abide in My Love", "John 15:9-11", "Jesus invites His followers to remain in His love and receive His joy."],
+      ["Day 10", "Abide in God's Love", "John 15:9-11", "Jesus invites His followers to remain in His love and receive His joy."],
       ["Day 11", "Loved Beyond Measuring", "Ephesians 3:16-19", "God's love in Christ is wide, long, high, deep, and beyond full comprehension."],
       ["Day 12", "Nothing Can Separate", "Romans 8:35-39", "No suffering, power, fear, or created thing can separate you from God's love in Christ."],
       ["Day 13", "Quieted by Love", "Zephaniah 3:17", "God is present, mighty to save, rejoices over His people, and quiets them by His love."],
