@@ -8,7 +8,7 @@ Take your next step with God today.
 
 ## Start Here
 
-Read the [Walk With God Design Bible](WALK_WITH_GOD_DESIGN_BIBLE.md) before making major product, content, design, or technical decisions.
+Read the [Walk With God Manifesto](WALK_WITH_GOD_MANIFESTO.md) and [Walk With God Design Bible](WALK_WITH_GOD_DESIGN_BIBLE.md) before making major product, content, design, or technical decisions.
 
 That document defines:
 
@@ -53,6 +53,8 @@ http://127.0.0.1:4173
 
 ## Supporting Docs
 
+- [Walk With God Manifesto](WALK_WITH_GOD_MANIFESTO.md)
+- [Walk With God Design Bible](WALK_WITH_GOD_DESIGN_BIBLE.md)
 - [Path Content Audit](WALK_WITH_GOD_PATH_CONTENT_AUDIT.md)
 - [Production Deploy](PRODUCTION_DEPLOY.md)
 - [Local Setup](LOCAL_SETUP.md)

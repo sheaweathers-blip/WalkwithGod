@@ -16,6 +16,12 @@ Every feature, screen, product, message, and piece of content should help someon
 
 If a feature does not support spiritual formation, it should be simplified, delayed, or removed.
 
+## Foundation Pages
+
+The public "Why We Walk" page and the Walk With God Manifesto should serve as orientation for the ministry. They should explain the heart behind the app, welcome people gently, and make clear that Walk With God exists to help people meet with Jesus in ordinary daily life.
+
+These pages should not feel like a sales pitch. They should feel like an invitation, a testimony, and a prayer.
+
 ## Core Mission
 
 Walk With God exists to encourage people into a deeper daily relationship with Jesus Christ through biblical truth, handcrafted reminders, prayer, community, and intentional practices that help them walk with God one step at a time.
