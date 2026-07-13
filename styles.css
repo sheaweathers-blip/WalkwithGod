@@ -2175,7 +2175,8 @@ select:focus {
 .add-focus-form input,
 .premium-content-form input,
 .premium-content-form select,
-.reminder-form input {
+.reminder-form input,
+.reminder-form textarea {
   width: 100%;
   min-height: 46px;
   padding: 0 13px;
@@ -2184,6 +2185,25 @@ select:focus {
   color: var(--ink);
   background: #fff;
   outline: none;
+}
+
+.reminder-form textarea {
+  min-height: 86px;
+  padding: 12px 13px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.reminder-form textarea[readonly] {
+  color: var(--deep-green);
+  background: rgba(255, 252, 239, 0.84);
+  font-weight: 750;
+}
+
+.field-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
 }
 
 .reminder-channels {

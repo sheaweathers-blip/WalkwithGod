@@ -43,6 +43,14 @@ const premiumMedia = {
   "breathwork-day-1": "breathwork-day-1.wav"
 };
 
+const DEFAULT_REMINDER_MESSAGE = "Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org";
+
+function defaultSettings() {
+  return {
+    reminderMessage: DEFAULT_REMINDER_MESSAGE
+  };
+}
+
 function ensureData() {
   fs.mkdirSync(dataDir, { recursive: true });
   if (!fs.existsSync(dbPath)) {
@@ -77,7 +85,8 @@ function defaultDb() {
     prayerRequests: [],
     reactions: [],
     comments: [],
-    premiumContent: []
+    premiumContent: [],
+    settings: defaultSettings()
   };
 }
 
@@ -129,8 +138,10 @@ function defaultPremiumContent() {
 function normalizeDb(db) {
   const normalized = { ...defaultDb(), ...(db || {}) };
   for (const key of Object.keys(defaultDb())) {
-    if (!Array.isArray(normalized[key])) normalized[key] = [];
+    if (Array.isArray(defaultDb()[key]) && !Array.isArray(normalized[key])) normalized[key] = [];
   }
+  normalized.settings = { ...defaultSettings(), ...(normalized.settings || {}) };
+  normalized.settings.reminderMessage = normalizeText(normalized.settings.reminderMessage, 240) || DEFAULT_REMINDER_MESSAGE;
   if (!normalized.premiumContent.length) {
     normalized.premiumContent = defaultPremiumContent();
   } else {
@@ -141,6 +152,10 @@ function normalizeDb(db) {
     });
   }
   return normalized;
+}
+
+function sharedReminderMessage(db) {
+  return normalizeText(db?.settings?.reminderMessage, 240) || DEFAULT_REMINDER_MESSAGE;
 }
 
 function readLocalDb() {
@@ -392,7 +407,7 @@ async function sendEmail(to, payload) {
       personalizations: [{ to: [{ email: to }] }],
       from: { email: process.env.EMAIL_FROM, name: "Walk With God" },
       subject: payload.title || "Walk With God",
-      content: [{ type: "text/plain", value: payload.body || "Spend uninterrupted time with God today." }]
+      content: [{ type: "text/plain", value: payload.body || DEFAULT_REMINDER_MESSAGE }]
     })
   });
   if (!response.ok) {
@@ -409,7 +424,7 @@ async function sendSms(to, payload) {
   const form = new URLSearchParams({
     From: process.env.TWILIO_FROM,
     To: to,
-    Body: payload.body || "Spend uninterrupted time with God today."
+    Body: payload.body || DEFAULT_REMINDER_MESSAGE
   });
   const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`, {
     method: "POST",
@@ -802,7 +817,11 @@ async function handleApi(request, response) {
   if (request.method === "GET" && url.pathname === "/api/reminder") {
     const user = requireUser(request, response, db);
     if (!user) return;
-    return json(response, 200, { reminder: db.reminders.find((item) => item.userId === user.id) || null });
+    return json(response, 200, {
+      reminder: db.reminders.find((item) => item.userId === user.id) || null,
+      reminderMessage: sharedReminderMessage(db),
+      canEditReminderMessage: user.role === "admin"
+    });
   }
 
   if (request.method === "POST" && url.pathname === "/api/reminder") {
@@ -817,7 +836,7 @@ async function handleApi(request, response) {
     const reminder = {
       userId: user.id,
       time,
-      message: normalizeText(body.message, 200) || "Spend uninterrupted time with God today.",
+      message: sharedReminderMessage(db),
       channels: normalizeChannels(body.channels),
       email: normalizeText(body.email, 160) || user.email,
       phone: normalizeText(body.phone, 32),
@@ -855,7 +874,7 @@ async function handleApi(request, response) {
       email: user.email,
       phone: ""
     };
-    const results = await sendReminderForUser(db, reminder, { title: "Walk With God", body: "This is your daily reminder test." });
+    const results = await sendReminderForUser(db, reminder, { title: "Walk With God", body: sharedReminderMessage(db) });
     return json(response, 200, {
       results,
       pushReady: Boolean(webPush),
@@ -914,6 +933,20 @@ async function handleApi(request, response) {
         pushSubscriptions: db.pushSubscriptions.length,
         premiumContent: db.premiumContent.filter((item) => !item.archivedAt).length
       });
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/admin/reminder-message") {
+      return json(response, 200, { reminderMessage: sharedReminderMessage(db) });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/admin/reminder-message") {
+      const body = await readBody(request);
+      const reminderMessage = normalizeText(body.message, 240);
+      if (!reminderMessage) return json(response, 400, { error: "Reminder wording is required." });
+      db.settings = { ...(db.settings || {}), reminderMessage };
+      db.reminders = db.reminders.map((reminder) => ({ ...reminder, message: reminderMessage }));
+      await writeDb(db);
+      return json(response, 200, { reminderMessage });
     }
 
     if (request.method === "POST" && url.pathname === "/api/admin/premium-content") {
@@ -1139,7 +1172,7 @@ function reminderScheduler() {
     let changed = false;
     for (const reminder of db.reminders) {
       if (!shouldSendScheduledReminder(reminder, now)) continue;
-      await sendReminderForUser(db, reminder, { title: "Walk With God", body: reminder.message });
+      await sendReminderForUser(db, reminder, { title: "Walk With God", body: sharedReminderMessage(db) });
       reminder.lastSentDate = localReminderInfo(now, reminder.timeZone || "America/New_York").dateKey;
       changed = true;
     }

@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260710-why-we-walk" />
+    <link rel="stylesheet" href="styles.css?v=20260712-reminder-message" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -134,7 +134,8 @@
               </label>
               <label>
                 Reminder words
-                <input id="reminderMessage" placeholder="Spend uninterrupted time with God today." />
+                <textarea id="reminderMessage" readonly rows="3">Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org</textarea>
+                <span class="field-note">This wording is set by Walk With God so daily reminders stay consistent.</span>
               </label>
               <fieldset class="reminder-channels">
                 <legend>Reminder method</legend>
@@ -849,6 +850,20 @@
           <p class="copy-status" id="premiumContentStatus" role="status" aria-live="polite"></p>
         </form>
 
+        <form class="premium-content-form" id="adminReminderMessageForm" hidden>
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Reminders</p>
+            <h3>Daily reminder wording</h3>
+          </div>
+          <label>
+            Shared reminder message
+            <textarea id="adminReminderMessage" maxlength="240" rows="3" placeholder="Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org"></textarea>
+          </label>
+          <p class="field-note">This message is used for everyone's app, text, and email reminders. Keep it short enough for text messages.</p>
+          <button class="copy-button" type="submit">Save Reminder Words</button>
+          <p class="copy-status" id="adminReminderMessageStatus" role="status" aria-live="polite"></p>
+        </form>
+
         <div class="admin-dashboard" id="adminDashboard" hidden>
           <div class="admin-summary" id="adminSummary"></div>
 
@@ -1015,6 +1030,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260710-why-we-walk"></script>
+    <script src="app.js?v=20260712-reminder-message"></script>
   </body>
 </html>

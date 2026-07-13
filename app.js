@@ -459,6 +459,7 @@ const defaultFocuses = [
 
 const implementationText = "Take a moment to check in before moving on. Completion should mean you spent focused time with God, not just skimmed the reading.";
 const adminCode = "walkwithgod";
+const DEFAULT_REMINDER_MESSAGE = "Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org";
 let reminderChannelAvailability = {
   push: true,
   email: false,
@@ -718,7 +719,7 @@ const state = {
   premiumContent: [],
   isPremium: false,
   deferredInstallPrompt: null,
-  reminder: JSON.parse(localStorage.getItem("walkWithGodReminder") || '{"time":"07:00","message":"Spend uninterrupted time with God today.","channels":{"push":true,"email":false,"sms":false},"email":"","phone":""}'),
+  reminder: JSON.parse(localStorage.getItem("walkWithGodReminder") || `{"time":"07:00","message":${JSON.stringify(DEFAULT_REMINDER_MESSAGE)},"channels":{"push":true,"email":false,"sms":false},"email":"","phone":""}`),
   user: null,
   supportMessages: [],
   selectedAdminUserId: "",
@@ -960,6 +961,9 @@ const premiumContentScripture = document.querySelector("#premiumContentScripture
 const premiumContentDescription = document.querySelector("#premiumContentDescription");
 const premiumContentUrl = document.querySelector("#premiumContentUrl");
 const premiumContentStatus = document.querySelector("#premiumContentStatus");
+const adminReminderMessageForm = document.querySelector("#adminReminderMessageForm");
+const adminReminderMessage = document.querySelector("#adminReminderMessage");
+const adminReminderMessageStatus = document.querySelector("#adminReminderMessageStatus");
 const adminDashboard = document.querySelector("#adminDashboard");
 const adminSummary = document.querySelector("#adminSummary");
 const adminUserList = document.querySelector("#adminUserList");
@@ -1104,12 +1108,15 @@ async function loadServerState() {
   if (reminderResult.reminder) {
     state.reminder = {
       time: reminderResult.reminder.time,
-      message: reminderResult.reminder.message,
+      message: reminderResult.reminderMessage || reminderResult.reminder.message || DEFAULT_REMINDER_MESSAGE,
       channels: reminderResult.reminder.channels || { push: true, email: false, sms: false },
       email: reminderResult.reminder.email || "",
       phone: reminderResult.reminder.phone || "",
       timeZone: reminderResult.reminder.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York"
     };
+    saveReminder();
+  } else if (reminderResult.reminderMessage) {
+    state.reminder.message = reminderResult.reminderMessage;
     saveReminder();
   }
   await loadCommunity();
@@ -2400,7 +2407,7 @@ function renderDayList(focus) {
 
 function renderReminder() {
   reminderTime.value = state.reminder.time || "07:00";
-  reminderMessage.value = state.reminder.message || "Spend uninterrupted time with God today.";
+  reminderMessage.value = state.reminder.message || DEFAULT_REMINDER_MESSAGE;
   reminderPush.checked = reminderChannelAvailability.push && state.reminder.channels?.push !== false;
   reminderEmail.checked = reminderChannelAvailability.email && Boolean(state.reminder.channels?.email);
   reminderSms.checked = Boolean(state.reminder.channels?.sms);
@@ -2460,7 +2467,7 @@ function notificationSupportMessage() {
 function reminderFromForm() {
   return {
     time: reminderTime.value || "07:00",
-    message: reminderMessage.value.trim() || "Spend uninterrupted time with God today.",
+    message: state.reminder.message || DEFAULT_REMINDER_MESSAGE,
     channels: {
       push: reminderPush.checked,
       email: reminderChannelAvailability.email && reminderEmail.checked,
@@ -2745,6 +2752,7 @@ function renderAdmin() {
   const canAdmin = state.user?.role === "admin" && state.adminUnlocked;
   addFocusForm.hidden = !canAdmin;
   if (premiumContentForm) premiumContentForm.hidden = !canAdmin;
+  if (adminReminderMessageForm) adminReminderMessageForm.hidden = !canAdmin;
   adminDashboard.hidden = !canAdmin;
   lockAdminButton.hidden = !state.adminUnlocked;
   if (state.adminUnlocked && state.user?.role !== "admin") {
@@ -2756,6 +2764,7 @@ function renderAdmin() {
 
 function renderAdminDashboard(data = null) {
   if (!data) return;
+  if (adminReminderMessage) adminReminderMessage.value = data.reminderMessage || DEFAULT_REMINDER_MESSAGE;
   adminSummary.innerHTML = `
     <div><strong>${data.summary.users}</strong><span>Users</span></div>
     <div><strong>${data.summary.communityPosts}</strong><span>Posts</span></div>
@@ -2837,13 +2846,14 @@ function renderAdminDashboard(data = null) {
 
 async function loadAdminDashboard() {
   if (state.user?.role !== "admin") return;
-  const [summary, users, feedback, reports, communityPosts, prayerRequests] = await Promise.all([
+  const [summary, users, feedback, reports, communityPosts, prayerRequests, reminderMessage] = await Promise.all([
     apiFetch("/api/admin/summary"),
     apiFetch("/api/admin/users"),
     apiFetch("/api/admin/feedback"),
     apiFetch("/api/admin/reports"),
     apiFetch("/api/admin/community"),
-    apiFetch("/api/admin/prayer-requests")
+    apiFetch("/api/admin/prayer-requests"),
+    apiFetch("/api/admin/reminder-message")
   ]);
   renderAdminDashboard({
     summary,
@@ -2851,7 +2861,8 @@ async function loadAdminDashboard() {
     feedback: feedback.feedback || [],
     reports: reports.reports || [],
     communityPosts: communityPosts.posts || [],
-    prayerRequests: prayerRequests.requests || []
+    prayerRequests: prayerRequests.requests || [],
+    reminderMessage: reminderMessage.reminderMessage || DEFAULT_REMINDER_MESSAGE
   });
 }
 
@@ -3760,6 +3771,31 @@ if (premiumContentForm) {
       })
       .catch((error) => {
         premiumContentStatus.textContent = error.message;
+      });
+  });
+}
+
+if (adminReminderMessageForm) {
+  adminReminderMessageForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!state.adminUnlocked) {
+      adminReminderMessageStatus.textContent = "Unlock admin before changing reminder wording.";
+      return;
+    }
+    const message = adminReminderMessage.value.trim();
+    apiFetch("/api/admin/reminder-message", {
+      method: "POST",
+      body: JSON.stringify({ message })
+    })
+      .then(async (result) => {
+        state.reminder.message = result.reminderMessage || DEFAULT_REMINDER_MESSAGE;
+        saveReminder();
+        renderReminder();
+        adminReminderMessageStatus.textContent = "Reminder wording saved for all users.";
+        await loadAdminDashboard();
+      })
+      .catch((error) => {
+        adminReminderMessageStatus.textContent = error.message;
       });
   });
 }
