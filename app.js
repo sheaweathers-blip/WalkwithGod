@@ -1001,6 +1001,52 @@ function loadCompleted() {
 function saveCompleted() {
   const serializable = Object.fromEntries(Object.entries(state.completed).map(([key, value]) => [key, [...value]]));
   localStorage.setItem("walkWithGodCompletedDays", JSON.stringify(serializable));
+  if (state.user?.id) localStorage.setItem("walkWithGodCompletedUserId", state.user.id);
+}
+
+function progressKey(focusId, dayIndex) {
+  return `${focusId}:${Number(dayIndex)}`;
+}
+
+function completedEntries() {
+  return Object.entries(state.completed).flatMap(([focusId, days]) =>
+    [...days].map((dayIndex) => ({ focusId, dayIndex: Number(dayIndex) }))
+  );
+}
+
+function pendingProgressEntries() {
+  return JSON.parse(localStorage.getItem("walkWithGodPendingProgress") || "[]");
+}
+
+function savePendingProgress(entries) {
+  localStorage.setItem("walkWithGodPendingProgress", JSON.stringify(entries));
+}
+
+function queueProgressSync(focusId, dayIndex) {
+  const pending = pendingProgressEntries();
+  const key = progressKey(focusId, dayIndex);
+  if (!pending.some((item) => progressKey(item.focusId, item.dayIndex) === key)) {
+    pending.push({ focusId, dayIndex: Number(dayIndex) });
+    savePendingProgress(pending);
+  }
+}
+
+async function syncPendingProgress(statusElement = null) {
+  if (!state.user) return;
+  const pending = pendingProgressEntries();
+  if (!pending.length) return;
+  const remaining = [];
+  for (const item of pending) {
+    try {
+      await apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ focusId: item.focusId, dayIndex: Number(item.dayIndex) }) });
+    } catch {
+      remaining.push(item);
+    }
+  }
+  savePendingProgress(remaining);
+  if (statusElement && remaining.length) {
+    statusElement.textContent = "Step saved on this device. It will sync to your account when the connection settles.";
+  }
 }
 
 function dayKey() {
@@ -1052,10 +1098,20 @@ async function loadReminderAvailability() {
 }
 
 function applyServerProgress(progress) {
-  state.completed = {};
+  const serverCompleted = {};
+  const serverKeys = new Set();
   for (const item of progress || []) {
-    if (!state.completed[item.focusId]) state.completed[item.focusId] = new Set();
-    state.completed[item.focusId].add(item.dayIndex);
+    if (!serverCompleted[item.focusId]) serverCompleted[item.focusId] = new Set();
+    serverCompleted[item.focusId].add(Number(item.dayIndex));
+    serverKeys.add(progressKey(item.focusId, item.dayIndex));
+  }
+  const localOwner = localStorage.getItem("walkWithGodCompletedUserId");
+  const canMergeLocal = !localOwner || localOwner === state.user?.id;
+  const localEntries = canMergeLocal ? completedEntries() : [];
+  state.completed = serverCompleted;
+  for (const item of localEntries) {
+    completedSet(item.focusId).add(Number(item.dayIndex));
+    if (!serverKeys.has(progressKey(item.focusId, item.dayIndex))) queueProgressSync(item.focusId, item.dayIndex);
   }
   saveCompleted();
 }
@@ -1071,8 +1127,9 @@ function chooseFallbackActiveFocus() {
 function applyServerActivePosition(activePosition) {
   const serverFocus = focusById(activePosition?.focusId);
   if (serverFocus) {
+    const proposedIndex = Math.max(0, Math.min(Number(activePosition.dayIndex) || 0, serverFocus.days.length - 1));
     state.activeId = serverFocus.id;
-    state.activeDayIndex = Math.max(0, Math.min(Number(activePosition.dayIndex) || 0, serverFocus.days.length - 1));
+    state.activeDayIndex = completedSet(serverFocus.id).has(proposedIndex) ? nextOpenDay(serverFocus) : proposedIndex;
   } else {
     const fallbackFocus = chooseFallbackActiveFocus();
     if (!fallbackFocus) return;
@@ -1101,6 +1158,7 @@ async function loadServerState() {
     apiFetch("/api/active-position")
   ]);
   applyServerProgress(progressResult.progress);
+  await syncPendingProgress();
   applyServerActivePosition(activePositionResult.activePosition);
   applyServerNotes(notesResult.notes);
   state.premiumContent = premiumResult.content || [];
@@ -1124,6 +1182,11 @@ async function loadServerState() {
   await loadSupportMessages();
   if (state.user?.role === "admin") await loadAdminDashboard();
 }
+
+window.addEventListener("online", () => {
+  syncPendingProgress();
+  if (state.user) saveActivePosition();
+});
 
 async function loadCommunity() {
   try {
@@ -2308,6 +2371,10 @@ function openReminderSettingsFromChoices() {
 }
 
 function markDayComplete(focus, dayIndex, statusElement) {
+  if (!focus || !focus.days?.[dayIndex]) {
+    if (statusElement) statusElement.textContent = "Choose a focus day before marking a step taken.";
+    return { becameFocusComplete: false, didComplete: false };
+  }
   const completed = completedSet(focus.id);
   const wasFocusComplete = isFocusComplete(focus);
   const wasDayComplete = completed.has(dayIndex);
@@ -2315,12 +2382,13 @@ function markDayComplete(focus, dayIndex, statusElement) {
   rememberCompletionDate();
   saveCompleted();
   if (state.user) {
-    apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ focusId: focus.id, dayIndex }) }).catch((error) => {
-      if (statusElement) statusElement.textContent = error.message;
-    });
+    queueProgressSync(focus.id, dayIndex);
+    syncPendingProgress(statusElement);
+  } else if (statusElement) {
+    statusElement.textContent = "Step saved on this device. Sign in to sync progress across devices.";
   }
   const becameFocusComplete = !wasDayComplete && !wasFocusComplete && isFocusComplete(focus);
-  return { becameFocusComplete };
+  return { becameFocusComplete, didComplete: !wasDayComplete };
 }
 
 function clampActiveDay(focus) {
