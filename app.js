@@ -2556,7 +2556,8 @@ function renderCommunity() {
           const comments = entry.comments || [];
           return `
           <article class="community-entry">
-            <strong>${escapeHtml(entry.userName || "Community member")} - ${escapeHtml(entry.dayLabel)} - ${escapeHtml(entry.dayTitle)}</strong>
+            <strong>${escapeHtml(entry.userName || "Community member")}</strong>
+            <span class="community-meta">${escapeHtml(entry.dayLabel)} - ${escapeHtml(entry.dayTitle)}</span>
             <p>${escapeHtml(entry.text)}</p>
             <div class="reaction-row">
               <button class="reaction-button" type="button" data-post-id="${escapeHtml(entry.id || "")}" data-reaction="praying">Praying ${counts.praying || 0}</button>
