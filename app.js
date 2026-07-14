@@ -1357,6 +1357,20 @@ function nextOpenDay(focus) {
   return openIndex === -1 ? focus.days.length - 1 : openIndex;
 }
 
+function focusStepLabel(focus, dayIndex) {
+  return `Step ${Number(dayIndex) + 1} of ${focus.days.length}`;
+}
+
+function storyDayLabel(day, dayIndex) {
+  const expectedLabel = `Day ${Number(dayIndex) + 1}`;
+  return day?.[0] && day[0] !== expectedLabel ? day[0] : "";
+}
+
+function focusDayContext(focus, day, dayIndex) {
+  const storyLabel = storyDayLabel(day, dayIndex);
+  return storyLabel ? `${focusStepLabel(focus, dayIndex)} - ${storyLabel}` : focusStepLabel(focus, dayIndex);
+}
+
 function streakDays() {
   const dates = Object.values(state.completed)
     .flatMap((set) => [...set].map(() => "local"))
@@ -1394,7 +1408,7 @@ function renderToday() {
   const focus = activeFocus() || state.focuses[0];
   const dayIndex = nextOpenDay(focus);
   const day = focus.days[dayIndex];
-  todayTitle.textContent = `${day[0]} of ${focus.title}`;
+  todayTitle.textContent = `${focusStepLabel(focus, dayIndex)} of ${focus.title}`;
   todayCopy.textContent = `${day[1]} - ${day[2]}. ${completedSet(focus.id).has(dayIndex) ? "Welcome back. Continue where you left off or choose another focus." : "Your next step is ready."}`;
   streakCount.textContent = String(streakDays());
   favoriteCount.textContent = String(state.favorites.length);
@@ -1508,7 +1522,7 @@ function renderNotesLibrary() {
         .map((entry) => `
           <article class="note-library-item">
             <div>
-              <p class="block-label">${escapeHtml(entry.focus.title)} - ${escapeHtml(entry.day[0])}</p>
+              <p class="block-label">${escapeHtml(entry.focus.title)} - ${escapeHtml(focusDayContext(entry.focus, entry.day, entry.dayIndex))}</p>
               <h3>${escapeHtml(entry.day[1])}</h3>
               <p class="scripture-reference">${escapeHtml(entry.day[2])}</p>
               <p>${escapeHtml(notePreview(entry))}</p>
@@ -2464,12 +2478,16 @@ function renderDayList(focus) {
   const completed = completedSet(focus.id);
   if (!dayChoiceList) return;
   dayChoiceList.innerHTML = focus.days
-    .map((day, index) => `
+    .map((day, index) => {
+      const storyLabel = storyDayLabel(day, index);
+      return `
       <button class="day-button ${completed.has(index) ? "is-complete" : ""}" type="button" data-index="${index}" aria-pressed="${index === state.activeDayIndex}">
-        <span>${day[0]}</span>
-        <strong>${day[1]}</strong>
+        <span>${escapeHtml(focusStepLabel(focus, index))}</span>
+        <strong>${escapeHtml(day[1])}</strong>
+        ${storyLabel ? `<small>${escapeHtml(storyLabel)} in the Bible story</small>` : ""}
       </button>
-    `)
+    `;
+    })
     .join("");
 }
 
@@ -2985,11 +3003,13 @@ function render() {
   encouragementText.textContent = isFocusComplete ? "This focus has been walked through. Choose another next step when you are ready." : `Walk this focus over ${focus.days.length} days.`;
   progressFill.style.width = `${progress}%`;
   if (currentDayShortcut) {
-    currentDayShortcut.textContent = `${day[0]} open: ${day[1]}`;
+    currentDayShortcut.textContent = `${focusDayContext(focus, day, state.activeDayIndex)} open: ${day[1]}`;
   }
-  dayLabel.textContent = day[0];
+  dayLabel.textContent = focusDayContext(focus, day, state.activeDayIndex);
   dayTitle.textContent = day[1];
-  scriptureText.textContent = day[2];
+  scriptureText.textContent = storyDayLabel(day, state.activeDayIndex)
+    ? `${day[2]} - ${day[0]} in the Bible story`
+    : day[2];
   if (pathTodayCard) {
     pathTodayCard.dataset.step = pathStep.name.toLowerCase();
     pathTodayMark.textContent = String(pathStep.index + 1);
@@ -3497,7 +3517,12 @@ communityForm.addEventListener("submit", (event) => {
   const day = focus ? focus.days[state.activeDayIndex] : ["Community", "General check-in"];
   apiFetch("/api/community", {
     method: "POST",
-    body: JSON.stringify({ focusId: focus?.id || "general", dayLabel: day[0], dayTitle: day[1], text })
+    body: JSON.stringify({
+      focusId: focus?.id || "general",
+      dayLabel: focus ? focusDayContext(focus, day, state.activeDayIndex) : day[0],
+      dayTitle: day[1],
+      text
+    })
   })
     .then(async () => {
       await loadCommunity();

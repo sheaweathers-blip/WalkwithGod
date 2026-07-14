@@ -709,6 +709,13 @@ button:hover {
   overflow-wrap: normal;
 }
 
+.day-button small {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
 .day-reader {
   min-height: 420px;
   padding: clamp(26px, 4vw, 46px);
