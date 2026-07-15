@@ -35,12 +35,15 @@ const types = {
   ".js": "text/javascript; charset=utf-8",
   ".png": "image/png",
   ".mp3": "audio/mpeg",
+  ".mp4": "video/mp4",
   ".wav": "audio/wav",
   ".json": "application/json; charset=utf-8"
 };
 
 const premiumMedia = {
-  "breathwork-day-1": "breathwork-day-1.wav"
+  "breathwork-day-1": "breathwork-day-1.wav",
+  "breathwork-01-simply-breathe": "breathwork-01-simply-breathe.mp4",
+  "breathwork-02-receive-gods-peace": "breathwork-02-receive-gods-peace.mp4"
 };
 
 const DEFAULT_REMINDER_MESSAGE = "Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org";
@@ -273,7 +276,16 @@ function verifyPassword(password, user) {
 }
 
 function publicUser(user) {
-  return user ? { id: user.id, name: user.name, email: user.email, role: user.role, subscriptionStatus: user.subscriptionStatus || "free" } : null;
+  return user
+    ? {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        subscriptionStatus: user.subscriptionStatus || "free",
+        mailingAddress: user.mailingAddress || null
+      }
+    : null;
 }
 
 function phoneDigits(value) {
@@ -309,6 +321,19 @@ function requireAdmin(request, response, db) {
 
 function normalizeText(value, max = 2000) {
   return String(value || "").trim().slice(0, max);
+}
+
+function normalizeMailingAddress(value) {
+  if (!value || typeof value !== "object") return null;
+  const address = {
+    line1: normalizeText(value.line1, 120),
+    line2: normalizeText(value.line2, 120),
+    city: normalizeText(value.city, 80),
+    state: normalizeText(value.state, 60),
+    postalCode: normalizeText(value.postalCode, 30),
+    country: normalizeText(value.country, 80) || "United States"
+  };
+  return Object.values(address).some(Boolean) ? address : null;
 }
 
 function normalizeChannels(value) {
@@ -540,6 +565,7 @@ async function handleApi(request, response) {
       email,
       role: db.users.length === 0 ? "admin" : "member",
       subscriptionStatus: "free",
+      mailingAddress: normalizeMailingAddress(body.mailingAddress),
       salt: passwordParts.salt,
       passwordHash: passwordParts.hash,
       createdAt: new Date().toISOString()
@@ -901,20 +927,41 @@ async function handleApi(request, response) {
   if (request.method === "GET" && url.pathname.startsWith("/api/premium-media/")) {
     const user = requireUser(request, response, db);
     if (!user) return;
-    const isPremium = user.role === "admin" || user.subscriptionStatus === "premium";
-    if (!isPremium) return json(response, 403, { error: "Abide access is required." });
+    if (user.role !== "admin") return json(response, 403, { error: "Admin access is required for Abide media previews." });
     const mediaId = url.pathname.replace("/api/premium-media/", "");
     const filename = premiumMedia[mediaId];
     if (!filename) return json(response, 404, { error: "Abide media not found." });
     const filePath = path.join(root, "premium-media", filename);
-    fs.readFile(filePath, (error, data) => {
+    fs.stat(filePath, (error, stats) => {
       if (error) return json(response, 404, { error: "Abide media not found." });
+      const contentType = types[path.extname(filePath)] || "application/octet-stream";
+      const range = request.headers.range;
+      if (range) {
+        const match = range.match(/bytes=(\d*)-(\d*)/);
+        const start = match?.[1] ? Number(match[1]) : 0;
+        const end = match?.[2] ? Number(match[2]) : stats.size - 1;
+        if (Number.isNaN(start) || Number.isNaN(end) || start > end || end >= stats.size) {
+          response.writeHead(416, { "Content-Range": `bytes */${stats.size}` });
+          response.end();
+          return;
+        }
+        response.writeHead(206, {
+          "Content-Type": contentType,
+          "Content-Length": end - start + 1,
+          "Content-Range": `bytes ${start}-${end}/${stats.size}`,
+          "Accept-Ranges": "bytes",
+          "Cache-Control": "no-store"
+        });
+        fs.createReadStream(filePath, { start, end }).pipe(response);
+        return;
+      }
       response.writeHead(200, {
-        "Content-Type": types[path.extname(filePath)] || "application/octet-stream",
-        "Content-Length": data.length,
+        "Content-Type": contentType,
+        "Content-Length": stats.size,
+        "Accept-Ranges": "bytes",
         "Cache-Control": "no-store"
       });
-      response.end(data);
+      fs.createReadStream(filePath).pipe(response);
     });
     return;
   }

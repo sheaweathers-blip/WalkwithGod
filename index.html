@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260714-step-labels" />
+    <link rel="stylesheet" href="styles.css?v=20260714-abide-combined" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -100,6 +100,40 @@
               Password
               <input id="authPassword" type="password" placeholder="At least 8 characters" required />
             </label>
+            <div class="mailing-address-fields" id="mailingAddressFields" hidden>
+              <div>
+                <p class="eyebrow">Optional Thank-You Note</p>
+                <p class="form-helper">Share a mailing address only if you would like a handwritten thank-you from Walk With God.</p>
+              </div>
+              <label>
+                Street address
+                <input id="authAddressLine1" autocomplete="address-line1" placeholder="Street address" />
+              </label>
+              <label>
+                Apartment, suite, or unit
+                <input id="authAddressLine2" autocomplete="address-line2" placeholder="Optional" />
+              </label>
+              <div class="form-grid">
+                <label>
+                  City
+                  <input id="authAddressCity" autocomplete="address-level2" placeholder="City" />
+                </label>
+                <label>
+                  State
+                  <input id="authAddressState" autocomplete="address-level1" placeholder="State" />
+                </label>
+              </div>
+              <div class="form-grid">
+                <label>
+                  ZIP code
+                  <input id="authAddressPostal" autocomplete="postal-code" placeholder="ZIP code" />
+                </label>
+                <label>
+                  Country
+                  <input id="authAddressCountry" autocomplete="country-name" placeholder="United States" />
+                </label>
+              </div>
+            </div>
             <div class="reflection-actions">
               <button class="copy-button" id="submitAuthButton" type="submit">Continue</button>
               <button class="quiet-button" id="cancelAuthButton" type="button">Cancel</button>
@@ -483,102 +517,99 @@
 
       <section class="daily premium-section" id="premium" hidden>
         <div class="section-heading">
-          <p class="eyebrow">Abide Membership Coming Later</p>
-          <h2>Come deeper without making the free walk feel empty</h2>
+          <p class="eyebrow">Abide</p>
+          <h2>Preview guided experiences</h2>
           <p class="section-copy">
-            A preview of future guided discipleship journeys built around Scripture, prayer, practice, and community.
+            A simple look at future guided videos, studies, movement, and prayer practices.
           </p>
         </div>
         <div class="abide-framework">
           <article>
             <p class="block-label">Truth</p>
             <h3>Abide in Scripture</h3>
-            <p>Scripture journeys, walk-through studies, word studies, and guided reflection.</p>
+            <p>Deeper Bible study, reflection, and guided teaching.</p>
           </article>
           <article>
             <p class="block-label">Presence</p>
             <h3>Abide Daily</h3>
-            <p>Morning walks, midday pauses, night prayers, breath prayers, and quiet reflection.</p>
+            <p>Morning, midday, and evening rhythms with God.</p>
           </article>
           <article>
             <p class="block-label">Practice</p>
-            <h3>Abide in Practice</h3>
-            <p>Guided prayer walks, breathwork, faith-led movement, Sabbath, journaling, and nature walks.</p>
+            <h3>Practice With God</h3>
+            <p>Breath prayer, walking, faith-led movement, and rest.</p>
           </article>
           <article>
             <p class="block-label">Community</p>
             <h3>Abide Together</h3>
-            <p>Prayer partners, small groups, live studies, testimonies, and shared encouragement.</p>
+            <p>Future classes, groups, prayer, and shared encouragement.</p>
           </article>
-        </div>
-        <div class="journey-framework-card">
-          <p class="eyebrow">Journey Framework</p>
-          <h3>Future Abide journeys will bring the whole person into discipleship.</h3>
-          <p>Each journey can include Scripture, prayer, breath prayer, guided walk, journal prompt, action step, audio, and an optional Living Stones reflection.</p>
         </div>
         <button class="premium-expand-button" type="button" data-premium-toggle="premiumOverview">Open Abide Preview</button>
         <div class="premium-panel-content" id="premiumOverviewPanel" hidden>
           <div class="premium-grid" id="premiumGrid"></div>
           <p class="copy-status" id="premiumStatus" role="status" aria-live="polite"></p>
         </div>
-      </section>
 
-      <section class="daily breathwork-section" id="breathwork" hidden>
-        <div class="section-heading">
-          <p class="eyebrow">Abide in Practice</p>
-          <h2>30 days of breath prayer with God</h2>
-          <p class="section-copy">
-            A future Abide audio/video journey for calm, focus, emotional wellness, and prayer. Move gently, breathe comfortably, and stop if you feel lightheaded.
-          </p>
-        </div>
-        <button class="premium-expand-button" type="button" data-premium-toggle="breathwork">Open Breathwork Prayer</button>
-        <div class="premium-panel-content" id="breathworkPanel" hidden>
-          <div class="premium-lock-note" id="breathworkLockNote"></div>
-          <div class="breathwork-layout">
-          <div class="breathwork-list" id="breathworkList" aria-label="Breathwork routines"></div>
-          <article class="breathwork-reader">
-            <p class="block-label" id="breathworkDayLabel">Day 1</p>
-            <h3 id="breathworkTitle">Simply Breathe</h3>
-            <div class="breathwork-meta">
-              <span id="breathworkDuration">3 minutes</span>
-              <span id="breathworkTechnique">4-in, 4-out</span>
+        <div class="abide-experience-block breathwork-section" id="breathwork">
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Breathwork Prayer</p>
+            <h2>30 days of breath prayer with God</h2>
+            <p class="section-copy">
+              Finished admin-only videos and upcoming breath prayer sessions for calm, focus, and prayer. Move gently, breathe comfortably, and stop if you feel lightheaded.
+            </p>
+          </div>
+          <button class="premium-expand-button" type="button" data-premium-toggle="breathwork">Open Breathwork Prayer</button>
+          <div class="premium-panel-content" id="breathworkPanel" hidden>
+            <div class="premium-lock-note" id="breathworkLockNote"></div>
+            <div class="breathwork-layout">
+              <div class="breathwork-list" id="breathworkList" aria-label="Breathwork routines"></div>
+              <article class="breathwork-reader">
+                <p class="block-label" id="breathworkDayLabel">Day 1</p>
+                <h3 id="breathworkTitle">Simply Breathe</h3>
+                <div class="breathwork-meta">
+                  <span id="breathworkDuration">3 minutes</span>
+                  <span id="breathworkTechnique">4-in, 4-out</span>
+                </div>
+                <p class="scripture-reference" id="breathworkScripture">Psalm 46:10</p>
+                <p id="breathworkPurpose"></p>
+                <div class="premium-media-card" id="breathworkMediaCard" hidden>
+                  <p class="block-label" id="breathworkMediaLabel">Abide Media Preview</p>
+                  <iframe id="breathworkYoutube" title="Abide video preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen hidden></iframe>
+                  <video id="breathworkVideo" controls preload="none" playsinline hidden></video>
+                  <audio id="breathworkAudio" controls preload="none"></audio>
+                  <p id="breathworkAudioNote"></p>
+                </div>
+                <div class="verse-text-card" id="breathworkScriptCard">
+                  <p class="block-label" id="breathworkScriptLabel">Guided Script</p>
+                  <div id="breathworkScript"></div>
+                </div>
+                <div class="daily-rhythm-grid" id="breathworkProductionGrid">
+                  <div class="rhythm-card">
+                    <p class="block-label">Visual Notes</p>
+                    <p id="breathworkVisual"></p>
+                  </div>
+                  <div class="rhythm-card">
+                    <p class="block-label">Recording Notes</p>
+                    <p id="breathworkVoice"></p>
+                  </div>
+                  <div class="rhythm-card">
+                    <p class="block-label">Prayer</p>
+                    <p id="breathworkPrayer"></p>
+                  </div>
+                </div>
+              </article>
             </div>
-            <p class="scripture-reference" id="breathworkScripture">Psalm 46:10</p>
-            <p id="breathworkPurpose"></p>
-            <div class="premium-media-card" id="breathworkMediaCard" hidden>
-              <p class="block-label">Abide Audio Preview</p>
-              <audio id="breathworkAudio" controls preload="none"></audio>
-              <p id="breathworkAudioNote"></p>
-            </div>
-            <div class="verse-text-card">
-              <p class="block-label">Guided Script</p>
-              <div id="breathworkScript"></div>
-            </div>
-            <div class="daily-rhythm-grid">
-              <div class="rhythm-card">
-                <p class="block-label">Future Video Visual</p>
-                <p id="breathworkVisual"></p>
-              </div>
-              <div class="rhythm-card">
-                <p class="block-label">Voiceover Direction</p>
-                <p id="breathworkVoice"></p>
-              </div>
-              <div class="rhythm-card">
-                <p class="block-label">Closing Prayer</p>
-                <p id="breathworkPrayer"></p>
-              </div>
-            </div>
-          </article>
           </div>
         </div>
       </section>
 
       <section class="daily yoga-section" id="faithYoga" hidden>
         <div class="section-heading">
-          <p class="eyebrow">Abide in Practice</p>
+          <p class="eyebrow">Movement With God</p>
           <h2>Christ-centered movement sessions</h2>
           <p class="section-copy">
-            A future Abide video journey for gentle stretching, strength, mobility, rest, prayer, and Scripture meditation. Move slowly, honor your limits, and skip anything that does not feel safe for your body.
+            Gentle movement, prayer, Scripture meditation, rest, and body-kind care. Move slowly, honor your limits, and skip anything that does not feel safe.
           </p>
         </div>
         <button class="premium-expand-button" type="button" data-premium-toggle="faithYoga">Open Faith-Led Yoga</button>
@@ -601,15 +632,15 @@
             </div>
             <div class="daily-rhythm-grid">
               <div class="rhythm-card">
-                <p class="block-label">Future Video Visual</p>
+                <p class="block-label">Visual Notes</p>
                 <p id="yogaVisual"></p>
               </div>
               <div class="rhythm-card">
-                <p class="block-label">Voiceover Direction</p>
+                <p class="block-label">Recording Notes</p>
                 <p id="yogaVoice"></p>
               </div>
               <div class="rhythm-card">
-                <p class="block-label">Closing Prayer</p>
+                <p class="block-label">Prayer</p>
                 <p id="yogaPrayer"></p>
               </div>
             </div>
@@ -623,7 +654,7 @@
           <p class="eyebrow">Abide in Scripture</p>
           <h2>Scripture journeys and guided studies</h2>
           <p class="section-copy">
-            A future Abide library for Scripture journeys, guided teaching, reflection, discussion, word studies, and practical discipleship.
+            Guided Bible studies with teaching, reflection, discussion questions, and practical discipleship.
           </p>
         </div>
         <button class="premium-expand-button" type="button" data-premium-toggle="bibleStudy">Open Scripture Journey</button>
@@ -654,7 +685,7 @@
                 <p id="bibleStudyPractice"></p>
               </div>
               <div class="rhythm-card">
-                <p class="block-label">Closing Prayer</p>
+                <p class="block-label">Prayer</p>
                 <p id="bibleStudyPrayer"></p>
               </div>
             </div>
@@ -665,10 +696,10 @@
 
       <section class="daily walking-section" id="premiumWalking" hidden>
         <div class="section-heading">
-          <p class="eyebrow">Abide in Practice</p>
+          <p class="eyebrow">Prayer Walks</p>
           <h2>Guided prayer walks</h2>
           <p class="section-copy">
-            A future Abide walking library with Scripture-led movement, prayer prompts, reflection, silence, and gentle pacing for daily devotion in motion.
+            Scripture-led walks with prayer prompts, reflection, silence, and gentle pacing.
           </p>
         </div>
         <button class="premium-expand-button" type="button" data-premium-toggle="walking">Open Walking Sessions</button>
@@ -695,11 +726,11 @@
                 <p id="walkingPrompts"></p>
               </div>
               <div class="rhythm-card">
-                <p class="block-label">Future Audio Visual</p>
+                <p class="block-label">Audio Notes</p>
                 <p id="walkingVisual"></p>
               </div>
               <div class="rhythm-card">
-                <p class="block-label">Closing Prayer</p>
+                <p class="block-label">Prayer</p>
                 <p id="walkingPrayer"></p>
               </div>
             </div>
@@ -812,7 +843,7 @@
         <form class="premium-content-form" id="premiumContentForm" hidden>
           <div class="section-heading compact-heading">
             <p class="eyebrow">Abide</p>
-            <h3>Add future Abide content</h3>
+            <h3>Add Abide preview content</h3>
           </div>
           <div class="form-grid">
             <label>
@@ -1030,6 +1061,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260714-step-labels"></script>
+    <script src="app.js?v=20260714-abide-combined"></script>
   </body>
 </html>

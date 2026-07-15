@@ -466,8 +466,8 @@ let reminderChannelAvailability = {
   sms: true
 };
 const premiumBreathworkRoutines = [
-  ["Day 1", "Simply Breathe", "3 minutes", "4-in, 4-out", "Awareness", "Psalm 46:10", "Today, simply notice the breath. Inhale for 4, exhale for 4. Nothing to fix, nothing to achieve, just breathe with God.", "Soft morning light over a walking path", "Slow, reassuring, spacious voice with pauses after each count.", "Lord, teach me to begin with You, one quiet breath at a time.", "/api/premium-media/breathwork-day-1"],
-  ["Day 2", "Let Go", "3 minutes", "4-in, 6-out", "Releasing tension", "1 Peter 5:7", "Inhale gently for 4. Exhale slowly for 6. With every longer exhale, release what you cannot control into God's care.", "Flowing river or slow clouds", "Warm and calm, emphasizing release on each exhale.", "Father, I give You what I was not meant to carry alone."],
+  ["Day 1", "Be Still and Breathe", "5:21 video", "4-in, 4-out breath prayer", "Stillness", "Psalm 46:10", "Begin in a comfortable seated position. Breathe slowly, inhaling for 4 seconds and exhaling for 4 seconds. Pray: Inhale, Be still. Exhale, You are God. Bring one worry, responsibility, fear, decision, or loved one before God. Then pray: I receive God's peace. I release my hurry. I receive Your presence. I release control.", "Finished Abide video with peaceful nature visuals and the Walk With God logo cards.", "Slow, reassuring, spacious voice with pauses after each count and prayer phrase.", "Lord, thank You for meeting me in stillness. Teach me to care for the body You created, quiet my anxious thoughts, and return to You throughout this day.", "https://www.youtube.com/embed/HlOInGhINB4", "youtube"],
+  ["Day 2", "Receive God's Peace", "6-8 minute video", "Natural breath prayer", "Peace", "John 14:27", "Begin seated, standing, or lying down. Let your shoulders soften, your jaw relax, and your hands rest open. Pray: Inhale, Jesus, You are near. Exhale, I receive God's peace. Notice tension without judgment and bring it into prayer. Pray: Your peace is a gift. I do not have to strive. Then bring one concern before the Lord and pray: I give this to You. Hold me in Your peace.", "Finished Abide video with peaceful visuals, opening logo card, and ending card.", "Warm and calm, emphasizing that peace is received from Jesus rather than forced.", "Lord Jesus, thank You that Your peace is not fragile or dependent on perfect circumstances. Help me walk into the rest of this day with a quieter heart, a steadier mind, and deeper trust in Your presence.", "https://www.youtube.com/embed/Ni_pIWldPQQ", "youtube"],
   ["Day 3", "Ground Yourself", "4 minutes", "Belly breathing", "Presence", "Colossians 2:7", "Place a hand on your belly. Let the breath rise and fall slowly. Notice that you are here, held by God, rooted in His love.", "Forest floor, moss, steady trees", "Grounded, gentle, with quiet reminders to relax the shoulders.", "Root me in Your truth and steady my heart today."],
   ["Day 4", "Quiet the Mind", "4 minutes", "Box breathing", "Calm thoughts", "Isaiah 26:3", "Inhale 4, hold 4, exhale 4, hold 4. Imagine tracing a square while your thoughts settle before the Lord.", "Gentle ocean waves", "Clear counting with peaceful space between rounds.", "Keep my mind stayed on You and lead me into peace."],
   ["Day 5", "Gratitude Breath", "4 minutes", "Inhale gratitude, exhale worry", "Thankfulness", "1 Thessalonians 5:18", "Breathe in and name one gift. Breathe out and release one worry. Let gratitude become prayer.", "Sunlit garden or wildflowers", "Soft, grateful, slightly brighter tone.", "Thank You, Lord, for meeting me in this moment."],
@@ -496,7 +496,7 @@ const premiumBreathworkRoutines = [
   ["Day 28", "Surrender", "6 minutes", "Long exhale surrender", "Letting go", "Luke 22:42", "Name one burden. Inhale God's presence. Exhale: Into Your hands. Repeat gently.", "Hands open, quiet trail, soft sky", "Reverent, gentle, not rushed.", "Not my will, but Yours be done."],
   ["Day 29", "Walking With God", "8 minutes", "Walking breath prayer", "Active prayer", "Micah 6:8", "Walk slowly if you can. Match prayer to your steps: justice, mercy, humility, with God.", "Walking path through trees", "Active, grounded, rhythmic.", "Teach me to walk humbly with You in ordinary life."],
   ["Day 30", "Celebration and Renewal", "10 minutes", "Review and prayer", "Celebration", "2 Corinthians 5:17", "For thirty days you have paused, breathed, reflected, and grown. Review what God has been forming in you.", "Sunrise, open road, joyful nature", "Celebratory but peaceful, with gratitude.", "Make me new, Lord, and continue this work in me."]
-].map(([day, title, duration, technique, purpose, scripture, script, visual, voice, prayer, audioSrc], index) => ({
+].map(([day, title, duration, technique, purpose, scripture, script, visual, voice, prayer, mediaSrc, mediaKind], index) => ({
   id: `breathwork-${index + 1}`,
   day,
   title,
@@ -508,7 +508,8 @@ const premiumBreathworkRoutines = [
   visual,
   voice,
   prayer,
-  audioSrc
+  mediaSrc,
+  mediaKind: mediaKind || (mediaSrc ? "audio" : "")
 }));
 const premiumYogaSessions = [
   ["Session 1", "Begin in Stillness", "20 minutes", "Gentle flow", "Psalm 46:10", "Settle your body and attention before God before moving into the day.", "Opening seated breath prayer, neck and shoulder release, cat-cow, child's pose, low lunge, forward fold, gentle twist, supported rest.", "Soft morning light, mat near a window, calm greenery", "Quiet and reverent, with simple cues and Scripture woven between movements.", "Lord, quiet my striving and help my body and soul become still before You."],
@@ -792,6 +793,13 @@ const authForm = document.querySelector("#authForm");
 const authName = document.querySelector("#authName");
 const authEmail = document.querySelector("#authEmail");
 const authPassword = document.querySelector("#authPassword");
+const mailingAddressFields = document.querySelector("#mailingAddressFields");
+const authAddressLine1 = document.querySelector("#authAddressLine1");
+const authAddressLine2 = document.querySelector("#authAddressLine2");
+const authAddressCity = document.querySelector("#authAddressCity");
+const authAddressState = document.querySelector("#authAddressState");
+const authAddressPostal = document.querySelector("#authAddressPostal");
+const authAddressCountry = document.querySelector("#authAddressCountry");
 const logoutButton = document.querySelector("#logoutButton");
 const submitAuthButton = document.querySelector("#submitAuthButton");
 const cancelAuthButton = document.querySelector("#cancelAuthButton");
@@ -897,11 +905,17 @@ const breathworkDuration = document.querySelector("#breathworkDuration");
 const breathworkTechnique = document.querySelector("#breathworkTechnique");
 const breathworkScripture = document.querySelector("#breathworkScripture");
 const breathworkPurpose = document.querySelector("#breathworkPurpose");
+const breathworkScriptCard = document.querySelector("#breathworkScriptCard");
+const breathworkScriptLabel = document.querySelector("#breathworkScriptLabel");
 const breathworkScript = document.querySelector("#breathworkScript");
+const breathworkProductionGrid = document.querySelector("#breathworkProductionGrid");
 const breathworkVisual = document.querySelector("#breathworkVisual");
 const breathworkVoice = document.querySelector("#breathworkVoice");
 const breathworkPrayer = document.querySelector("#breathworkPrayer");
 const breathworkMediaCard = document.querySelector("#breathworkMediaCard");
+const breathworkMediaLabel = document.querySelector("#breathworkMediaLabel");
+const breathworkYoutube = document.querySelector("#breathworkYoutube");
+const breathworkVideo = document.querySelector("#breathworkVideo");
 const breathworkAudio = document.querySelector("#breathworkAudio");
 const breathworkAudioNote = document.querySelector("#breathworkAudioNote");
 const yogaLockNote = document.querySelector("#yogaLockNote");
@@ -2666,7 +2680,7 @@ function renderPremium() {
   const isUnlocked = state.isPremium || state.user?.role === "admin";
   premiumStatus.textContent = isUnlocked
     ? "Abide preview is open for this account."
-    : "These are future Abide Membership journeys. Your daily focuses, notes, prayer requests, reminders, and community stay free.";
+    : "Abide is coming later. The daily focus path stays free.";
   premiumGrid.innerHTML = state.premiumContent.length
     ? state.premiumContent
         .map((item) => {
@@ -2699,11 +2713,15 @@ function renderPremium() {
 function renderBreathwork() {
   if (!breathworkList) return;
   const isUnlocked = state.isPremium || state.user?.role === "admin";
+  const isAdmin = state.user?.role === "admin";
   state.activeBreathworkIndex = Math.max(0, Math.min(state.activeBreathworkIndex, premiumBreathworkRoutines.length - 1));
   const routine = premiumBreathworkRoutines[state.activeBreathworkIndex];
+  const hasFinishedVideo = routine.mediaKind === "video" || routine.mediaKind === "youtube";
+  const isYouTubeVideo = routine.mediaKind === "youtube";
+  breathworkLockNote.hidden = isAdmin && hasFinishedVideo;
   breathworkLockNote.textContent = isUnlocked
-    ? "Admin preview is open. These routines are ready to become future Abide audio or video sessions."
-    : "Abide Membership coming later. Free accounts can preview the series titles, while full guided scripts will unlock with a future Abide plan.";
+    ? "Admin preview is open."
+    : "Abide breathwork is coming later. You can preview the session titles for now.";
   breathworkList.innerHTML = premiumBreathworkRoutines
     .map((item, index) => `
       <button class="breathwork-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBreathworkIndex}">
@@ -2718,28 +2736,61 @@ function renderBreathwork() {
   breathworkDuration.textContent = routine.duration;
   breathworkTechnique.textContent = routine.technique;
   breathworkScripture.textContent = routine.scripture;
-  breathworkPurpose.textContent = `${routine.purpose} - ${isUnlocked ? "Full Abide preview." : "Abide preview."}`;
+  breathworkPurpose.textContent = hasFinishedVideo && isAdmin
+    ? `${routine.purpose} - Finished admin-only video.`
+    : `${routine.purpose} - ${isUnlocked ? "Full Abide preview." : "Preview."}`;
+  if (breathworkScriptCard) breathworkScriptCard.hidden = hasFinishedVideo && isAdmin;
+  if (breathworkScriptLabel) breathworkScriptLabel.textContent = hasFinishedVideo ? "Session Notes" : "Guided Script";
   breathworkScript.innerHTML = isUnlocked
     ? `<p>${escapeHtml(routine.script)}</p>`
-    : `<p>This guided script is part of the future Abide breath prayer library.</p><small>Preview: ${escapeHtml(routine.purpose)} with ${escapeHtml(routine.technique)}.</small>`;
-  if (breathworkMediaCard && breathworkAudio && breathworkAudioNote) {
-    const canPlayMedia = isUnlocked && Boolean(routine.audioSrc);
+    : `<p>Full breath prayer guidance is not open yet.</p><small>Preview: ${escapeHtml(routine.purpose)} with ${escapeHtml(routine.technique)}.</small>`;
+  if (breathworkMediaCard && breathworkAudio && breathworkVideo && breathworkYoutube && breathworkAudioNote) {
+    const canPlayMedia = isAdmin && Boolean(routine.mediaSrc);
+    const isVideo = hasFinishedVideo;
     breathworkMediaCard.hidden = !canPlayMedia;
+    breathworkAudio.hidden = !canPlayMedia || isVideo;
+    breathworkVideo.hidden = !canPlayMedia || !isVideo || isYouTubeVideo;
+    breathworkYoutube.hidden = !canPlayMedia || !isYouTubeVideo;
     if (canPlayMedia) {
-      if (!breathworkAudio.src.endsWith(routine.audioSrc)) {
-        breathworkAudio.src = routine.audioSrc;
+      if (isYouTubeVideo) {
+        breathworkVideo.pause();
+        breathworkVideo.removeAttribute("src");
+        breathworkVideo.load();
+        breathworkAudio.removeAttribute("src");
         breathworkAudio.load();
+        breathworkYoutube.src = routine.mediaSrc;
+      } else {
+        breathworkYoutube.removeAttribute("src");
+        const mediaElement = isVideo ? breathworkVideo : breathworkAudio;
+        const inactiveElement = isVideo ? breathworkAudio : breathworkVideo;
+        inactiveElement.pause();
+        inactiveElement.removeAttribute("src");
+        inactiveElement.load();
+        if (!mediaElement.src.endsWith(routine.mediaSrc)) {
+          mediaElement.src = routine.mediaSrc;
+          mediaElement.load();
+        }
       }
-      breathworkAudioNote.textContent = "Admin/Abide-only audio for building the first finished breathwork video.";
+      if (breathworkMediaLabel) breathworkMediaLabel.textContent = isVideo ? "Admin-Only Abide Video Preview" : "Admin-Only Abide Audio Preview";
+      breathworkAudioNote.textContent = isVideo
+        ? "Finished video. Visible only to admin right now."
+        : "Only admin can play this Abide breathwork audio right now.";
     } else {
+      breathworkYoutube.removeAttribute("src");
+      breathworkVideo.pause();
+      breathworkVideo.removeAttribute("src");
+      breathworkVideo.load();
       breathworkAudio.removeAttribute("src");
       breathworkAudio.load();
       breathworkAudioNote.textContent = "";
     }
   }
-  breathworkVisual.textContent = isUnlocked ? routine.visual : "Visual direction unlocks with the Abide production plan.";
-  breathworkVoice.textContent = isUnlocked ? routine.voice : "Voiceover direction unlocks with the full Abide script.";
-  breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Closing prayer unlocks with the full Abide routine.";
+  if (breathworkProductionGrid) breathworkProductionGrid.hidden = hasFinishedVideo;
+  if (!hasFinishedVideo) {
+    breathworkVisual.textContent = isUnlocked ? routine.visual : "Visual notes are available in admin preview.";
+    breathworkVoice.textContent = isUnlocked ? routine.voice : "Recording notes are available in admin preview.";
+    breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Prayer text is available in admin preview.";
+  }
 }
 
 function renderYoga() {
@@ -2748,8 +2799,8 @@ function renderYoga() {
   state.activeYogaIndex = Math.max(0, Math.min(state.activeYogaIndex, premiumYogaSessions.length - 1));
   const session = premiumYogaSessions[state.activeYogaIndex];
   yogaLockNote.textContent = isUnlocked
-    ? "Admin preview is open. These faith-led movement sessions are ready to become future Abide videos."
-    : "Abide Membership coming later. Free accounts can preview the session titles, while full flows and prayers will unlock with a future Abide plan.";
+    ? "Admin preview is open."
+    : "Faith-led movement is coming later. You can preview the session titles for now.";
   yogaList.innerHTML = premiumYogaSessions
     .map((item, index) => `
       <button class="yoga-button" type="button" data-index="${index}" aria-pressed="${index === state.activeYogaIndex}">
@@ -2767,10 +2818,10 @@ function renderYoga() {
   yogaIntention.textContent = `${session.intention} ${isUnlocked ? "Modify any pose and rest whenever needed." : "Abide preview."}`;
   yogaFlow.innerHTML = isUnlocked
     ? `<p>${escapeHtml(session.flow)}</p>`
-    : `<p>This movement flow is part of the future Abide faith-led movement library.</p><small>Preview: ${escapeHtml(session.style)} around ${escapeHtml(session.scripture)}.</small>`;
-  yogaVisual.textContent = isUnlocked ? session.visual : "Visual direction unlocks with the Abide production plan.";
-  yogaVoice.textContent = isUnlocked ? session.voice : "Voiceover direction unlocks with the full Abide session.";
-  yogaPrayer.textContent = isUnlocked ? session.prayer : "Closing prayer unlocks with the full Abide session.";
+    : `<p>Full movement guidance is not open yet.</p><small>Preview: ${escapeHtml(session.style)} around ${escapeHtml(session.scripture)}.</small>`;
+  yogaVisual.textContent = isUnlocked ? session.visual : "Visual notes are available in admin preview.";
+  yogaVoice.textContent = isUnlocked ? session.voice : "Recording notes are available in admin preview.";
+  yogaPrayer.textContent = isUnlocked ? session.prayer : "Prayer text is available in admin preview.";
 }
 
 function renderBibleStudy() {
@@ -2779,8 +2830,8 @@ function renderBibleStudy() {
   state.activeBibleStudyIndex = Math.max(0, Math.min(state.activeBibleStudyIndex, premiumBibleStudySessions.length - 1));
   const study = premiumBibleStudySessions[state.activeBibleStudyIndex];
   bibleStudyLockNote.textContent = isUnlocked
-    ? "Admin preview is open. These in-depth sessions are ready to become future Abide Scripture journeys."
-    : "Abide Membership coming later. Free accounts can preview the journey titles, while full outlines, questions, and practices will unlock with a future Abide plan.";
+    ? "Admin preview is open."
+    : "Guided Bible studies are coming later. You can preview the journey titles for now.";
   bibleStudyList.innerHTML = premiumBibleStudySessions
     .map((item, index) => `
       <button class="bible-study-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBibleStudyIndex}">
@@ -2798,10 +2849,10 @@ function renderBibleStudy() {
   bibleStudyAim.textContent = `${study.aim} ${isUnlocked ? "Full Abide Scripture preview." : "Abide preview."}`;
   bibleStudyOutline.innerHTML = isUnlocked
     ? `<p>${escapeHtml(study.outline)}</p>`
-    : `<p>This teaching outline is part of the future Abide Scripture journey library.</p><small>Preview: ${escapeHtml(study.aim)}</small>`;
-  bibleStudyQuestions.textContent = isUnlocked ? study.questions : "Discussion questions unlock with the full Abide Scripture journey.";
-  bibleStudyPractice.textContent = isUnlocked ? study.practice : "Faith-in-practice steps unlock with the full Abide Scripture journey.";
-  bibleStudyPrayer.textContent = isUnlocked ? study.prayer : "Closing prayer unlocks with the full Abide Scripture journey.";
+    : `<p>Full teaching notes are not open yet.</p><small>Preview: ${escapeHtml(study.aim)}</small>`;
+  bibleStudyQuestions.textContent = isUnlocked ? study.questions : "Discussion questions are available in admin preview.";
+  bibleStudyPractice.textContent = isUnlocked ? study.practice : "Practice steps are available in admin preview.";
+  bibleStudyPrayer.textContent = isUnlocked ? study.prayer : "Prayer text is available in admin preview.";
 }
 
 function renderWalking() {
@@ -2810,8 +2861,8 @@ function renderWalking() {
   state.activeWalkingIndex = Math.max(0, Math.min(state.activeWalkingIndex, premiumWalkingSessions.length - 1));
   const walk = premiumWalkingSessions[state.activeWalkingIndex];
   walkingLockNote.textContent = isUnlocked
-    ? "Admin preview is open. These guided walks are ready to become future Abide audio or video sessions."
-    : "Abide Membership coming later. Free accounts can preview the walking session titles, while full guides and prayer prompts will unlock with a future Abide plan.";
+    ? "Admin preview is open."
+    : "Guided walking sessions are coming later. You can preview the session titles for now.";
   walkingList.innerHTML = premiumWalkingSessions
     .map((item, index) => `
       <button class="walking-button" type="button" data-index="${index}" aria-pressed="${index === state.activeWalkingIndex}">
@@ -2829,10 +2880,10 @@ function renderWalking() {
   walkingIntention.textContent = `${walk.intention} ${isUnlocked ? "Choose a safe route and adjust pace as needed." : "Abide preview."}`;
   walkingGuide.innerHTML = isUnlocked
     ? `<p>${escapeHtml(walk.guide)}</p>`
-    : `<p>This guided walk is part of the future Abide Walking With God library.</p><small>Preview: ${escapeHtml(walk.duration)} at ${escapeHtml(walk.pace)} around ${escapeHtml(walk.scripture)}.</small>`;
-  walkingPrompts.textContent = isUnlocked ? walk.prompts : "Prayer prompts unlock with the full Abide walking session.";
-  walkingVisual.textContent = isUnlocked ? walk.visual : "Audio and visual direction unlocks with the Abide production plan.";
-  walkingPrayer.textContent = isUnlocked ? walk.prayer : "Closing prayer unlocks with the full Abide walking session.";
+    : `<p>Full walking guidance is not open yet.</p><small>Preview: ${escapeHtml(walk.duration)} at ${escapeHtml(walk.pace)} around ${escapeHtml(walk.scripture)}.</small>`;
+  walkingPrompts.textContent = isUnlocked ? walk.prompts : "Prayer prompts are available in admin preview.";
+  walkingVisual.textContent = isUnlocked ? walk.visual : "Audio notes are available in admin preview.";
+  walkingPrayer.textContent = isUnlocked ? walk.prayer : "Prayer text is available in admin preview.";
 }
 
 function renderAdmin() {
@@ -2847,6 +2898,12 @@ function renderAdmin() {
   } else if (canAdmin) {
     adminStatus.textContent = "Admin unlocked. You can manage focuses, accounts, feedback, and reports.";
   }
+}
+
+function formatMailingAddress(address) {
+  if (!address) return "";
+  const cityLine = [address.city, address.state, address.postalCode].filter(Boolean).join(", ");
+  return [address.line1, address.line2, cityLine, address.country].filter(Boolean).join(" | ");
 }
 
 function renderAdminDashboard(data = null) {
@@ -2866,6 +2923,7 @@ function renderAdminDashboard(data = null) {
           <button class="admin-row" type="button" data-user-id="${escapeHtml(user.id)}">
             <strong>${escapeHtml(user.name)}</strong>
             <span>${escapeHtml(user.email)} - ${escapeHtml(user.role)} - ${user.metrics.completedDays} steps walked</span>
+            <span>${escapeHtml(formatMailingAddress(user.mailingAddress) || "No mailing address shared")}</span>
           </button>
         `)
         .join("")
@@ -3588,6 +3646,7 @@ function openAuthForm(mode) {
   authForm.hidden = false;
   reminderSettingsPanel.hidden = true;
   authName.closest("label").hidden = mode === "login";
+  if (mailingAddressFields) mailingAddressFields.hidden = mode === "login";
   submitAuthButton.textContent = mode === "signup" ? "Create Account" : "Log In";
   authMessage.textContent = mode === "signup" ? "Create your account to save your path rhythm and join community." : "Log in to continue.";
 }
@@ -3634,6 +3693,7 @@ if (musicToggleButton && backgroundMusic) {
 cancelAuthButton.addEventListener("click", () => {
   authForm.hidden = true;
   authMessage.textContent = "";
+  if (mailingAddressFields) mailingAddressFields.hidden = true;
 });
 
 communityFeed.addEventListener("click", (event) => {
@@ -3751,17 +3811,34 @@ feedbackForm.addEventListener("submit", (event) => {
 authForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const mode = state.authMode || "login";
+  const mailingAddress =
+    mode === "signup"
+      ? {
+          line1: authAddressLine1?.value.trim() || "",
+          line2: authAddressLine2?.value.trim() || "",
+          city: authAddressCity?.value.trim() || "",
+          state: authAddressState?.value.trim() || "",
+          postalCode: authAddressPostal?.value.trim() || "",
+          country: authAddressCountry?.value.trim() || "United States"
+        }
+      : null;
   try {
     const result = await apiFetch(mode === "signup" ? "/api/auth/signup" : "/api/auth/login", {
       method: "POST",
       body: JSON.stringify({
         name: authName.value.trim(),
         email: authEmail.value.trim(),
-        password: authPassword.value
+        password: authPassword.value,
+        mailingAddress
       })
     });
     state.user = result.user;
     authPassword.value = "";
+    if (mode === "signup") {
+      [authAddressLine1, authAddressLine2, authAddressCity, authAddressState, authAddressPostal, authAddressCountry].forEach((input) => {
+        if (input) input.value = "";
+      });
+    }
     authMessage.textContent = mode === "signup" ? "Account created." : "Signed in.";
     await loadServerState();
     render();
@@ -3917,6 +3994,7 @@ adminUserList.addEventListener("click", (event) => {
       adminUserDetail.innerHTML = `
         <p><strong>${escapeHtml(user.name)}</strong></p>
         <p>${escapeHtml(user.email)} - ${escapeHtml(user.role)}</p>
+        <p><strong>Mailing address:</strong> ${escapeHtml(formatMailingAddress(user.mailingAddress) || "Not shared")}</p>
         <p>${user.metrics.completedDays} steps walked, ${user.metrics.communityPosts} community posts, ${user.metrics.privateNotes} private notes.</p>
         <p>Reminder: ${escapeHtml(user.metrics.reminder?.time || "not set")} - Push devices: ${user.metrics.pushSubscriptions}</p>
       `;
