@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260714-abide-combined" />
+    <link rel="stylesheet" href="styles.css?v=20260726-merged-today" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -34,6 +34,17 @@
             <a class="primary-link" href="#account">Get Started Free</a>
           </div>
         </div>
+      </section>
+
+      <section class="daily path-section" id="walkPath" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">The Walk With God Path</p>
+          <h2>Take your next step with God today</h2>
+          <p class="section-copy">
+            A gentle rhythm for discipleship: not a pressure system, but a simple way to follow Jesus one faithful step at a time.
+          </p>
+        </div>
+        <div class="path-steps" id="pathSteps" aria-label="Seven steps in the Walk With God Path"></div>
       </section>
 
       <section class="daily public-info-section" id="about">
@@ -220,54 +231,17 @@
           </div>
           <div class="today-stats">
             <div><strong id="streakCount">0</strong><span>day rhythm</span></div>
+            <div><strong id="focusPathCount">0%</strong><span>focus path</span></div>
+            <div><strong id="savedNotesCount">0</strong><span>saved notes</span></div>
             <div><strong id="favoriteCount">0</strong><span>favorite verses</span></div>
           </div>
           <div class="reflection-actions">
             <button class="copy-button" id="continueTodayButton" type="button">Continue Today</button>
+            <button class="quiet-button" type="button" data-open-choices>Open Daily Tools</button>
             <button class="quiet-button" id="quickCompleteButton" type="button">Mark Step Taken</button>
           </div>
           <p class="copy-status" id="todayStatus" role="status" aria-live="polite"></p>
         </div>
-      </section>
-
-      <section class="daily home-dashboard-section" id="homeDashboard" hidden>
-        <div class="home-dashboard-card">
-          <div class="home-dashboard-copy">
-            <p class="eyebrow">Today's Walk</p>
-            <h2 id="homeDashboardTitle">Your daily walk is ready</h2>
-            <p class="section-copy" id="homeDashboardCopy">
-              Continue your focus with Scripture, active time with God, application, and one lived deed.
-            </p>
-            <div class="dashboard-actions">
-              <button class="copy-button" type="button" data-open-choices>Open Daily Tools</button>
-            </div>
-          </div>
-          <div class="home-dashboard-metrics" aria-label="Daily walk snapshot">
-            <div>
-              <strong id="dashboardStreak">0</strong>
-              <span>day rhythm</span>
-            </div>
-            <div>
-              <strong id="dashboardProgress">0%</strong>
-              <span>focus path</span>
-            </div>
-            <div>
-              <strong id="dashboardNotes">0</strong>
-              <span>saved notes</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="daily path-section" id="walkPath" hidden>
-        <div class="section-heading">
-          <p class="eyebrow">The Walk With God Path</p>
-          <h2>Take your next step with God today</h2>
-          <p class="section-copy">
-            A gentle rhythm for discipleship: not a pressure system, but a simple way to follow Jesus one faithful step at a time.
-          </p>
-        </div>
-        <div class="path-steps" id="pathSteps" aria-label="Seven steps in the Walk With God Path"></div>
       </section>
 
       <section class="daily locked-section" id="lockedBenefits">
@@ -1061,6 +1035,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260714-abide-combined"></script>
+    <script src="app.js?v=20260726-merged-today"></script>
   </body>
 </html>

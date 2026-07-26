@@ -749,7 +749,6 @@ const aboutSection = document.querySelector("#about");
 const lockedBenefits = document.querySelector("#lockedBenefits");
 const gatedSections = [
   document.querySelector("#today"),
-  document.querySelector("#homeDashboard"),
   document.querySelector("#themes"),
   document.querySelector("#notesLibrary"),
   document.querySelector("#prayerLibrary"),
@@ -768,14 +767,11 @@ const todayTitle = document.querySelector("#todayTitle");
 const todayCopy = document.querySelector("#todayCopy");
 const streakCount = document.querySelector("#streakCount");
 const favoriteCount = document.querySelector("#favoriteCount");
+const focusPathCount = document.querySelector("#focusPathCount");
+const savedNotesCount = document.querySelector("#savedNotesCount");
 const continueTodayButton = document.querySelector("#continueTodayButton");
 const quickCompleteButton = document.querySelector("#quickCompleteButton");
 const todayStatus = document.querySelector("#todayStatus");
-const homeDashboardTitle = document.querySelector("#homeDashboardTitle");
-const homeDashboardCopy = document.querySelector("#homeDashboardCopy");
-const dashboardStreak = document.querySelector("#dashboardStreak");
-const dashboardProgress = document.querySelector("#dashboardProgress");
-const dashboardNotes = document.querySelector("#dashboardNotes");
 const pathSteps = document.querySelector("#pathSteps");
 const pathTodayCard = document.querySelector("#pathTodayCard");
 const pathTodayMark = document.querySelector("#pathTodayMark");
@@ -1432,27 +1428,15 @@ function renderToday() {
   const focus = activeFocus() || state.focuses[0];
   const dayIndex = nextOpenDay(focus);
   const day = focus.days[dayIndex];
+  const completeCount = completedSet(focus.id).size;
+  const progressPercent = Math.round((completeCount / focus.days.length) * 100);
   todayTitle.textContent = `${focusStepLabel(focus, dayIndex)} of ${focus.title}`;
   todayCopy.textContent = `${day[1]} - ${day[2]}. ${completedSet(focus.id).has(dayIndex) ? "Welcome back. Continue where you left off or choose another focus." : "Your next step is ready."}`;
   streakCount.textContent = String(streakDays());
+  if (focusPathCount) focusPathCount.textContent = `${progressPercent}%`;
+  if (savedNotesCount) savedNotesCount.textContent = String(noteEntries().length);
   favoriteCount.textContent = String(state.favorites.length);
   quickCompleteButton.disabled = !focus || completedSet(focus.id).has(dayIndex);
-}
-
-function renderHomeDashboard() {
-  if (!homeDashboardTitle) return;
-  const focus = activeFocus() || state.focuses[0];
-  const dayIndex = nextOpenDay(focus);
-  const day = focus.days[dayIndex];
-  const completeCount = completedSet(focus.id).size;
-  const progressPercent = Math.round((completeCount / focus.days.length) * 100);
-  const notesCount = noteEntries().length;
-
-  homeDashboardTitle.textContent = `${day[1]} is ready`;
-  homeDashboardCopy.textContent = `${focus.title}: ${day[2]}. Read, move, pray, reflect, and live one faithful deed today.`;
-  dashboardStreak.textContent = String(streakDays());
-  dashboardProgress.textContent = `${progressPercent}%`;
-  dashboardNotes.textContent = String(notesCount);
 }
 
 function pathStepByName(name) {
@@ -3034,7 +3018,6 @@ function render() {
   readerEmpty.hidden = Boolean(focus);
   readerContent.hidden = !focus;
   renderToday();
-  renderHomeDashboard();
   renderFocusList();
   renderPrayerBreath();
   renderReminder();
@@ -3114,7 +3097,6 @@ function render() {
   renderPrayerBreath();
   renderFavorites();
   renderToday();
-  renderHomeDashboard();
   renderWalkPath();
   renderReminder();
   renderMode();
@@ -3381,7 +3363,6 @@ favoriteVerseButton.addEventListener("click", () => {
   saveFavorites();
   renderFavorites();
   renderToday();
-  renderHomeDashboard();
 });
 
 saveNoteButton.addEventListener("click", () => {
@@ -3406,7 +3387,7 @@ saveNoteButton.addEventListener("click", () => {
   saveNotes();
   saveCheckins();
   renderNotesLibrary();
-  renderHomeDashboard();
+  renderToday();
   if (!state.user) {
     noteStatus.textContent = "Note saved on this device. Sign in to sync it.";
     return;
