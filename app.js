@@ -1524,22 +1524,39 @@ function notePreview(entry) {
   return parts.join("\n");
 }
 
+function noteExcerpt(entry) {
+  const preview = notePreview(entry).replace(/\s+/g, " ").trim();
+  if (!preview) return "Open this note to review your check-in.";
+  return preview.length > 150 ? `${preview.slice(0, 150).trim()}...` : preview;
+}
+
 function renderNotesLibrary() {
   const entries = noteEntries();
   notesLibraryList.innerHTML = entries.length
-    ? entries
-        .map((entry) => `
-          <article class="note-library-item">
-            <div>
-              <p class="block-label">${escapeHtml(entry.focus.title)} - ${escapeHtml(focusDayContext(entry.focus, entry.day, entry.dayIndex))}</p>
-              <h3>${escapeHtml(entry.day[1])}</h3>
-              <p class="scripture-reference">${escapeHtml(entry.day[2])}</p>
-              <p>${escapeHtml(notePreview(entry))}</p>
-            </div>
-            <button class="quiet-button open-note-day" type="button" data-focus-id="${escapeHtml(entry.focusId)}" data-day-index="${entry.dayIndex}">Open Day</button>
-          </article>
-        `)
-        .join("")
+    ? `
+      <div class="notes-library-count">${entries.length} saved ${entries.length === 1 ? "note" : "notes"}</div>
+      <div class="notes-library-scroll" aria-label="Saved private notes">
+        ${entries
+          .map((entry) => `
+            <details class="note-library-item">
+              <summary>
+                <span class="note-library-summary-copy">
+                  <span class="block-label">${escapeHtml(entry.focus.title)} - ${escapeHtml(focusDayContext(entry.focus, entry.day, entry.dayIndex))}</span>
+                  <strong>${escapeHtml(entry.day[1])}</strong>
+                  <span class="scripture-reference">${escapeHtml(entry.day[2])}</span>
+                  <span class="note-library-excerpt">${escapeHtml(noteExcerpt(entry))}</span>
+                </span>
+                <span class="note-toggle-label">Open</span>
+              </summary>
+              <div class="note-library-body">
+                <p>${escapeHtml(notePreview(entry))}</p>
+                <button class="quiet-button open-note-day" type="button" data-focus-id="${escapeHtml(entry.focusId)}" data-day-index="${entry.dayIndex}">Open Day</button>
+              </div>
+            </details>
+          `)
+          .join("")}
+      </div>
+    `
     : '<p class="empty-feed">Saved private notes will appear here.</p>';
 }
 

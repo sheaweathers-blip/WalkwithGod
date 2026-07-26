@@ -923,6 +923,24 @@ button:hover {
   margin-top: 22px;
 }
 
+.notes-library-count {
+  justify-self: start;
+  padding: 8px 12px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 999px;
+  color: var(--deep-green);
+  background: rgba(255, 255, 255, 0.68);
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.notes-library-scroll {
+  max-height: min(620px, 68vh);
+  overflow-y: auto;
+  padding: 4px 8px 4px 0;
+  scroll-padding: 12px;
+}
+
 .prayer-library-section {
   background:
     radial-gradient(circle at 18% 16%, rgba(205, 161, 72, 0.16), transparent 28%),
@@ -992,22 +1010,85 @@ button:hover {
 }
 
 .note-library-item {
+  padding: 0;
+}
+
+.note-library-item summary {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 16px;
-  align-items: start;
-  padding: 16px;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
 }
 
-.note-library-item h3 {
-  margin-bottom: 4px;
+.note-library-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.note-library-summary-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.note-library-summary-copy strong {
   color: var(--deep-green);
+  font-size: 1.05rem;
+  line-height: 1.25;
 }
 
-.note-library-item p:last-of-type {
+.note-library-excerpt {
+  color: var(--muted);
+  line-height: 1.42;
+}
+
+.note-toggle-label {
+  min-width: 74px;
+  padding: 8px 10px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 999px;
+  color: var(--deep-green);
+  background: rgba(255, 255, 255, 0.68);
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.note-library-item[open] .note-toggle-label {
+  color: #fff;
+  background: var(--deep-green);
+}
+
+.note-library-item[open] .note-toggle-label::before {
+  content: "Close";
+}
+
+.note-library-item[open] .note-toggle-label {
+  font-size: 0;
+}
+
+.note-library-item[open] .note-toggle-label::before {
+  font-size: 0.86rem;
+}
+
+.note-library-body {
+  display: grid;
+  gap: 14px;
+  padding: 0 16px 16px;
+  border-top: 1px solid rgba(31, 75, 59, 0.1);
+}
+
+.note-library-body p {
+  margin: 14px 0 0;
   color: var(--muted);
   line-height: 1.55;
   white-space: pre-wrap;
+}
+
+.note-library-body .quiet-button {
+  justify-self: start;
 }
 
 .completion-card {
@@ -3606,6 +3687,20 @@ select:focus {
 
   .today-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .notes-library-scroll {
+    max-height: 520px;
+    padding-right: 4px;
+  }
+
+  .note-library-item summary {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .note-toggle-label {
+    justify-self: start;
   }
 
   .path-today-card {
