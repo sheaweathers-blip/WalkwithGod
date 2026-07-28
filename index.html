@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260728-breathwork-seven" />
+    <link rel="stylesheet" href="styles.css?v=20260728-abide-week-one" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -536,6 +536,22 @@
           <button class="premium-expand-button" type="button" data-premium-toggle="breathwork">Open Breathwork Prayer</button>
           <div class="premium-panel-content" id="breathworkPanel" hidden>
             <div class="premium-lock-note" id="breathworkLockNote"></div>
+            <div class="abide-week-card" id="breathworkWeekCard">
+              <div>
+                <p class="block-label">Abide Breath Prayer: Week One</p>
+                <h3>Seven finished breathwork videos</h3>
+                <p id="breathworkWeekCopy">A calm first week of Scripture, breath prayer, and stillness with God.</p>
+              </div>
+              <div class="abide-week-progress" aria-label="Breathwork week one progress">
+                <strong id="breathworkWeekProgress">0 of 7</strong>
+                <span>videos reviewed</span>
+                <div class="mini-progress"><span id="breathworkWeekProgressBar"></span></div>
+              </div>
+              <div class="abide-week-actions">
+                <button class="copy-button" type="button" id="continueBreathworkWeek">Start Week One</button>
+                <button class="quiet-button" type="button" id="markBreathworkWatched">Mark Video Watched</button>
+              </div>
+            </div>
             <div class="breathwork-layout">
               <div class="breathwork-list" id="breathworkList" aria-label="Breathwork routines"></div>
               <article class="breathwork-reader">
@@ -1035,6 +1051,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260728-breathwork-seven"></script>
+    <script src="app.js?v=20260728-abide-week-one"></script>
   </body>
 </html>

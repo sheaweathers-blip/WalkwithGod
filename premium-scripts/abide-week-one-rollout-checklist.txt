@@ -1,0 +1,30 @@
+Abide Breath Prayer: Week One Rollout Checklist
+
+Purpose
+Use this checklist to prepare the first seven Abide breath prayer videos before they are opened beyond admin preview.
+
+App Setup
+[ ] Review all seven videos inside the Abide Breath Prayer: Week One section while signed in as admin.
+[ ] Mark each video watched after checking the title, Scripture, description, and YouTube playback.
+[ ] Replace "Finished video" labels with exact minute-and-second durations after final YouTube details are confirmed.
+[ ] Decide whether regular testers should see only the titles or receive access to selected Week One videos.
+[ ] When ready, update the locked message from "coming later" to the access wording you want users to see.
+
+YouTube Setup
+[ ] Make sure each video title starts with "Abide Breath Prayer" or "Walk With God Breath Prayer."
+[ ] Add the website link to every video description: https://walk-with-god.org
+[ ] Add a short disclaimer: breathe naturally, stop if uncomfortable, and seek medical advice when needed.
+[ ] Add a consistent thumbnail style using the Walk With God logo.
+[ ] Group the first seven videos into a YouTube playlist named "Abide Breath Prayer: Week One."
+
+Content Review
+[ ] Confirm each session is grounded in its Scripture.
+[ ] Confirm every phrase points users toward God, prayer, peace, and dependence on Him.
+[ ] Keep language gentle and simple, especially for anxious or weary users.
+[ ] Avoid making health claims. Present breath prayer as a spiritual practice with calming support, not medical treatment.
+
+Opening Beyond Admin
+[ ] Test on phone and laptop while signed in as admin.
+[ ] Test on a non-admin account to confirm videos are still hidden until you choose to open them.
+[ ] Choose the first small tester group for Abide access.
+[ ] Ask testers whether the videos feel peaceful, clear, biblically grounded, and easy to follow.

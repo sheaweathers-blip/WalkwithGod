@@ -460,6 +460,7 @@ const defaultFocuses = [
 const implementationText = "Take a moment to check in before moving on. Completion should mean you spent focused time with God, not just skimmed the reading.";
 const adminCode = "walkwithgod";
 const DEFAULT_REMINDER_MESSAGE = "Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org";
+const ABIDE_BREATHWORK_WEEK_ONE_COUNT = 7;
 let reminderChannelAvailability = {
   push: true,
   email: false,
@@ -717,6 +718,7 @@ const state = {
   prayerRequests: [],
   prayerBoardOpen: localStorage.getItem("walkWithGodPrayerBoardOpen") === "true",
   activeBreathworkIndex: Number(localStorage.getItem("walkWithGodBreathworkIndex") || 0),
+  breathworkCompleted: JSON.parse(localStorage.getItem("walkWithGodBreathworkCompleted") || "{}"),
   activeYogaIndex: Number(localStorage.getItem("walkWithGodYogaIndex") || 0),
   activeBibleStudyIndex: Number(localStorage.getItem("walkWithGodBibleStudyIndex") || 0),
   activeWalkingIndex: Number(localStorage.getItem("walkWithGodWalkingIndex") || 0),
@@ -902,6 +904,12 @@ const prayerFeed = document.querySelector("#prayerFeed");
 const premiumGrid = document.querySelector("#premiumGrid");
 const premiumStatus = document.querySelector("#premiumStatus");
 const breathworkLockNote = document.querySelector("#breathworkLockNote");
+const breathworkWeekCard = document.querySelector("#breathworkWeekCard");
+const breathworkWeekCopy = document.querySelector("#breathworkWeekCopy");
+const breathworkWeekProgress = document.querySelector("#breathworkWeekProgress");
+const breathworkWeekProgressBar = document.querySelector("#breathworkWeekProgressBar");
+const continueBreathworkWeek = document.querySelector("#continueBreathworkWeek");
+const markBreathworkWatched = document.querySelector("#markBreathworkWatched");
 const breathworkList = document.querySelector("#breathworkList");
 const breathworkDayLabel = document.querySelector("#breathworkDayLabel");
 const breathworkTitle = document.querySelector("#breathworkTitle");
@@ -2730,6 +2738,23 @@ function renderBreathwork() {
   const routine = premiumBreathworkRoutines[state.activeBreathworkIndex];
   const hasFinishedVideo = routine.mediaKind === "video" || routine.mediaKind === "youtube";
   const isYouTubeVideo = routine.mediaKind === "youtube";
+  const weekOneRoutines = premiumBreathworkRoutines.slice(0, ABIDE_BREATHWORK_WEEK_ONE_COUNT);
+  const completedWeekOne = weekOneRoutines.filter((item) => state.breathworkCompleted[item.id]).length;
+  const weekPercent = Math.round((completedWeekOne / ABIDE_BREATHWORK_WEEK_ONE_COUNT) * 100);
+  const isWeekOneRoutine = state.activeBreathworkIndex < ABIDE_BREATHWORK_WEEK_ONE_COUNT;
+  if (breathworkWeekCard && breathworkWeekCopy && breathworkWeekProgress && breathworkWeekProgressBar && continueBreathworkWeek && markBreathworkWatched) {
+    breathworkWeekCard.classList.toggle("is-locked", !isAdmin);
+    breathworkWeekCopy.textContent = isAdmin
+      ? "Admin-only for now: review the finished Week One videos before opening Abide to others."
+      : "Coming later: a seven-day guided breath prayer series for Scripture, stillness, and peace with God.";
+    breathworkWeekProgress.textContent = `${completedWeekOne} of ${ABIDE_BREATHWORK_WEEK_ONE_COUNT}`;
+    breathworkWeekProgressBar.style.width = `${weekPercent}%`;
+    continueBreathworkWeek.textContent = completedWeekOne ? "Continue Week One" : "Start Week One";
+    continueBreathworkWeek.disabled = !isAdmin;
+    markBreathworkWatched.hidden = !isAdmin;
+    markBreathworkWatched.disabled = !isWeekOneRoutine;
+    markBreathworkWatched.textContent = state.breathworkCompleted[routine.id] ? "Reviewed" : "Mark Video Watched";
+  }
   breathworkLockNote.hidden = isAdmin && hasFinishedVideo;
   breathworkLockNote.textContent = isUnlocked
     ? "Admin preview is open."
@@ -2737,9 +2762,9 @@ function renderBreathwork() {
   breathworkList.innerHTML = premiumBreathworkRoutines
     .map((item, index) => `
       <button class="breathwork-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBreathworkIndex}">
-        <span>${escapeHtml(item.day)}</span>
+        <span>${escapeHtml(item.day)}${state.breathworkCompleted[item.id] ? " - Reviewed" : ""}</span>
         <strong>${escapeHtml(item.title)}</strong>
-        <small>${escapeHtml(item.duration)} - ${escapeHtml(item.technique)}</small>
+        <small>${index < ABIDE_BREATHWORK_WEEK_ONE_COUNT ? "Week One video ready" : "Coming later"} - ${escapeHtml(item.duration)} - ${escapeHtml(item.technique)}</small>
       </button>
     `)
     .join("");
@@ -3221,6 +3246,27 @@ if (breathworkList) {
     if (!button) return;
     state.activeBreathworkIndex = Number(button.dataset.index);
     localStorage.setItem("walkWithGodBreathworkIndex", String(state.activeBreathworkIndex));
+    renderBreathwork();
+  });
+}
+
+if (continueBreathworkWeek) {
+  continueBreathworkWeek.addEventListener("click", () => {
+    const nextIndex = premiumBreathworkRoutines
+      .slice(0, ABIDE_BREATHWORK_WEEK_ONE_COUNT)
+      .findIndex((routine) => !state.breathworkCompleted[routine.id]);
+    state.activeBreathworkIndex = nextIndex === -1 ? 0 : nextIndex;
+    localStorage.setItem("walkWithGodBreathworkIndex", String(state.activeBreathworkIndex));
+    renderBreathwork();
+  });
+}
+
+if (markBreathworkWatched) {
+  markBreathworkWatched.addEventListener("click", () => {
+    const routine = premiumBreathworkRoutines[state.activeBreathworkIndex];
+    if (!routine || state.activeBreathworkIndex >= ABIDE_BREATHWORK_WEEK_ONE_COUNT) return;
+    state.breathworkCompleted[routine.id] = true;
+    localStorage.setItem("walkWithGodBreathworkCompleted", JSON.stringify(state.breathworkCompleted));
     renderBreathwork();
   });
 }

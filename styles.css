@@ -1864,6 +1864,79 @@ select:focus {
   line-height: 1.45;
 }
 
+.abide-week-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.28fr) auto;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: clamp(16px, 2vw, 22px);
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 144, 62, 0.18), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 239, 0.9), rgba(226, 242, 225, 0.9));
+}
+
+.abide-week-card h3 {
+  margin: 3px 0 6px;
+  color: var(--deep-green);
+}
+
+.abide-week-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.abide-week-card.is-locked {
+  opacity: 0.92;
+}
+
+.abide-week-progress {
+  display: grid;
+  gap: 5px;
+  min-width: 145px;
+  padding: 12px;
+  border: 1px solid rgba(31, 75, 59, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.abide-week-progress strong {
+  color: var(--deep-green);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.abide-week-progress span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.mini-progress {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(31, 75, 59, 0.12);
+}
+
+.mini-progress span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), var(--gold));
+  transition: width 180ms ease;
+}
+
+.abide-week-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .breathwork-layout {
   display: grid;
   grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.5fr);
@@ -3401,6 +3474,7 @@ select:focus {
   .practice-grid,
   .premium-grid,
   .abide-framework,
+  .abide-week-card,
   .breathwork-layout,
   .yoga-layout,
   .bible-study-layout,
@@ -3442,6 +3516,15 @@ select:focus {
 
   .story-page h1 {
     font-size: clamp(3.35rem, 21vw, 5.4rem);
+  }
+
+  .abide-week-actions {
+    justify-content: stretch;
+  }
+
+  .abide-week-actions .copy-button,
+  .abide-week-actions .quiet-button {
+    width: 100%;
   }
 
   .story-lede {
