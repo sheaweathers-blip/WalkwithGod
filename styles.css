@@ -1748,6 +1748,31 @@ select:focus {
   line-height: 1.5;
 }
 
+.abide-access-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(184, 144, 62, 0.18), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 239, 0.94), rgba(225, 241, 225, 0.92));
+}
+
+.abide-access-card h3 {
+  margin: 4px 0 8px;
+  color: var(--deep-green);
+}
+
+.abide-access-card p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 760px;
+}
+
 .journey-framework-card {
   margin-top: 14px;
 }
@@ -3474,6 +3499,7 @@ select:focus {
   .practice-grid,
   .premium-grid,
   .abide-framework,
+  .abide-access-card,
   .abide-week-card,
   .breathwork-layout,
   .yoga-layout,

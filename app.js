@@ -903,6 +903,7 @@ const prayerStatus = document.querySelector("#prayerStatus");
 const prayerFeed = document.querySelector("#prayerFeed");
 const premiumGrid = document.querySelector("#premiumGrid");
 const premiumStatus = document.querySelector("#premiumStatus");
+const abideAccessCard = document.querySelector("#abideAccessCard");
 const breathworkLockNote = document.querySelector("#breathworkLockNote");
 const breathworkWeekCard = document.querySelector("#breathworkWeekCard");
 const breathworkWeekCopy = document.querySelector("#breathworkWeekCopy");
@@ -1009,6 +1010,10 @@ const premiumPanelLabels = {
   bibleStudy: "Scripture Journey",
   walking: "Walking Sessions"
 };
+
+function hasAbideAccess() {
+  return Boolean(state.isPremium || state.user?.role === "admin");
+}
 
 function loadAddedFocuses() {
   return JSON.parse(localStorage.getItem("walkWithGodAddedFocuses") || "[]");
@@ -1369,6 +1374,7 @@ function playNextBackgroundTrack({ keepPlaying = false } = {}) {
 
 function renderAccessGate() {
   const isSignedIn = Boolean(state.user);
+  const abideUnlocked = hasAbideAccess();
   if (heroActions) heroActions.hidden = isSignedIn;
   aboutSection.hidden = isSignedIn;
   lockedBenefits.hidden = isSignedIn;
@@ -1376,6 +1382,21 @@ function renderAccessGate() {
   if (walkPathSection) walkPathSection.hidden = false;
   for (const section of gatedSections) {
     if (section) section.hidden = !isSignedIn;
+  }
+  ["#breathwork", "#faithYoga", "#premiumBibleStudy", "#premiumWalking"].forEach((selector) => {
+    const section = document.querySelector(selector);
+    if (section) section.hidden = !isSignedIn || !abideUnlocked;
+  });
+  const premiumOverviewButton = document.querySelector('[data-premium-toggle="premiumOverview"]');
+  const premiumOverviewPanel = document.querySelector("#premiumOverviewPanel");
+  if (abideAccessCard) abideAccessCard.hidden = !isSignedIn || abideUnlocked;
+  if (premiumOverviewButton) premiumOverviewButton.hidden = !isSignedIn || !abideUnlocked;
+  if (premiumOverviewPanel && !abideUnlocked) premiumOverviewPanel.hidden = true;
+  if (!abideUnlocked) {
+    ["premiumOverview", "breathwork", "faithYoga", "bibleStudy", "walking"].forEach((panelId) => {
+      state.premiumPanels[panelId] = false;
+    });
+    savePremiumPanels();
   }
 }
 
@@ -2697,10 +2718,10 @@ function premiumTypeClass(type) {
 
 function renderPremium() {
   if (!premiumGrid) return;
-  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  const isUnlocked = hasAbideAccess();
   premiumStatus.textContent = isUnlocked
-    ? "Abide preview is open for this account."
-    : "Abide is coming later. The daily focus path stays free.";
+    ? "Abide access is open for this account."
+    : "Abide enrollment is not open yet. The daily focus path stays free.";
   premiumGrid.innerHTML = state.premiumContent.length
     ? state.premiumContent
         .map((item) => {
@@ -2732,7 +2753,7 @@ function renderPremium() {
 
 function renderBreathwork() {
   if (!breathworkList) return;
-  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  const isUnlocked = hasAbideAccess();
   const isAdmin = state.user?.role === "admin";
   state.activeBreathworkIndex = Math.max(0, Math.min(state.activeBreathworkIndex, premiumBreathworkRoutines.length - 1));
   const routine = premiumBreathworkRoutines[state.activeBreathworkIndex];
@@ -2832,7 +2853,7 @@ function renderBreathwork() {
 
 function renderYoga() {
   if (!yogaList) return;
-  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  const isUnlocked = hasAbideAccess();
   state.activeYogaIndex = Math.max(0, Math.min(state.activeYogaIndex, premiumYogaSessions.length - 1));
   const session = premiumYogaSessions[state.activeYogaIndex];
   yogaLockNote.textContent = isUnlocked
@@ -2863,7 +2884,7 @@ function renderYoga() {
 
 function renderBibleStudy() {
   if (!bibleStudyList) return;
-  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  const isUnlocked = hasAbideAccess();
   state.activeBibleStudyIndex = Math.max(0, Math.min(state.activeBibleStudyIndex, premiumBibleStudySessions.length - 1));
   const study = premiumBibleStudySessions[state.activeBibleStudyIndex];
   bibleStudyLockNote.textContent = isUnlocked
@@ -2894,7 +2915,7 @@ function renderBibleStudy() {
 
 function renderWalking() {
   if (!walkingList) return;
-  const isUnlocked = state.isPremium || state.user?.role === "admin";
+  const isUnlocked = hasAbideAccess();
   state.activeWalkingIndex = Math.max(0, Math.min(state.activeWalkingIndex, premiumWalkingSessions.length - 1));
   const walk = premiumWalkingSessions[state.activeWalkingIndex];
   walkingLockNote.textContent = isUnlocked
@@ -3325,6 +3346,12 @@ document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-premium-toggle]");
   if (!button) return;
   const panelId = button.dataset.premiumToggle;
+  if (!hasAbideAccess()) {
+    state.premiumPanels[panelId] = false;
+    savePremiumPanels();
+    renderPremiumPanels();
+    return;
+  }
   state.premiumPanels[panelId] = !state.premiumPanels[panelId];
   if (state.premiumPanels[panelId]) localStorage.setItem("walkWithGodPremiumPreviewOpened", "true");
   savePremiumPanels();
