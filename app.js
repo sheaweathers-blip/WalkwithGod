@@ -901,8 +901,6 @@ const prayerInput = document.querySelector("#prayerInput");
 const anonymousPrayer = document.querySelector("#anonymousPrayer");
 const prayerStatus = document.querySelector("#prayerStatus");
 const prayerFeed = document.querySelector("#prayerFeed");
-const premiumGrid = document.querySelector("#premiumGrid");
-const premiumStatus = document.querySelector("#premiumStatus");
 const abideAccessCard = document.querySelector("#abideAccessCard");
 const breathworkLockNote = document.querySelector("#breathworkLockNote");
 const breathworkWeekCard = document.querySelector("#breathworkWeekCard");
@@ -1004,7 +1002,6 @@ const adminReportList = document.querySelector("#adminReportList");
 const adminCommunityList = document.querySelector("#adminCommunityList");
 const adminPrayerList = document.querySelector("#adminPrayerList");
 const premiumPanelLabels = {
-  premiumOverview: "Abide Preview",
   breathwork: "Breathwork Prayer",
   faithYoga: "Faith-Led Yoga",
   bibleStudy: "Scripture Journey",
@@ -1387,13 +1384,9 @@ function renderAccessGate() {
     const section = document.querySelector(selector);
     if (section) section.hidden = !isSignedIn || !abideUnlocked;
   });
-  const premiumOverviewButton = document.querySelector('[data-premium-toggle="premiumOverview"]');
-  const premiumOverviewPanel = document.querySelector("#premiumOverviewPanel");
   if (abideAccessCard) abideAccessCard.hidden = !isSignedIn || abideUnlocked;
-  if (premiumOverviewButton) premiumOverviewButton.hidden = !isSignedIn || !abideUnlocked;
-  if (premiumOverviewPanel && !abideUnlocked) premiumOverviewPanel.hidden = true;
   if (!abideUnlocked) {
-    ["premiumOverview", "breathwork", "faithYoga", "bibleStudy", "walking"].forEach((panelId) => {
+    ["breathwork", "faithYoga", "bibleStudy", "walking"].forEach((panelId) => {
       state.premiumPanels[panelId] = false;
     });
     savePremiumPanels();
@@ -2708,49 +2701,6 @@ function renderPremiumPanels() {
   });
 }
 
-function premiumTypeClass(type) {
-  const normalized = String(type || "").toLowerCase();
-  if (normalized.includes("movement")) return "movement";
-  if (normalized.includes("breath")) return "breath";
-  if (normalized.includes("study")) return "study";
-  return "class";
-}
-
-function renderPremium() {
-  if (!premiumGrid) return;
-  const isUnlocked = hasAbideAccess();
-  premiumStatus.textContent = isUnlocked
-    ? "Abide access is open for this account."
-    : "Abide enrollment is not open yet. The daily focus path stays free.";
-  premiumGrid.innerHTML = state.premiumContent.length
-    ? state.premiumContent
-        .map((item) => {
-          const locked = item.locked && !isUnlocked;
-          const typeClass = premiumTypeClass(item.type);
-          return `
-            <article class="premium-card premium-${typeClass}">
-              <div class="premium-card-top">
-                <span>${escapeHtml(item.type || "Abide Journey")}</span>
-                <strong>${locked ? "Locked" : "Preview"}</strong>
-              </div>
-              <h3>${escapeHtml(item.title)}</h3>
-              <p>${escapeHtml(item.description)}</p>
-              <div class="premium-meta">
-                ${item.length ? `<span>${escapeHtml(item.length)}</span>` : ""}
-                ${item.scripture ? `<span>${escapeHtml(item.scripture)}</span>` : ""}
-              </div>
-              ${
-                item.url && !locked
-                  ? `<a class="secondary-link" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">Open Resource</a>`
-                  : `<button class="quiet-button" type="button" disabled>${locked ? "Abide Coming Later" : "Admin Preview"}</button>`
-              }
-            </article>
-          `;
-        })
-        .join("")
-    : '<p class="empty-feed">Abide journey previews will appear here.</p>';
-}
-
 function renderBreathwork() {
   if (!breathworkList) return;
   const isUnlocked = hasAbideAccess();
@@ -2778,8 +2728,8 @@ function renderBreathwork() {
   }
   breathworkLockNote.hidden = isAdmin && hasFinishedVideo;
   breathworkLockNote.textContent = isUnlocked
-    ? "Admin preview is open."
-    : "Abide breathwork is coming later. You can preview the session titles for now.";
+    ? "Abide access is open."
+    : "Abide breathwork will open with Abide enrollment.";
   breathworkList.innerHTML = premiumBreathworkRoutines
     .map((item, index) => `
       <button class="breathwork-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBreathworkIndex}">
@@ -2796,12 +2746,12 @@ function renderBreathwork() {
   breathworkScripture.textContent = routine.scripture;
   breathworkPurpose.textContent = hasFinishedVideo && isAdmin
     ? `${routine.purpose} - Finished admin-only video.`
-    : `${routine.purpose} - ${isUnlocked ? "Full Abide preview." : "Preview."}`;
+    : `${routine.purpose}${isUnlocked ? "" : " - Coming with Abide enrollment."}`;
   if (breathworkScriptCard) breathworkScriptCard.hidden = hasFinishedVideo && isAdmin;
   if (breathworkScriptLabel) breathworkScriptLabel.textContent = hasFinishedVideo ? "Session Notes" : "Guided Script";
   breathworkScript.innerHTML = isUnlocked
     ? `<p>${escapeHtml(routine.script)}</p>`
-    : `<p>Full breath prayer guidance is not open yet.</p><small>Preview: ${escapeHtml(routine.purpose)} with ${escapeHtml(routine.technique)}.</small>`;
+    : `<p>Full breath prayer guidance will open with Abide enrollment.</p>`;
   if (breathworkMediaCard && breathworkAudio && breathworkVideo && breathworkYoutube && breathworkAudioNote) {
     const canPlayMedia = isAdmin && Boolean(routine.mediaSrc);
     const isVideo = hasFinishedVideo;
@@ -2829,7 +2779,7 @@ function renderBreathwork() {
           mediaElement.load();
         }
       }
-      if (breathworkMediaLabel) breathworkMediaLabel.textContent = isVideo ? "Admin-Only Abide Video Preview" : "Admin-Only Abide Audio Preview";
+      if (breathworkMediaLabel) breathworkMediaLabel.textContent = isVideo ? "Admin-Only Abide Video" : "Admin-Only Abide Audio";
       breathworkAudioNote.textContent = isVideo
         ? "Finished video. Visible only to admin right now."
         : "Only admin can play this Abide breathwork audio right now.";
@@ -2845,9 +2795,9 @@ function renderBreathwork() {
   }
   if (breathworkProductionGrid) breathworkProductionGrid.hidden = hasFinishedVideo;
   if (!hasFinishedVideo) {
-    breathworkVisual.textContent = isUnlocked ? routine.visual : "Visual notes are available in admin preview.";
-    breathworkVoice.textContent = isUnlocked ? routine.voice : "Recording notes are available in admin preview.";
-    breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Prayer text is available in admin preview.";
+    breathworkVisual.textContent = isUnlocked ? routine.visual : "Visual notes will open with Abide enrollment.";
+    breathworkVoice.textContent = isUnlocked ? routine.voice : "Recording notes will open with Abide enrollment.";
+    breathworkPrayer.textContent = isUnlocked ? routine.prayer : "Prayer text will open with Abide enrollment.";
   }
 }
 
@@ -2857,8 +2807,8 @@ function renderYoga() {
   state.activeYogaIndex = Math.max(0, Math.min(state.activeYogaIndex, premiumYogaSessions.length - 1));
   const session = premiumYogaSessions[state.activeYogaIndex];
   yogaLockNote.textContent = isUnlocked
-    ? "Admin preview is open."
-    : "Faith-led movement is coming later. You can preview the session titles for now.";
+    ? "Abide access is open."
+    : "Faith-led movement will open with Abide enrollment.";
   yogaList.innerHTML = premiumYogaSessions
     .map((item, index) => `
       <button class="yoga-button" type="button" data-index="${index}" aria-pressed="${index === state.activeYogaIndex}">
@@ -2873,13 +2823,13 @@ function renderYoga() {
   yogaDuration.textContent = session.duration;
   yogaStyle.textContent = session.style;
   yogaScripture.textContent = session.scripture;
-  yogaIntention.textContent = `${session.intention} ${isUnlocked ? "Modify any pose and rest whenever needed." : "Abide preview."}`;
+  yogaIntention.textContent = `${session.intention} ${isUnlocked ? "Modify any pose and rest whenever needed." : "Coming with Abide enrollment."}`;
   yogaFlow.innerHTML = isUnlocked
     ? `<p>${escapeHtml(session.flow)}</p>`
-    : `<p>Full movement guidance is not open yet.</p><small>Preview: ${escapeHtml(session.style)} around ${escapeHtml(session.scripture)}.</small>`;
-  yogaVisual.textContent = isUnlocked ? session.visual : "Visual notes are available in admin preview.";
-  yogaVoice.textContent = isUnlocked ? session.voice : "Recording notes are available in admin preview.";
-  yogaPrayer.textContent = isUnlocked ? session.prayer : "Prayer text is available in admin preview.";
+    : `<p>Full movement guidance will open with Abide enrollment.</p>`;
+  yogaVisual.textContent = isUnlocked ? session.visual : "Visual notes will open with Abide enrollment.";
+  yogaVoice.textContent = isUnlocked ? session.voice : "Recording notes will open with Abide enrollment.";
+  yogaPrayer.textContent = isUnlocked ? session.prayer : "Prayer text will open with Abide enrollment.";
 }
 
 function renderBibleStudy() {
@@ -2888,8 +2838,8 @@ function renderBibleStudy() {
   state.activeBibleStudyIndex = Math.max(0, Math.min(state.activeBibleStudyIndex, premiumBibleStudySessions.length - 1));
   const study = premiumBibleStudySessions[state.activeBibleStudyIndex];
   bibleStudyLockNote.textContent = isUnlocked
-    ? "Admin preview is open."
-    : "Guided Bible studies are coming later. You can preview the journey titles for now.";
+    ? "Abide access is open."
+    : "Guided Bible studies will open with Abide enrollment.";
   bibleStudyList.innerHTML = premiumBibleStudySessions
     .map((item, index) => `
       <button class="bible-study-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBibleStudyIndex}">
@@ -2904,13 +2854,13 @@ function renderBibleStudy() {
   bibleStudyDuration.textContent = study.duration;
   bibleStudyFormat.textContent = study.format;
   bibleStudyScripture.textContent = study.scripture;
-  bibleStudyAim.textContent = `${study.aim} ${isUnlocked ? "Full Abide Scripture preview." : "Abide preview."}`;
+  bibleStudyAim.textContent = `${study.aim} ${isUnlocked ? "" : "Coming with Abide enrollment."}`;
   bibleStudyOutline.innerHTML = isUnlocked
     ? `<p>${escapeHtml(study.outline)}</p>`
-    : `<p>Full teaching notes are not open yet.</p><small>Preview: ${escapeHtml(study.aim)}</small>`;
-  bibleStudyQuestions.textContent = isUnlocked ? study.questions : "Discussion questions are available in admin preview.";
-  bibleStudyPractice.textContent = isUnlocked ? study.practice : "Practice steps are available in admin preview.";
-  bibleStudyPrayer.textContent = isUnlocked ? study.prayer : "Prayer text is available in admin preview.";
+    : `<p>Full teaching notes will open with Abide enrollment.</p>`;
+  bibleStudyQuestions.textContent = isUnlocked ? study.questions : "Discussion questions will open with Abide enrollment.";
+  bibleStudyPractice.textContent = isUnlocked ? study.practice : "Practice steps will open with Abide enrollment.";
+  bibleStudyPrayer.textContent = isUnlocked ? study.prayer : "Prayer text will open with Abide enrollment.";
 }
 
 function renderWalking() {
@@ -2919,8 +2869,8 @@ function renderWalking() {
   state.activeWalkingIndex = Math.max(0, Math.min(state.activeWalkingIndex, premiumWalkingSessions.length - 1));
   const walk = premiumWalkingSessions[state.activeWalkingIndex];
   walkingLockNote.textContent = isUnlocked
-    ? "Admin preview is open."
-    : "Guided walking sessions are coming later. You can preview the session titles for now.";
+    ? "Abide access is open."
+    : "Guided walking sessions will open with Abide enrollment.";
   walkingList.innerHTML = premiumWalkingSessions
     .map((item, index) => `
       <button class="walking-button" type="button" data-index="${index}" aria-pressed="${index === state.activeWalkingIndex}">
@@ -2935,13 +2885,13 @@ function renderWalking() {
   walkingDuration.textContent = walk.duration;
   walkingPace.textContent = walk.pace;
   walkingScripture.textContent = walk.scripture;
-  walkingIntention.textContent = `${walk.intention} ${isUnlocked ? "Choose a safe route and adjust pace as needed." : "Abide preview."}`;
+  walkingIntention.textContent = `${walk.intention} ${isUnlocked ? "Choose a safe route and adjust pace as needed." : "Coming with Abide enrollment."}`;
   walkingGuide.innerHTML = isUnlocked
     ? `<p>${escapeHtml(walk.guide)}</p>`
-    : `<p>Full walking guidance is not open yet.</p><small>Preview: ${escapeHtml(walk.duration)} at ${escapeHtml(walk.pace)} around ${escapeHtml(walk.scripture)}.</small>`;
-  walkingPrompts.textContent = isUnlocked ? walk.prompts : "Prayer prompts are available in admin preview.";
-  walkingVisual.textContent = isUnlocked ? walk.visual : "Audio notes are available in admin preview.";
-  walkingPrayer.textContent = isUnlocked ? walk.prayer : "Prayer text is available in admin preview.";
+    : `<p>Full walking guidance will open with Abide enrollment.</p>`;
+  walkingPrompts.textContent = isUnlocked ? walk.prompts : "Prayer prompts will open with Abide enrollment.";
+  walkingVisual.textContent = isUnlocked ? walk.visual : "Audio notes will open with Abide enrollment.";
+  walkingPrayer.textContent = isUnlocked ? walk.prayer : "Prayer text will open with Abide enrollment.";
 }
 
 function renderAdmin() {
@@ -2972,7 +2922,7 @@ function renderAdminDashboard(data = null) {
     <div><strong>${data.summary.communityPosts}</strong><span>Posts</span></div>
     <div><strong>${data.summary.openFeedback}</strong><span>Open feedback</span></div>
     <div><strong>${data.summary.openReports}</strong><span>Open reports</span></div>
-    <div><strong>${data.summary.premiumContent || 0}</strong><span>Abide previews</span></div>
+    <div><strong>${data.summary.premiumContent || 0}</strong><span>Abide content</span></div>
   `;
 
   adminUserList.innerHTML = data.users.length
@@ -3087,7 +3037,6 @@ function render() {
   renderMode();
   renderCommunity();
   renderPrayerRequests();
-  renderPremium();
   renderBreathwork();
   renderYoga();
   renderBibleStudy();
@@ -3165,7 +3114,6 @@ function render() {
   renderMode();
   renderCommunity();
   renderPrayerRequests();
-  renderPremium();
   renderBreathwork();
   renderYoga();
   renderBibleStudy();
@@ -3353,7 +3301,7 @@ document.addEventListener("click", (event) => {
     return;
   }
   state.premiumPanels[panelId] = !state.premiumPanels[panelId];
-  if (state.premiumPanels[panelId]) localStorage.setItem("walkWithGodPremiumPreviewOpened", "true");
+  if (state.premiumPanels[panelId]) localStorage.setItem("walkWithGodAbideAccessOpened", "true");
   savePremiumPanels();
   renderPremiumPanels();
 });
@@ -4017,10 +3965,9 @@ if (premiumContentForm) {
     })
       .then(async () => {
         premiumContentForm.reset();
-        premiumContentStatus.textContent = "Abide preview added.";
+        premiumContentStatus.textContent = "Abide content added.";
         await loadPremiumContent();
         await loadAdminDashboard();
-        renderPremium();
       })
       .catch((error) => {
         premiumContentStatus.textContent = error.message;

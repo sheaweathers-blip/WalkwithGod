@@ -1,6 +1,6 @@
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open("walk-with-god-v63").then((cache) =>
+    caches.open("walk-with-god-v64").then((cache) =>
       cache.addAll([
         "/",
         "/index.html",
@@ -9,8 +9,8 @@ self.addEventListener("install", (event) => {
         "/terms.html",
         "/sms-consent.html",
         "/twilio-opt-in-proof.html",
-        "/styles.css?v=20260728-abide-gated",
-        "/app.js?v=20260728-abide-gated",
+        "/styles.css?v=20260728-abide-access",
+        "/app.js?v=20260728-abide-access",
         "/logo-fallback.js?v=20260627-visual-refresh",
         "/manifest.json",
         "/assets/daily-devotion.png",
@@ -26,7 +26,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v63").map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys.filter((key) => key !== "walk-with-god-v64").map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -42,7 +42,7 @@ self.addEventListener("fetch", (event) => {
       .then((response) => {
         if (!response || !response.ok) return response;
         const copy = response.clone();
-        caches.open("walk-with-god-v63").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
+        caches.open("walk-with-god-v64").then((cache) => cache.put(event.request, copy)).catch(() => undefined);
         return response;
       })
       .catch(() => caches.match(event.request).then((cached) => {

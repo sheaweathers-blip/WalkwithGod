@@ -927,7 +927,7 @@ async function handleApi(request, response) {
   if (request.method === "GET" && url.pathname.startsWith("/api/premium-media/")) {
     const user = requireUser(request, response, db);
     if (!user) return;
-    if (user.role !== "admin") return json(response, 403, { error: "Admin access is required for Abide media previews." });
+    if (user.role !== "admin") return json(response, 403, { error: "Admin access is required for Abide media." });
     const mediaId = url.pathname.replace("/api/premium-media/", "");
     const filename = premiumMedia[mediaId];
     if (!filename) return json(response, 404, { error: "Abide media not found." });

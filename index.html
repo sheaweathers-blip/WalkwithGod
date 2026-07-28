@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260728-abide-gated" />
+    <link rel="stylesheet" href="styles.css?v=20260728-abide-access" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -529,12 +529,6 @@
           </div>
           <button class="quiet-button" type="button" disabled>Enrollment Not Open Yet</button>
         </div>
-        <button class="premium-expand-button" type="button" data-premium-toggle="premiumOverview">Open Abide Preview</button>
-        <div class="premium-panel-content" id="premiumOverviewPanel" hidden>
-          <div class="premium-grid" id="premiumGrid"></div>
-          <p class="copy-status" id="premiumStatus" role="status" aria-live="polite"></p>
-        </div>
-
         <div class="abide-experience-block breathwork-section" id="breathwork">
           <div class="section-heading compact-heading">
             <p class="eyebrow">Breathwork Prayer</p>
@@ -574,8 +568,8 @@
                 <p class="scripture-reference" id="breathworkScripture">Psalm 46:10</p>
                 <p id="breathworkPurpose"></p>
                 <div class="premium-media-card" id="breathworkMediaCard" hidden>
-                  <p class="block-label" id="breathworkMediaLabel">Abide Media Preview</p>
-                  <iframe id="breathworkYoutube" title="Abide video preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen hidden></iframe>
+                  <p class="block-label" id="breathworkMediaLabel">Abide Media</p>
+                  <iframe id="breathworkYoutube" title="Abide video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen hidden></iframe>
                   <video id="breathworkVideo" controls preload="none" playsinline hidden></video>
                   <audio id="breathworkAudio" controls preload="none"></audio>
                   <p id="breathworkAudioNote"></p>
@@ -776,7 +770,7 @@
               <option value="confusing">Something was confusing</option>
               <option value="mobile">Mobile layout issue</option>
               <option value="read-aloud">Read aloud issue</option>
-              <option value="premium-preview">Abide preview feedback</option>
+              <option value="abide">Abide feedback</option>
               <option value="bug">Text, image, or button problem</option>
               <option value="idea">Feature idea</option>
               <option value="account">Account help</option>
@@ -843,7 +837,7 @@
         <form class="premium-content-form" id="premiumContentForm" hidden>
           <div class="section-heading compact-heading">
             <p class="eyebrow">Abide</p>
-            <h3>Add Abide preview content</h3>
+            <h3>Add Abide content</h3>
           </div>
           <div class="form-grid">
             <label>
@@ -877,7 +871,7 @@
             Optional link
             <input id="premiumContentUrl" placeholder="Future video, class, or resource link" />
           </label>
-          <button class="copy-button" type="submit">Add Abide Preview</button>
+          <button class="copy-button" type="submit">Add Abide Content</button>
           <p class="copy-status" id="premiumContentStatus" role="status" aria-live="polite"></p>
         </form>
 
@@ -1003,8 +997,8 @@
             <span>Adjust app, text, and email reminder preferences.</span>
           </button>
           <a class="choice-card" href="#premium" data-choice-link>
-            <strong>Abide Preview</strong>
-            <span>Preview future journeys for Scripture, prayer, practice, and community.</span>
+            <strong>Abide Access</strong>
+            <span>See where future Abide series access will open when enrollment is available.</span>
           </a>
           <a class="choice-card" href="#install" data-choice-link>
             <strong>Install App</strong>
@@ -1061,6 +1055,6 @@
     </footer>
 
     <audio id="backgroundMusic" preload="none"></audio>
-    <script src="app.js?v=20260728-abide-gated"></script>
+    <script src="app.js?v=20260728-abide-access"></script>
   </body>
 </html>
