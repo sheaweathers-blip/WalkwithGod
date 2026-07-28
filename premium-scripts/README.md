@@ -1,6 +1,6 @@
 # Walk With God Abide Starter Scripts
 
-These are recording-ready starter scripts for the first Abide previews and future journey content. The app previews should match these script titles, Scriptures, prayer language, and timing.
+These are recording-ready starter scripts for Abide series content. The app should match these script titles, Scriptures, prayer language, and timing when each series is opened for Abide access.
 
 Recommended workflow:
 
@@ -10,22 +10,18 @@ Recommended workflow:
 4. Add the Scripture and reflection text as simple slides.
 5. Export as MP4.
 6. Upload as unlisted video for testing.
-7. Add the unlisted YouTube link to the matching Abide preview when the video is ready.
+7. Add the unlisted YouTube link to the matching Abide session when the video is ready.
 
-Core starter files:
+Folder layout:
 
-- `01-breathwork-prayer-be-still-and-breathe.txt`
-- `02-faith-led-yoga-begin-in-stillness.txt`
-- `03-walking-with-god-begin-the-day.txt`
-- `04-bible-study-how-to-read-scripture-with-god.txt`
-- `05-breathwork-prayer-receive-gods-peace.txt`
-- `06-breathwork-prayer-when-i-feel-anxious.txt`
-- `07-breathwork-prayer-abide-in-gods-love.txt`
-- `08-breathwork-prayer-evening-rest.txt`
-- `09-breathwork-prayer-new-morning-mercies.txt`
-- `10-breathwork-prayer-strength-for-the-next-step.txt`
+- `breathwork-scripts/` - 30 Abide Breath Prayer scripts
+- `yoga-scripts/` - Faith-led yoga scripts
+- `walking-scripts/` - Guided walking scripts
+- `bible-study-scripts/` - Deeper Bible study scripts
+- `Music/` - Background music for videos
+- `logo-intro/` - Logo intro and ending card assets
 
-Breathwork Prayer starter week:
+Breathwork Prayer 30-day series:
 
 1. Be Still and Breathe - Psalm 46:10 - finished video, 5:21
 2. Receive God's Peace - John 14:27 - finished video, exact time to add
@@ -34,6 +30,29 @@ Breathwork Prayer starter week:
 5. Evening Rest - Psalm 4:8 - finished video, exact time to add
 6. New Morning Mercies - Lamentations 3:22-23 - finished video, exact time to add
 7. Strength for the Next Step - Isaiah 40:31 - finished video, exact time to add
+8. Morning Energy - Psalm 118:24
+9. Clear Thinking - James 1:5
+10. Confidence - Joshua 1:9
+11. Focus Flow - Colossians 3:23
+12. Productivity Reset - Psalm 90:12
+13. Mental Clarity - Romans 12:2
+14. Weekend Recharge - Exodus 33:14
+15. Anxiety Relief - Philippians 4:6-7
+16. Patience - Galatians 5:22
+17. Self-Compassion - Psalm 103:13-14
+18. Release Anger - James 1:19-20
+19. Forgiveness - Ephesians 4:32
+20. Hope - Romans 15:13
+21. Emotional Reset - Psalm 62:8
+22. Be Still - Psalm 46:10
+23. God's Peace - Philippians 4:7
+24. Trust - Proverbs 3:5-6
+25. Strength - Isaiah 40:31
+26. Rest - Matthew 11:28
+27. Gratitude Prayer - Psalm 107:1
+28. Surrender - Luke 22:42
+29. Walking With God - Micah 6:8
+30. Celebration and Renewal - 2 Corinthians 5:17
 
 Guided Walking starter series:
 
