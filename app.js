@@ -1001,6 +1001,7 @@ const adminFeedbackList = document.querySelector("#adminFeedbackList");
 const adminReportList = document.querySelector("#adminReportList");
 const adminCommunityList = document.querySelector("#adminCommunityList");
 const adminPrayerList = document.querySelector("#adminPrayerList");
+const adminPrayerClickList = document.querySelector("#adminPrayerClickList");
 const premiumPanelLabels = {
   breathwork: "Breathwork Prayer",
   faithYoga: "Faith-Led Yoga",
@@ -1595,9 +1596,31 @@ function renderPrayerLibrary() {
     .join("");
 }
 
+function prayerAnalyticsId(prayer) {
+  return `${prayer.category}-${prayer.title}-${prayer.scripture}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 140);
+}
+
+function recordPrayerOpen(prayer) {
+  if (!state.user || !prayer) return;
+  apiFetch("/api/prayer-clicks", {
+    method: "POST",
+    body: JSON.stringify({
+      id: prayerAnalyticsId(prayer),
+      title: prayer.title,
+      category: prayer.category,
+      scripture: prayer.scripture
+    })
+  }).catch(() => undefined);
+}
+
 function openPrayerModal(index) {
   const prayer = prayerLibrary[index];
   if (!prayer || !prayerOverlay) return;
+  recordPrayerOpen(prayer);
   prayerOverlay.dataset.prayerIndex = String(index);
   prayerModalCategory.textContent = prayer.category;
   prayerModalTitle.textContent = prayer.title;
@@ -2922,8 +2945,23 @@ function renderAdminDashboard(data = null) {
     <div><strong>${data.summary.communityPosts}</strong><span>Posts</span></div>
     <div><strong>${data.summary.openFeedback}</strong><span>Open feedback</span></div>
     <div><strong>${data.summary.openReports}</strong><span>Open reports</span></div>
+    <div><strong>${data.summary.totalPrayerClicks || 0}</strong><span>Prayer opens</span></div>
     <div><strong>${data.summary.premiumContent || 0}</strong><span>Abide content</span></div>
   `;
+
+  if (adminPrayerClickList) {
+    adminPrayerClickList.innerHTML = data.summary.prayerClicks?.length
+      ? data.summary.prayerClicks
+          .map((item, index) => `
+            <article class="admin-item prayer-click-item">
+              <strong>${index + 1}. ${escapeHtml(item.title)} - ${Number(item.count) || 0} opens</strong>
+              <p>${escapeHtml(item.category || "Prayer")} - ${escapeHtml(item.scripture || "")}</p>
+              <small>Last opened: ${escapeHtml(item.lastOpenedAt ? new Date(item.lastOpenedAt).toLocaleString() : "Not recorded")}</small>
+            </article>
+          `)
+          .join("")
+      : '<p class="empty-feed">Prayer opens will appear after users open saved prayers.</p>';
+  }
 
   adminUserList.innerHTML = data.users.length
     ? data.users

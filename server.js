@@ -86,6 +86,7 @@ function defaultDb() {
     reports: [],
     supportMessages: [],
     prayerRequests: [],
+    prayerClicks: [],
     reactions: [],
     comments: [],
     premiumContent: [],
@@ -145,6 +146,9 @@ function normalizeDb(db) {
   }
   normalized.settings = { ...defaultSettings(), ...(normalized.settings || {}) };
   normalized.settings.reminderMessage = normalizeText(normalized.settings.reminderMessage, 240) || DEFAULT_REMINDER_MESSAGE;
+  normalized.prayerClicks = normalized.prayerClicks
+    .map(normalizePrayerClick)
+    .filter((item) => item.id && item.title);
   if (!normalized.premiumContent.length) {
     normalized.premiumContent = defaultPremiumContent();
   } else {
@@ -341,6 +345,17 @@ function normalizeChannels(value) {
     push: value?.push !== false,
     email: Boolean(value?.email),
     sms: Boolean(value?.sms)
+  };
+}
+
+function normalizePrayerClick(item) {
+  return {
+    id: normalizeText(item?.id, 160),
+    title: normalizeText(item?.title, 160),
+    category: normalizeText(item?.category, 80),
+    scripture: normalizeText(item?.scripture, 160),
+    count: Math.max(0, Number(item?.count) || 0),
+    lastOpenedAt: normalizeText(item?.lastOpenedAt, 40)
   };
 }
 
@@ -737,6 +752,37 @@ async function handleApi(request, response) {
     return json(response, 200, { request: requestItem });
   }
 
+  if (request.method === "POST" && url.pathname === "/api/prayer-clicks") {
+    const user = requireUser(request, response, db);
+    if (!user) return;
+    const body = await readBody(request);
+    const prayer = normalizePrayerClick({
+      id: body.id,
+      title: body.title,
+      category: body.category,
+      scripture: body.scripture,
+      count: 0,
+      lastOpenedAt: ""
+    });
+    if (!prayer.id || !prayer.title) return json(response, 400, { error: "Prayer details are required." });
+    const existing = db.prayerClicks.find((item) => item.id === prayer.id);
+    if (existing) {
+      existing.title = prayer.title;
+      existing.category = prayer.category;
+      existing.scripture = prayer.scripture;
+      existing.count = Math.max(0, Number(existing.count) || 0) + 1;
+      existing.lastOpenedAt = new Date().toISOString();
+    } else {
+      db.prayerClicks.push({
+        ...prayer,
+        count: 1,
+        lastOpenedAt: new Date().toISOString()
+      });
+    }
+    await writeDb(db);
+    return json(response, 200, { ok: true });
+  }
+
   if (request.method === "POST" && url.pathname === "/api/community/report") {
     const user = requireUser(request, response, db);
     if (!user) return;
@@ -971,6 +1017,10 @@ async function handleApi(request, response) {
     if (!admin) return;
 
     if (request.method === "GET" && url.pathname === "/api/admin/summary") {
+      const topPrayerClicks = db.prayerClicks
+        .slice()
+        .sort((a, b) => (Number(b.count) || 0) - (Number(a.count) || 0) || String(b.lastOpenedAt || "").localeCompare(String(a.lastOpenedAt || "")))
+        .slice(0, 10);
       return json(response, 200, {
         users: db.users.length,
         communityPosts: db.posts.filter((post) => !post.hiddenAt).length,
@@ -978,7 +1028,9 @@ async function handleApi(request, response) {
         openReports: db.reports.filter((item) => item.status === "open").length,
         reminders: db.reminders.length,
         pushSubscriptions: db.pushSubscriptions.length,
-        premiumContent: db.premiumContent.filter((item) => !item.archivedAt).length
+        premiumContent: db.premiumContent.filter((item) => !item.archivedAt).length,
+        prayerClicks: topPrayerClicks,
+        totalPrayerClicks: db.prayerClicks.reduce((sum, item) => sum + (Number(item.count) || 0), 0)
       });
     }
 
