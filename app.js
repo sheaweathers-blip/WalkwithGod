@@ -600,16 +600,6 @@ const premiumWalkingSessions = [
   prayer
 }));
 
-const backgroundMusicTracks = [
-  ["Sunlit Dream", "/assets/music/sunlit-dream.mp3?v=20260701-playlist"],
-  ["Nature Breath", "/assets/music/nature-breath.mp3?v=20260701-playlist"],
-  ["Sacred Breath", "/assets/music/sacred-breath.mp3?v=20260701-playlist"],
-  ["Holy Resonance", "/assets/music/holy-resonance.mp3?v=20260701-playlist"],
-  ["Eden Echoes", "/assets/music/eden-echoes.mp3?v=20260701-playlist"],
-  ["Living Waters", "/assets/music/living-waters.mp3?v=20260701-playlist"],
-  ["Creation Sings", "/assets/music/creation-sings.mp3?v=20260701-playlist"]
-].map(([title, src], index) => ({ title, src, index }));
-
 const walkPathSteps = [
   ["Pause", "Psalm 46:10", "Slow down, breathe, and notice God's presence before moving forward.", "Jesus often withdrew to quiet places.", "Luke 5:16"],
   ["Pray", "Mark 1:35", "Speak honestly with God, listen, and bring your real life before Him.", "Jesus regularly prayed to the Father.", "Mark 1:35"],
@@ -726,7 +716,8 @@ const state = {
   currentPassageReference: "",
   currentPassageText: "",
   isReadingPassage: false,
-  activeMusicIndex: Number(localStorage.getItem("walkWithGodMusicIndex") || 0),
+  passageSpeechQueue: [],
+  passageSpeechIndex: 0,
   speechSettings: JSON.parse(localStorage.getItem("walkWithGodSpeechSettings") || '{"voiceURI":"","rate":0.9,"pitch":1}'),
   premiumContent: [],
   isPremium: false,
@@ -791,10 +782,6 @@ const showSignupButton = document.querySelector("#showSignupButton");
 const showLoginButton = document.querySelector("#showLoginButton");
 const dailyToolsButton = document.querySelector("#dailyToolsButton");
 const showReminderSettingsButton = document.querySelector("#showReminderSettingsButton");
-const musicToggleButton = document.querySelector("#musicToggleButton");
-const musicSkipButton = document.querySelector("#musicSkipButton");
-const backgroundMusic = document.querySelector("#backgroundMusic");
-const musicStatus = document.querySelector("#musicStatus");
 const authForm = document.querySelector("#authForm");
 const authName = document.querySelector("#authName");
 const authEmail = document.querySelector("#authEmail");
@@ -1274,8 +1261,6 @@ function renderAccount() {
     showLoginButton.hidden = true;
     if (dailyToolsButton) dailyToolsButton.hidden = false;
     showReminderSettingsButton.hidden = false;
-    if (musicToggleButton) musicToggleButton.hidden = false;
-    if (musicSkipButton) musicSkipButton.hidden = false;
     logoutButton.hidden = false;
     if (accountShortcuts) accountShortcuts.hidden = false;
   } else {
@@ -1286,8 +1271,6 @@ function renderAccount() {
     showLoginButton.hidden = false;
     if (dailyToolsButton) dailyToolsButton.hidden = true;
     showReminderSettingsButton.hidden = true;
-    if (musicToggleButton) musicToggleButton.hidden = true;
-    if (musicSkipButton) musicSkipButton.hidden = true;
     reminderSettingsPanel.hidden = true;
     logoutButton.hidden = true;
     if (accountShortcuts) accountShortcuts.hidden = true;
@@ -1300,74 +1283,6 @@ function renderAccount() {
         .map((message) => `<article class="support-message"><strong>Admin message</strong><p>${escapeHtml(message.text)}</p></article>`)
         .join("")
     : "";
-  renderMusicControl();
-}
-
-function musicPreferred() {
-  return localStorage.getItem("walkWithGodMusicEnabled") === "true";
-}
-
-function activeMusicTrack() {
-  state.activeMusicIndex = Math.max(0, Math.min(state.activeMusicIndex, backgroundMusicTracks.length - 1));
-  return backgroundMusicTracks[state.activeMusicIndex] || backgroundMusicTracks[0];
-}
-
-function loadActiveMusicTrack() {
-  if (!backgroundMusic) return null;
-  const track = activeMusicTrack();
-  if (!backgroundMusic.src.endsWith(track.src)) {
-    backgroundMusic.src = track.src;
-    backgroundMusic.load();
-  }
-  return track;
-}
-
-function renderMusicControl() {
-  if (!musicToggleButton || !backgroundMusic) return;
-  const isPlaying = !backgroundMusic.paused;
-  const track = activeMusicTrack();
-  musicToggleButton.textContent = isPlaying ? "Pause Music" : "Play Music";
-  musicToggleButton.classList.toggle("is-playing", isPlaying);
-  musicToggleButton.title = `${isPlaying ? "Now playing" : "Ready to play"}: ${track.title}`;
-  if (musicSkipButton) musicSkipButton.title = `Skip ${track.title}`;
-  if (musicStatus && !state.user) musicStatus.textContent = "";
-}
-
-async function playBackgroundMusic() {
-  if (!backgroundMusic) return;
-  const track = loadActiveMusicTrack();
-  backgroundMusic.volume = 0.28;
-  try {
-    await backgroundMusic.play();
-    localStorage.setItem("walkWithGodMusicEnabled", "true");
-    if (musicStatus) musicStatus.textContent = `Now playing: ${track.title}.`;
-  } catch {
-    localStorage.removeItem("walkWithGodMusicEnabled");
-    if (musicStatus) musicStatus.textContent = "Tap Play Music again if your browser blocked audio.";
-  }
-  renderMusicControl();
-}
-
-function pauseBackgroundMusic(message = "Music paused.") {
-  if (!backgroundMusic) return;
-  backgroundMusic.pause();
-  localStorage.removeItem("walkWithGodMusicEnabled");
-  if (musicStatus) musicStatus.textContent = message;
-  renderMusicControl();
-}
-
-function playNextBackgroundTrack({ keepPlaying = false } = {}) {
-  if (!backgroundMusicTracks.length) return;
-  const wasPlaying = keepPlaying || (backgroundMusic && !backgroundMusic.paused);
-  state.activeMusicIndex = (state.activeMusicIndex + 1) % backgroundMusicTracks.length;
-  localStorage.setItem("walkWithGodMusicIndex", String(state.activeMusicIndex));
-  const track = loadActiveMusicTrack();
-  if (musicStatus) musicStatus.textContent = `Next song: ${track.title}.`;
-  if (wasPlaying) {
-    playBackgroundMusic();
-  } else {
-    renderMusicControl();
-  }
 }
 
 function renderAccessGate() {
@@ -2342,8 +2257,52 @@ function updateReadPassageButton() {
 function stopPassageAudio(message = "") {
   if (speechSupported()) window.speechSynthesis.cancel();
   state.isReadingPassage = false;
+  state.passageSpeechQueue = [];
+  state.passageSpeechIndex = 0;
   if (readPassageStatus) readPassageStatus.textContent = message;
   updateReadPassageButton();
+}
+
+function passageSpeechChunks(text) {
+  return String(text || "")
+    .replace(/\s+/g, " ")
+    .match(/[^.!?;:]+[.!?;:]?|[^.!?;:]+$/g)
+    ?.map((part) => part.trim())
+    .filter(Boolean)
+    .reduce((chunks, sentence) => {
+      const last = chunks[chunks.length - 1] || "";
+      if (last && `${last} ${sentence}`.length <= 180) {
+        chunks[chunks.length - 1] = `${last} ${sentence}`;
+      } else {
+        chunks.push(sentence);
+      }
+      return chunks;
+    }, []) || [];
+}
+
+function speakPassageChunk() {
+  if (!state.isReadingPassage || !speechSupported()) return;
+  const text = state.passageSpeechQueue[state.passageSpeechIndex];
+  if (!text) {
+    stopPassageAudio("Finished reading passage.");
+    return;
+  }
+  const utterance = new SpeechSynthesisUtterance(text);
+  const voice = selectedSpeechVoice();
+  if (voice) utterance.voice = voice;
+  utterance.lang = voice?.lang || "en-US";
+  utterance.rate = Number(state.speechSettings.rate) || 0.9;
+  utterance.pitch = Number(state.speechSettings.pitch) || 1;
+  utterance.onend = () => {
+    if (!state.isReadingPassage) return;
+    state.passageSpeechIndex += 1;
+    window.setTimeout(speakPassageChunk, 80);
+  };
+  utterance.onerror = () => {
+    stopPassageAudio("Reading aloud stopped. On iPhone, try tapping Read Passage Aloud again after the passage finishes loading.");
+  };
+  readPassageStatus.textContent = `Reading passage aloud (${state.passageSpeechIndex + 1} of ${state.passageSpeechQueue.length}).`;
+  window.speechSynthesis.speak(utterance);
 }
 
 function readPassageAloud() {
@@ -2360,26 +2319,15 @@ function readPassageAloud() {
     return;
   }
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(state.currentPassageText);
-  const voice = selectedSpeechVoice();
-  if (voice) utterance.voice = voice;
-  utterance.lang = voice?.lang || "en-US";
-  utterance.rate = Number(state.speechSettings.rate) || 0.9;
-  utterance.pitch = Number(state.speechSettings.pitch) || 1;
-  utterance.onend = () => {
-    state.isReadingPassage = false;
-    readPassageStatus.textContent = "Finished reading passage.";
-    updateReadPassageButton();
-  };
-  utterance.onerror = () => {
-    state.isReadingPassage = false;
-    readPassageStatus.textContent = "Reading aloud stopped.";
-    updateReadPassageButton();
-  };
+  state.passageSpeechQueue = passageSpeechChunks(state.currentPassageText);
+  state.passageSpeechIndex = 0;
+  if (!state.passageSpeechQueue.length) {
+    readPassageStatus.textContent = "No passage text is ready to read yet.";
+    return;
+  }
   state.isReadingPassage = true;
-  readPassageStatus.textContent = "Reading passage aloud.";
   updateReadPassageButton();
-  window.speechSynthesis.speak(utterance);
+  speakPassageChunk();
 }
 
 function getDayExtras(focus, day) {
@@ -3739,25 +3687,6 @@ showReminderSettingsButton.addEventListener("click", () => {
   }
 });
 
-if (musicToggleButton && backgroundMusic) {
-  musicToggleButton.addEventListener("click", () => {
-    if (backgroundMusic.paused) {
-      playBackgroundMusic();
-    } else {
-      pauseBackgroundMusic();
-    }
-  });
-  if (musicSkipButton) {
-    musicSkipButton.addEventListener("click", playNextBackgroundTrack);
-  }
-  backgroundMusic.addEventListener("play", renderMusicControl);
-  backgroundMusic.addEventListener("pause", renderMusicControl);
-  backgroundMusic.addEventListener("ended", () => playNextBackgroundTrack({ keepPlaying: true }));
-  backgroundMusic.addEventListener("error", () => {
-    if (musicStatus) musicStatus.textContent = "Music could not load right now.";
-    renderMusicControl();
-  });
-}
 cancelAuthButton.addEventListener("click", () => {
   authForm.hidden = true;
   authMessage.textContent = "";
@@ -4230,7 +4159,6 @@ async function init() {
   if (speechSupported()) {
     window.speechSynthesis.onvoiceschanged = populateVoiceOptions;
   }
-  loadActiveMusicTrack();
   await loadReminderAvailability();
   try {
     const result = await apiFetch("/api/me");
@@ -4246,9 +4174,6 @@ async function init() {
   }
   await registerAppShell();
   render();
-  if (state.user && musicPreferred()) {
-    if (musicStatus) musicStatus.textContent = "Tap Play Music to resume gentle background music.";
-  }
 }
 
 init();
