@@ -460,7 +460,7 @@ const defaultFocuses = [
 const implementationText = "Take a moment to check in before moving on. Completion should mean you spent focused time with God, not just skimmed the reading.";
 const adminCode = "walkwithgod";
 const DEFAULT_REMINDER_MESSAGE = "Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org";
-const ABIDE_BREATHWORK_WEEK_ONE_COUNT = 7;
+const ABIDE_BREATHWORK_WEEK_ONE_COUNT = 8;
 let reminderChannelAvailability = {
   push: true,
   email: false,
@@ -474,7 +474,7 @@ const premiumBreathworkRoutines = [
   ["Day 5", "Evening Rest", "Finished video", "Slow evening release", "Rest and safety", "Psalm 4:8", "Use this at the end of the day or any time you need to slow down. Pray: Inhale, Lord, You are with me. Exhale, I place this day in Your hands. Remember one gift from the day and release what does not need to be carried into rest.", "Finished Abide video with dusk-like calm, soft rest imagery, and a peaceful landing for the end of the day.", "Slow bedtime tone with spacious pauses and very gentle transitions.", "Lord, I place this day in Your hands. Help me rest in Your care and dwell in safety.", "https://www.youtube.com/embed/kC3oNTIUuNc", "youtube"],
   ["Day 6", "New Morning Mercies", "Finished video", "Morning breath prayer", "Beginning again", "Lamentations 3:22-23", "Begin the day by receiving mercy rather than pressure. Pray: Inhale, Your mercies are new. Exhale, I begin again with You. Let God's faithfulness meet the new morning before your tasks do.", "Finished Abide video with morning light, fresh-start imagery, and a calm invitation to begin again with God's mercy.", "Hopeful, gentle, and clear, with a fresh-start feeling that does not rush.", "Faithful God, thank You that Your mercies are new this morning. Help me begin again with You.", "https://www.youtube.com/embed/bElE8hP6yp0", "youtube"],
   ["Day 7", "Strength for the Next Step", "Finished video", "Strength-renewing breath prayer", "Endurance", "Isaiah 40:31", "Use this when you feel tired, stretched thin, or unsure how to keep going. Pray: Inhale, I wait on You. Exhale, Renew my strength. Ask God for strength for the next faithful step, not the entire road at once.", "Finished Abide video with steady path imagery, peaceful strength, and an invitation to receive enough grace for the next faithful step.", "Steady and encouraging, with room for honest fatigue and renewed courage.", "Lord, renew my strength as I wait on You. Help me take the next faithful step.", "https://www.youtube.com/embed/7U41X4JuG2A", "youtube"],
-  ["Day 8", "Morning Energy", "4 minutes", "Deeper steady breathing", "New day", "Psalm 118:24", "Breathe a little deeper than usual, without strain. Welcome the new day as a gift from God.", "Sunrise and open sky", "Hopeful, bright, energizing without rushing.", "Lord, help me receive this day and walk in it faithfully."],
+  ["Day 8", "Morning Energy", "4-6 minutes", "Slow energizing breath prayer", "Receiving the day", "Psalm 118:24", "Before we begin, sit or stand comfortably. Let your feet feel grounded. Let your shoulders soften. If you feel dizzy, uncomfortable, or short of breath, return to normal breathing. This is not about pushing your body. This is about receiving the day from God before rushing into it. Our Scripture today is Psalm 118:24: This is the day that the Lord has made; let us rejoice and be glad in it. Take a slow breath in, and gently breathe out. Again, breathe in, and breathe out. Let your breath grow a little deeper, but do not strain. Inhale: This is Your day. Exhale: I receive it with You. Inhale: This is Your day. Exhale: I receive it with You. Notice the gift of being alive today, the gift of breath, the gift of mercy, and the gift of one more opportunity to walk with God. If your mind is already racing, gently bring it back. You do not have to live the whole day at once. You only need the next faithful step. Inhale: Wake my heart to You. Exhale: Order my steps today. Inhale: Wake my heart to You. Exhale: Order my steps today. Now take three natural breaths. Lord, thank You for this day. Help me receive it as a gift, not a burden. Give my body the strength it needs, my mind the clarity it needs, and my heart the joy it needs to walk with You. Let my energy come from Your presence instead of pressure. This is Your day. I will walk through it with You. Amen.", "Sunrise, open sky, gentle movement, and morning light that feels fresh without feeling rushed.", "Hopeful, bright, and peaceful; energizing without becoming pressured.", "Lord, thank You for this day. Wake my heart to You, order my steps, and help me walk through today with You."],
   ["Day 9", "Clear Thinking", "4 minutes", "Box breathing", "Mental clarity", "James 1:5", "Use box breathing to clear mental clutter. Ask God for wisdom with each steady round.", "Clear mountain air", "Steady and focused, with crisp counting.", "God of wisdom, order my thoughts and guide my choices."],
   ["Day 10", "Confidence", "5 minutes", "5-in, 5-out", "Courage", "Joshua 1:9", "Inhale for 5 and exhale for 5. Let each breath remind you that courage comes from God's presence.", "Strong trees in morning light", "Encouraging and grounded.", "Lord, make me strong and courageous because You are with me."],
   ["Day 11", "Focus Flow", "5 minutes", "One breath, one task", "Attention", "Colossians 3:23", "Breathe slowly and choose one faithful task. Let your attention return to God and the work before you.", "Mountain trail or quiet desk with natural light", "Minimal, focused, with simple repetition.", "Help me work with a whole heart before You."],
@@ -2695,15 +2695,15 @@ function renderBreathwork() {
   if (breathworkWeekCard && breathworkWeekCopy && breathworkWeekProgress && breathworkWeekProgressBar && continueBreathworkWeek && markBreathworkWatched) {
     breathworkWeekCard.classList.toggle("is-locked", !isAdmin);
     breathworkWeekCopy.textContent = isAdmin
-      ? "Admin-only for now: review the finished Week One videos before opening Abide to others."
-      : "Coming later: a seven-day guided breath prayer series for Scripture, stillness, and peace with God.";
+      ? "Admin-only for now: review the first Abide breathwork sessions before opening Abide to others."
+      : "Coming later: guided breath prayer sessions for Scripture, stillness, and peace with God.";
     breathworkWeekProgress.textContent = `${completedWeekOne} of ${ABIDE_BREATHWORK_WEEK_ONE_COUNT}`;
     breathworkWeekProgressBar.style.width = `${weekPercent}%`;
     continueBreathworkWeek.textContent = completedWeekOne ? "Continue Week One" : "Start Week One";
     continueBreathworkWeek.disabled = !isAdmin;
     markBreathworkWatched.hidden = !isAdmin;
     markBreathworkWatched.disabled = !isWeekOneRoutine;
-    markBreathworkWatched.textContent = state.breathworkCompleted[routine.id] ? "Reviewed" : "Mark Video Watched";
+    markBreathworkWatched.textContent = state.breathworkCompleted[routine.id] ? "Reviewed" : "Mark Session Reviewed";
   }
   breathworkLockNote.hidden = isAdmin && hasFinishedVideo;
   breathworkLockNote.textContent = isUnlocked
@@ -2714,7 +2714,7 @@ function renderBreathwork() {
       <button class="breathwork-button" type="button" data-index="${index}" aria-pressed="${index === state.activeBreathworkIndex}">
         <span>${escapeHtml(item.day)}${state.breathworkCompleted[item.id] ? " - Reviewed" : ""}</span>
         <strong>${escapeHtml(item.title)}</strong>
-        <small>${index < ABIDE_BREATHWORK_WEEK_ONE_COUNT ? "Week One video ready" : "Coming later"} - ${escapeHtml(item.duration)} - ${escapeHtml(item.technique)}</small>
+        <small>${index < ABIDE_BREATHWORK_WEEK_ONE_COUNT ? "Abide session ready" : "Coming later"} - ${escapeHtml(item.duration)} - ${escapeHtml(item.technique)}</small>
       </button>
     `)
     .join("");
