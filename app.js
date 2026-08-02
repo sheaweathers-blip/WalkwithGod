@@ -2403,6 +2403,14 @@ function openReminderSettingsFromChoices() {
   document.querySelector("#account").scrollIntoView({ behavior: "smooth" });
 }
 
+function scrollToTodaySection() {
+  const section = document.querySelector("#today");
+  if (!section || section.hidden) return;
+  window.setTimeout(() => {
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 80);
+}
+
 function markDayComplete(focus, dayIndex, statusElement) {
   if (!focus || !focus.days?.[dayIndex]) {
     if (statusElement) statusElement.textContent = "Choose a focus day before marking a step taken.";
@@ -3297,6 +3305,10 @@ completeButton.addEventListener("click", () => {
   const result = markDayComplete(focus, state.activeDayIndex, noteStatus);
   if (!result.becameFocusComplete) state.activeDayIndex = nextOpenDay(focus);
   render();
+  todayStatus.textContent = result.didComplete
+    ? "Step marked. Your Today section is updated with your next step."
+    : "That step was already marked. Your Today section is up to date.";
+  scrollToTodaySection();
   if (result.becameFocusComplete) showFocusCelebration(focus);
 });
 
@@ -3318,6 +3330,7 @@ quickCompleteButton.addEventListener("click", () => {
     ? `${focus.title} walked through. Take a moment to celebrate what God has walked you through.`
     : "Step marked for today. Welcome back whenever you are ready for the next step.";
   render();
+  scrollToTodaySection();
   if (result.becameFocusComplete) showFocusCelebration(focus);
 });
 
