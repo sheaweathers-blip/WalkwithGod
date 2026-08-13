@@ -153,16 +153,14 @@ Do:
 
 Do not:
 
-- Claim stones, jewelry, breathwork, or movement have spiritual power.
-- Suggest objects heal, protect, attract blessings, clear energy, or create spiritual outcomes.
+- Claim breathwork, movement, or app content has spiritual power.
+- Suggest practices heal, protect, attract blessings, clear energy, or create spiritual outcomes.
 - Use mystical, New Age, crystal-energy, self-salvation, or manifestation-as-personal-power language.
 - Replace Scripture, prayer, worship, church community, or wise counsel with app content.
 - Promise healing, outcomes, prosperity, or certainty where Scripture does not.
 
 Use language like:
 
-- This stone reminds us of...
-- This piece points us back to...
 - This practice helps us pause and pray...
 - This walk invites us to reflect on Scripture...
 - This breath prayer helps quiet distractions and turn toward God...
@@ -305,7 +303,6 @@ Future Abide journeys may include:
 - Journal prompt
 - Action step
 - Audio or video
-- Optional Living Stones reflection
 
 Example future journeys:
 
@@ -321,25 +318,6 @@ Example future journeys:
 - Lent Journey
 
 Every journey should help the user take one more faithful step with God.
-
-## Living Stones And Physical Products
-
-Living Stones is a future phase and should be handled carefully.
-
-Each handcrafted item may connect to:
-
-- Product name
-- Stone or material
-- Scripture
-- Short devotional
-- Prayer
-- Reflection question
-- Weekly Walk action
-- Optional QR code destination
-
-The object is always a reminder, never a source of power.
-
-The language should point from the object back to God.
 
 ## Visual And Brand Direction
 
@@ -436,8 +414,6 @@ Phase 1 should prioritize:
 
 Phase 1 may defer:
 
-- Living Stones product system
-- QR devotional journeys
 - Walk Cards
 - Full Abide Membership subscriptions
 - App store packaging

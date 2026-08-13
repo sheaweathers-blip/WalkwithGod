@@ -18,7 +18,6 @@ That document defines:
 - Language to use and avoid
 - Community and prayer standards
 - Abide Membership and journey standards
-- Living Stones future-phase guidance
 - The decision filter for new features
 
 ## Current App
