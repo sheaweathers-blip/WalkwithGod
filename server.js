@@ -47,6 +47,12 @@ const premiumMedia = {
 };
 
 const DEFAULT_REMINDER_MESSAGE = "Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org";
+const OWNER_ADMIN_EMAIL = "sheaweather@gmail.com";
+const ADMIN_EMAILS = new Set(
+  [OWNER_ADMIN_EMAIL, ...(process.env.ADMIN_EMAILS || "").split(",")]
+    .map((email) => normalizeEmail(email))
+    .filter(Boolean)
+);
 
 function defaultSettings() {
   return {
@@ -146,6 +152,11 @@ function normalizeDb(db) {
   }
   normalized.settings = { ...defaultSettings(), ...(normalized.settings || {}) };
   normalized.settings.reminderMessage = normalizeText(normalized.settings.reminderMessage, 240) || DEFAULT_REMINDER_MESSAGE;
+  normalized.users = normalized.users.map((user, index) => ({
+    ...user,
+    email: normalizeEmail(user.email),
+    role: index === 0 || ADMIN_EMAILS.has(normalizeEmail(user.email)) ? "admin" : user.role || "member"
+  }));
   normalized.prayerClicks = normalized.prayerClicks
     .map(normalizePrayerClick)
     .filter((item) => item.id && item.title);
@@ -348,6 +359,14 @@ function normalizeChannels(value) {
   };
 }
 
+function normalizeEmail(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function shouldBeAdmin(db, email) {
+  return db.users.length === 0 || ADMIN_EMAILS.has(normalizeEmail(email));
+}
+
 function normalizePrayerClick(item) {
   return {
     id: normalizeText(item?.id, 160),
@@ -529,7 +548,12 @@ async function handleApi(request, response) {
   }
 
   if (request.method === "GET" && url.pathname === "/api/me") {
-    return json(response, 200, { user: publicUser(currentUser(request, db)) });
+    const user = currentUser(request, db);
+    if (user && shouldBeAdmin(db, user.email) && user.role !== "admin") {
+      user.role = "admin";
+      await writeDb(db);
+    }
+    return json(response, 200, { user: publicUser(user) });
   }
 
   if (request.method === "POST" && url.pathname === "/api/twilio/sms") {
@@ -565,7 +589,7 @@ async function handleApi(request, response) {
   if (request.method === "POST" && url.pathname === "/api/auth/signup") {
     const body = await readBody(request);
     const name = normalizeText(body.name, 80);
-    const email = normalizeText(body.email, 120).toLowerCase();
+    const email = normalizeEmail(normalizeText(body.email, 120));
     const password = String(body.password || "");
     if (!name || !email || password.length < 8) {
       return json(response, 400, { error: "Name, email, and an 8+ character password are required." });
@@ -578,7 +602,7 @@ async function handleApi(request, response) {
       id: crypto.randomUUID(),
       name,
       email,
-      role: db.users.length === 0 ? "admin" : "member",
+      role: shouldBeAdmin(db, email) ? "admin" : "member",
       subscriptionStatus: "free",
       mailingAddress: normalizeMailingAddress(body.mailingAddress),
       salt: passwordParts.salt,
@@ -594,10 +618,13 @@ async function handleApi(request, response) {
 
   if (request.method === "POST" && url.pathname === "/api/auth/login") {
     const body = await readBody(request);
-    const email = normalizeText(body.email, 120).toLowerCase();
+    const email = normalizeEmail(normalizeText(body.email, 120));
     const user = db.users.find((item) => item.email === email);
     if (!user || !verifyPassword(String(body.password || ""), user)) {
       return json(response, 401, { error: "Email or password was incorrect." });
+    }
+    if (shouldBeAdmin(db, email) && user.role !== "admin") {
+      user.role = "admin";
     }
     const session = { id: crypto.randomUUID(), userId: user.id, expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 30 };
     db.sessions.push(session);

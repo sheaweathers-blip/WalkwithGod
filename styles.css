@@ -193,7 +193,9 @@ h1,
 h2,
 h3,
 p {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 
 h1 {
@@ -430,8 +432,9 @@ button:hover {
 .theme-button {
   position: relative;
   overflow: hidden;
+  min-width: 0;
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 42px minmax(0, 1fr);
   gap: 14px;
   width: 100%;
   min-height: 102px;
@@ -507,6 +510,9 @@ button:hover {
 .theme-name {
   display: block;
   font-weight: 850;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 
 .theme-purpose {
@@ -515,6 +521,9 @@ button:hover {
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.35;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 
 .theme-count {
@@ -1284,115 +1293,6 @@ select:focus {
   margin-top: -26px;
   position: relative;
   z-index: 2;
-}
-
-.path-section {
-  background:
-    radial-gradient(circle at 14% 18%, rgba(205, 161, 72, 0.18), transparent 28%),
-    radial-gradient(circle at 92% 78%, rgba(48, 109, 82, 0.18), transparent 32%),
-    linear-gradient(135deg, rgba(239, 249, 235, 0.98), rgba(224, 240, 221, 0.96));
-}
-
-.path-steps {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 24px;
-}
-
-.path-step {
-  position: relative;
-  display: grid;
-  gap: 12px;
-  align-content: start;
-  min-height: 190px;
-  padding: 16px;
-  border: 1px solid rgba(36, 90, 66, 0.16);
-  border-radius: 8px;
-  background:
-    linear-gradient(140deg, rgba(255, 255, 255, 0.84), rgba(247, 243, 225, 0.66));
-  box-shadow: 0 12px 28px rgba(36, 90, 66, 0.08);
-}
-
-.path-step.is-active {
-  border-color: rgba(36, 90, 66, 0.44);
-  background:
-    radial-gradient(circle at 82% 12%, rgba(205, 161, 72, 0.18), transparent 26%),
-    linear-gradient(140deg, rgba(255, 255, 255, 0.94), rgba(221, 239, 216, 0.8));
-  box-shadow: 0 18px 34px rgba(36, 90, 66, 0.14);
-}
-
-.path-stone,
-.path-today-mark {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 999px;
-  color: #fff;
-  background:
-    radial-gradient(circle at 32% 25%, rgba(255, 255, 255, 0.36), transparent 34%),
-    linear-gradient(135deg, var(--deep-green), var(--trail));
-  font-weight: 950;
-  box-shadow: 0 12px 24px rgba(31, 75, 59, 0.16);
-}
-
-.path-step h3 {
-  margin: 0 0 8px;
-  color: var(--deep-green);
-  font-size: 1rem;
-}
-
-.path-step p {
-  margin: 0;
-  color: #33423a;
-  line-height: 1.5;
-}
-
-.path-short-copy {
-  display: none;
-}
-
-.path-step small {
-  display: block;
-  margin-top: 10px;
-  color: var(--muted);
-  font-weight: 750;
-  line-height: 1.45;
-}
-
-.path-today-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-  margin: 18px 0 18px;
-  padding: 18px;
-  border: 1px solid rgba(36, 90, 66, 0.18);
-  border-radius: 8px;
-  background:
-    radial-gradient(circle at 92% 18%, rgba(205, 161, 72, 0.16), transparent 28%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(231, 244, 226, 0.78));
-}
-
-.path-today-card h4 {
-  margin: 4px 0 8px;
-  color: var(--deep-green);
-  font-size: 1.35rem;
-}
-
-.path-today-card p {
-  margin: 0;
-  color: #33423a;
-  line-height: 1.55;
-}
-
-.path-today-card small {
-  display: block;
-  margin-top: 10px;
-  color: var(--muted);
-  font-weight: 800;
 }
 
 .start-here-section {
@@ -2716,6 +2616,60 @@ select:focus {
   white-space: pre-wrap;
 }
 
+.today-flow-dialog {
+  width: min(760px, 100%);
+}
+
+.today-flow-progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.today-flow-progress span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 999px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.today-flow-progress span.is-active {
+  color: #fff;
+  border-color: rgba(31, 75, 59, 0.44);
+  background: linear-gradient(135deg, var(--deep-green), var(--green));
+}
+
+.today-flow-panel {
+  display: grid;
+  gap: 14px;
+  padding: clamp(16px, 3vw, 24px);
+  border: 1px solid rgba(31, 75, 59, 0.16);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 92% 14%, rgba(205, 161, 72, 0.14), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(237, 248, 232, 0.82));
+}
+
+.today-flow-panel[hidden] {
+  display: none;
+}
+
+.today-flow-panel h3 {
+  color: var(--deep-green);
+  font-size: clamp(1.35rem, 4vw, 2rem);
+}
+
+.today-flow-panel textarea {
+  min-height: 130px;
+}
+
 .day-choice-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   max-height: min(560px, 62vh);
@@ -3492,7 +3446,6 @@ select:focus {
   .form-grid,
   .public-info-grid,
   .today-card,
-  .path-steps,
   .guided-checkin,
   .read-passage-controls,
   .locked-benefits-grid,
@@ -3560,45 +3513,8 @@ select:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .path-steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    margin-top: 14px;
-  }
-
   .prayer-library-grid {
     grid-template-columns: 1fr;
-  }
-
-  .path-step {
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 10px;
-    min-height: 0;
-    padding: 10px;
-    box-shadow: 0 8px 18px rgba(36, 90, 66, 0.07);
-  }
-
-  .path-step .path-stone {
-    width: 34px;
-    height: 34px;
-    font-size: 0.92rem;
-  }
-
-  .path-step h3 {
-    margin: 0 0 2px;
-    font-size: 0.95rem;
-  }
-
-  .path-full-copy,
-  .path-step small {
-    display: none;
-  }
-
-  .path-short-copy {
-    display: block;
-    font-size: 0.86rem;
-    line-height: 1.25;
   }
 
   .daily {
@@ -3773,8 +3689,21 @@ select:focus {
   }
 
   .theme-button {
-    grid-template-columns: 38px 1fr;
-    min-height: 92px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    min-height: auto;
+    gap: 10px;
+    padding: 13px;
+  }
+
+  .theme-mark {
+    width: 34px;
+    height: 34px;
+    font-size: 0.82rem;
+  }
+
+  .theme-name {
+    font-size: 0.96rem;
+    line-height: 1.25;
   }
 
   .today-stats {
@@ -3793,46 +3722,6 @@ select:focus {
 
   .note-toggle-label {
     justify-self: start;
-  }
-
-  .path-today-card {
-    grid-template-columns: 1fr;
-  }
-
-  .path-steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .path-section .section-heading h2 {
-    font-size: clamp(2rem, 12vw, 3rem);
-  }
-
-  .path-section .section-copy {
-    font-size: 0.98rem;
-  }
-
-  .path-today-card {
-    gap: 10px;
-    margin: 12px 0;
-    padding: 12px;
-    background: rgba(244, 250, 241, 0.88);
-  }
-
-  .path-today-card .path-today-mark {
-    width: 36px;
-    height: 36px;
-    font-size: 0.95rem;
-  }
-
-  .path-today-card h4 {
-    margin: 2px 0 4px;
-    font-size: 1.05rem;
-  }
-
-  .path-today-card p,
-  .path-today-card small {
-    font-size: 0.92rem;
-    line-height: 1.4;
   }
 
   .account-shortcuts {

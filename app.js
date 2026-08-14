@@ -707,6 +707,10 @@ const state = {
   community: JSON.parse(localStorage.getItem("walkWithGodCommunity") || "[]"),
   prayerRequests: [],
   prayerBoardOpen: localStorage.getItem("walkWithGodPrayerBoardOpen") === "true",
+  notesLibraryOpen: localStorage.getItem("walkWithGodNotesLibraryOpen") === "true",
+  prayerLibraryOpen: localStorage.getItem("walkWithGodPrayerLibraryOpen") === "true",
+  favoritesLibraryOpen: localStorage.getItem("walkWithGodFavoritesLibraryOpen") === "true",
+  todayFlowStep: "passage",
   activeBreathworkIndex: Number(localStorage.getItem("walkWithGodBreathworkIndex") || 0),
   breathworkCompleted: JSON.parse(localStorage.getItem("walkWithGodBreathworkCompleted") || "{}"),
   activeYogaIndex: Number(localStorage.getItem("walkWithGodYogaIndex") || 0),
@@ -745,6 +749,7 @@ const gatedSections = [
   document.querySelector("#themes"),
   document.querySelector("#notesLibrary"),
   document.querySelector("#prayerLibrary"),
+  document.querySelector("#favoritesLibrary"),
   document.querySelector("#community"),
   document.querySelector("#premium"),
   document.querySelector("#breathwork"),
@@ -833,9 +838,12 @@ const saveNoteButton = document.querySelector("#saveNoteButton");
 const noteStatus = document.querySelector("#noteStatus");
 const favoriteVersesList = document.querySelector("#favoriteVersesList");
 const completionContainer = document.querySelector("#completionContainer");
+const toggleNotesLibraryButton = document.querySelector("#toggleNotesLibraryButton");
 const notesLibraryList = document.querySelector("#notesLibraryList");
+const togglePrayerLibraryButton = document.querySelector("#togglePrayerLibraryButton");
 const prayerLibraryList = document.querySelector("#prayerLibraryList");
 const prayerLibraryStatus = document.querySelector("#prayerLibraryStatus");
+const toggleFavoritesLibraryButton = document.querySelector("#toggleFavoritesLibraryButton");
 const completeButton = document.querySelector("#completeButton");
 const nextButton = document.querySelector("#nextButton");
 const focusCelebrationOverlay = document.querySelector("#focusCelebrationOverlay");
@@ -858,6 +866,35 @@ const prayerModalText = document.querySelector("#prayerModalText");
 const copyPrayerModalButton = document.querySelector("#copyPrayerModalButton");
 const dayOverlay = document.querySelector("#dayOverlay");
 const dayCloseButton = document.querySelector("#dayCloseButton");
+const todayFlowOverlay = document.querySelector("#todayFlowOverlay");
+const todayFlowCloseButton = document.querySelector("#todayFlowCloseButton");
+const todayFlowStepLabel = document.querySelector("#todayFlowStepLabel");
+const todayFlowTitle = document.querySelector("#todayFlowTitle");
+const todayFlowIntro = document.querySelector("#todayFlowIntro");
+const todayFlowProgress = document.querySelector("#todayFlowProgress");
+const todayFlowPassagePanel = document.querySelector("#todayFlowPassagePanel");
+const todayFlowPassageTitle = document.querySelector("#todayFlowPassageTitle");
+const todayFlowPassageReference = document.querySelector("#todayFlowPassageReference");
+const todayFlowPassageText = document.querySelector("#todayFlowPassageText");
+const todayFlowReadAloudButton = document.querySelector("#todayFlowReadAloudButton");
+const todayFlowReadButton = document.querySelector("#todayFlowReadButton");
+const todayFlowActivePanel = document.querySelector("#todayFlowActivePanel");
+const todayFlowActiveText = document.querySelector("#todayFlowActiveText");
+const todayFlowActiveButton = document.querySelector("#todayFlowActiveButton");
+const todayFlowApplicationPanel = document.querySelector("#todayFlowApplicationPanel");
+const todayFlowApplicationText = document.querySelector("#todayFlowApplicationText");
+const todayFlowApplicationInput = document.querySelector("#todayFlowApplicationInput");
+const todayFlowApplicationButton = document.querySelector("#todayFlowApplicationButton");
+const todayFlowCheckinPanel = document.querySelector("#todayFlowCheckinPanel");
+const todayFlowStoodOutInput = document.querySelector("#todayFlowStoodOutInput");
+const todayFlowInvitationInput = document.querySelector("#todayFlowInvitationInput");
+const todayFlowNoteInput = document.querySelector("#todayFlowNoteInput");
+const todayFlowCheckinButton = document.querySelector("#todayFlowCheckinButton");
+const todayFlowDeedPanel = document.querySelector("#todayFlowDeedPanel");
+const todayFlowDeedText = document.querySelector("#todayFlowDeedText");
+const todayFlowCompleteButton = document.querySelector("#todayFlowCompleteButton");
+const todayFlowDoneButton = document.querySelector("#todayFlowDoneButton");
+const todayFlowStatus = document.querySelector("#todayFlowStatus");
 const reminderForm = document.querySelector("#reminderForm");
 const reminderTime = document.querySelector("#reminderTime");
 const reminderMessage = document.querySelector("#reminderMessage");
@@ -1061,7 +1098,7 @@ async function syncPendingProgress(statusElement = null) {
   }
   savePendingProgress(remaining);
   if (statusElement && remaining.length) {
-    statusElement.textContent = "Step saved on this device. It will sync to your account when the connection settles.";
+    statusElement.textContent = "Day saved on this device. It will sync to your account when the connection settles.";
   }
 }
 
@@ -1265,7 +1302,7 @@ function renderAccount() {
     if (accountShortcuts) accountShortcuts.hidden = false;
   } else {
     accountHeading.textContent = "Start with a free account";
-    accountCopy.textContent = "Create an account or log in to open your daily focuses, prayer requests, community, notes, path rhythm, and reminders.";
+    accountCopy.textContent = "Create an account or log in to open your daily focuses, prayer requests, community, notes, progress, and reminders.";
     accountStatus.textContent = "Choose one option below to begin.";
     showSignupButton.hidden = false;
     showLoginButton.hidden = false;
@@ -1291,11 +1328,11 @@ function renderAccessGate() {
   if (heroActions) heroActions.hidden = isSignedIn;
   aboutSection.hidden = isSignedIn;
   lockedBenefits.hidden = isSignedIn;
-  const walkPathSection = document.querySelector("#walkPath");
-  if (walkPathSection) walkPathSection.hidden = false;
   for (const section of gatedSections) {
     if (section) section.hidden = !isSignedIn;
   }
+  const adminSection = document.querySelector("#admin");
+  if (adminSection) adminSection.hidden = !isSignedIn || state.user?.role !== "admin";
   ["#breathwork", "#faithYoga", "#premiumBibleStudy", "#premiumWalking"].forEach((selector) => {
     const section = document.querySelector(selector);
     if (section) section.hidden = !isSignedIn || !abideUnlocked;
@@ -1316,7 +1353,7 @@ function nextOpenDay(focus) {
 }
 
 function focusStepLabel(focus, dayIndex) {
-  return `Step ${Number(dayIndex) + 1} of ${focus.days.length}`;
+  return `Day ${Number(dayIndex) + 1} of ${focus.days.length}`;
 }
 
 function storyDayLabel(day, dayIndex) {
@@ -1368,8 +1405,8 @@ function renderToday() {
   const day = focus.days[dayIndex];
   const completeCount = completedSet(focus.id).size;
   const progressPercent = Math.round((completeCount / focus.days.length) * 100);
-  todayTitle.textContent = `${focusStepLabel(focus, dayIndex)} of ${focus.title}`;
-  todayCopy.textContent = `${day[1]} - ${day[2]}. ${completedSet(focus.id).has(dayIndex) ? "Welcome back. Continue where you left off or choose another focus." : "Your next step is ready."}`;
+  todayTitle.textContent = `${day[1]} is ready`;
+  todayCopy.textContent = `${focus.title}: ${day[2]}. ${completedSet(focus.id).has(dayIndex) ? "Welcome back. Continue where you left off or choose another focus." : "Walk through today's Scripture, active time, question, check-in, and deed."}`;
   streakCount.textContent = String(streakDays());
   if (focusPathCount) focusPathCount.textContent = `${progressPercent}%`;
   if (savedNotesCount) savedNotesCount.textContent = String(noteEntries().length);
@@ -1398,6 +1435,7 @@ function pathStepForDay(focus, day, dayNumber) {
 }
 
 function renderWalkPath() {
+  return;
   if (!pathSteps) return;
   const focus = activeFocus() || state.focuses[0];
   const dayIndex = focus ? nextOpenDay(focus) : 0;
@@ -1427,9 +1465,16 @@ function renderFavorites() {
   const isFavorite = state.favorites.some((item) => item.id === favoriteId);
   favoriteVerseButton.textContent = isFavorite ? "Favorite Saved" : "Save Favorite Verse";
   favoriteVerseButton.classList.toggle("is-saved", isFavorite);
+  if (toggleFavoritesLibraryButton) {
+    toggleFavoritesLibraryButton.textContent = state.favoritesLibraryOpen
+      ? "Close Favorite Verses"
+      : `Open Favorite Verses${state.favorites.length ? ` (${state.favorites.length})` : ""}`;
+    toggleFavoritesLibraryButton.setAttribute("aria-expanded", String(state.favoritesLibraryOpen));
+  }
+  if (!favoriteVersesList) return;
+  favoriteVersesList.hidden = !state.favoritesLibraryOpen;
   favoriteVersesList.innerHTML = state.favorites.length
-    ? state.favorites
-        .slice(-5)
+    ? [...state.favorites]
         .reverse()
         .map((item) => `<article class="favorite-item"><strong>${escapeHtml(item.reference)}</strong><p>${escapeHtml(item.title)} from ${escapeHtml(item.focusTitle)}</p></article>`)
         .join("")
@@ -1449,13 +1494,14 @@ function noteEntries() {
       return { key, focus, focusId, dayIndex, day, text, checkin };
     })
     .filter((entry) => entry.focus && entry.day)
-    .filter((entry) => entry.text.trim() || entry.checkin.stoodOut || entry.checkin.invitation || entry.checkin.bless)
+    .filter((entry) => entry.text.trim() || entry.checkin.applicationResponse || entry.checkin.stoodOut || entry.checkin.invitation || entry.checkin.bless)
     .sort((a, b) => a.focus.title.localeCompare(b.focus.title) || a.dayIndex - b.dayIndex);
 }
 
 function notePreview(entry) {
   const parts = [];
   if (entry.text.trim()) parts.push(entry.text.trim());
+  if (entry.checkin.applicationResponse) parts.push(`Application response: ${entry.checkin.applicationResponse}`);
   if (entry.checkin.stoodOut) parts.push(`What stood out: ${entry.checkin.stoodOut}`);
   if (entry.checkin.invitation) parts.push(`God may be inviting me to: ${entry.checkin.invitation}`);
   if (entry.checkin.bless) parts.push(`Who I can bless: ${entry.checkin.bless}`);
@@ -1470,6 +1516,14 @@ function noteExcerpt(entry) {
 
 function renderNotesLibrary() {
   const entries = noteEntries();
+  if (toggleNotesLibraryButton) {
+    toggleNotesLibraryButton.textContent = state.notesLibraryOpen
+      ? "Close Notes Library"
+      : `Open Notes Library${entries.length ? ` (${entries.length})` : ""}`;
+    toggleNotesLibraryButton.setAttribute("aria-expanded", String(state.notesLibraryOpen));
+  }
+  if (!notesLibraryList) return;
+  notesLibraryList.hidden = !state.notesLibraryOpen;
   notesLibraryList.innerHTML = entries.length
     ? `
       <div class="notes-library-count">${entries.length} saved ${entries.length === 1 ? "note" : "notes"}</div>
@@ -1500,6 +1554,13 @@ function renderNotesLibrary() {
 
 function renderPrayerLibrary() {
   if (!prayerLibraryList) return;
+  if (togglePrayerLibraryButton) {
+    togglePrayerLibraryButton.textContent = state.prayerLibraryOpen
+      ? "Close Prayer Library"
+      : `Open Prayer Library (${prayerLibrary.length})`;
+    togglePrayerLibraryButton.setAttribute("aria-expanded", String(state.prayerLibraryOpen));
+  }
+  prayerLibraryList.hidden = !state.prayerLibraryOpen;
   prayerLibraryList.innerHTML = prayerLibrary
     .map((prayer, index) => `
       <button class="prayer-library-card" type="button" data-prayer-index="${index}">
@@ -1563,6 +1624,109 @@ function hideDayOverlay() {
   document.body.classList.remove("choice-open");
 }
 
+const todayFlowSteps = ["passage", "active", "application", "checkin", "deed"];
+const todayFlowStepLabels = {
+  passage: "Scripture",
+  active: "Active Time",
+  application: "Question",
+  checkin: "Check-In",
+  deed: "Deed"
+};
+
+function todayFlowContext(options = {}) {
+  const focus = activeFocus() || state.focuses[0];
+  const dayIndex = focus ? (options.useNextOpen ? nextOpenDay(focus) : state.activeDayIndex) : 0;
+  if (focus && (!state.activeId || state.activeId !== focus.id || options.useNextOpen)) {
+    state.activeId = focus.id;
+    state.activeDayIndex = dayIndex;
+  }
+  const day = focus?.days?.[dayIndex];
+  return { focus, dayIndex, day, extras: focus && day ? getDayExtras(focus, day) : null };
+}
+
+function setTodayFlowStep(step) {
+  state.todayFlowStep = todayFlowSteps.includes(step) ? step : "passage";
+  renderTodayFlow();
+}
+
+function showTodayFlow(step = "passage") {
+  if (!todayFlowOverlay || !state.user) return;
+  const { focus, dayIndex, day } = todayFlowContext({ useNextOpen: true });
+  if (!focus || !day) return;
+  state.activeId = focus.id;
+  state.activeDayIndex = dayIndex;
+  state.todayFlowStep = todayFlowSteps.includes(step) ? step : "passage";
+  if (state.currentPassageReference !== day[2]) {
+    stopPassageAudio();
+    loadVerseText(day[2]).finally(renderTodayFlow);
+  }
+  renderTodayFlow();
+  todayFlowOverlay.hidden = false;
+  document.body.classList.add("choice-open");
+}
+
+function hideTodayFlow() {
+  if (!todayFlowOverlay) return;
+  todayFlowOverlay.hidden = true;
+  document.body.classList.remove("choice-open");
+}
+
+function renderTodayFlow() {
+  if (!todayFlowOverlay) return;
+  const { focus, dayIndex, day, extras } = todayFlowContext();
+  if (!focus || !day || !extras) return;
+  const stepIndex = todayFlowSteps.indexOf(state.todayFlowStep);
+  const safeStepIndex = stepIndex === -1 ? 0 : stepIndex;
+  const panels = {
+    passage: todayFlowPassagePanel,
+    active: todayFlowActivePanel,
+    application: todayFlowApplicationPanel,
+    checkin: todayFlowCheckinPanel,
+    deed: todayFlowDeedPanel
+  };
+  Object.entries(panels).forEach(([key, panel]) => {
+    if (panel) panel.hidden = key !== todayFlowSteps[safeStepIndex];
+  });
+  if (todayFlowStepLabel) todayFlowStepLabel.textContent = `Today's Focus - ${focusStepLabel(focus, dayIndex)}`;
+  if (todayFlowTitle) todayFlowTitle.textContent = day[1];
+  if (todayFlowIntro) todayFlowIntro.textContent = `${focus.title}: ${day[2]}`;
+  if (todayFlowProgress) {
+    todayFlowProgress.innerHTML = todayFlowSteps
+      .map((step, index) => `<span class="${index <= safeStepIndex ? "is-active" : ""}">${todayFlowStepLabels[step]}</span>`)
+      .join("");
+  }
+  if (todayFlowPassageTitle) todayFlowPassageTitle.textContent = day[1];
+  if (todayFlowPassageReference) todayFlowPassageReference.textContent = day[2];
+  if (todayFlowPassageText) {
+    todayFlowPassageText.textContent =
+      state.currentPassageReference === day[2] && state.currentPassageText
+        ? state.currentPassageText
+        : "Loading the passage...";
+  }
+  if (todayFlowActiveText) todayFlowActiveText.textContent = extras.active;
+  if (todayFlowApplicationText) todayFlowApplicationText.textContent = extras.application;
+  if (todayFlowDeedText) todayFlowDeedText.textContent = extras.deed;
+  const key = dayKey();
+  const checkin = state.checkins[key] || {};
+  if (todayFlowApplicationInput && todayFlowApplicationInput.value !== (checkin.applicationResponse || "")) {
+    todayFlowApplicationInput.value = checkin.applicationResponse || "";
+  }
+  if (todayFlowStoodOutInput && todayFlowStoodOutInput.value !== (checkin.stoodOut || "")) {
+    todayFlowStoodOutInput.value = checkin.stoodOut || "";
+  }
+  if (todayFlowInvitationInput && todayFlowInvitationInput.value !== (checkin.invitation || "")) {
+    todayFlowInvitationInput.value = checkin.invitation || "";
+  }
+  if (todayFlowNoteInput && todayFlowNoteInput.value !== (state.notes[key] || "")) {
+    todayFlowNoteInput.value = state.notes[key] || "";
+  }
+  if (todayFlowCompleteButton) {
+    const isComplete = completedSet(focus.id).has(dayIndex);
+    todayFlowCompleteButton.textContent = isComplete ? "Day Complete" : "Mark Day Complete";
+    todayFlowCompleteButton.classList.toggle("is-complete", isComplete);
+  }
+}
+
 function showFocusOverlay() {
   if (!focusOverlay) return;
   focusOverlay.hidden = false;
@@ -1596,7 +1760,7 @@ function renderCompletion(focus, isFocusComplete) {
       <h3>${escapeHtml(focus.title)} walked through</h3>
       <p>You walked through every day of this focus. Pause, breathe, and thank God for the Scripture, practice, and obedience He has been forming in you.</p>
       <p>Lord, help this focus become lived faith. Let Your word keep shaping my attention, choices, relationships, and obedience. Amen.</p>
-      <a class="secondary-link" href="#themes">Choose Next Step</a>
+      <a class="secondary-link" href="#themes">Choose Next Focus</a>
     </div>
   `;
 }
@@ -2413,7 +2577,7 @@ function scrollToTodaySection() {
 
 function markDayComplete(focus, dayIndex, statusElement) {
   if (!focus || !focus.days?.[dayIndex]) {
-    if (statusElement) statusElement.textContent = "Choose a focus day before marking a step taken.";
+    if (statusElement) statusElement.textContent = "Choose a focus day before marking it complete.";
     return { becameFocusComplete: false, didComplete: false };
   }
   const completed = completedSet(focus.id);
@@ -2426,7 +2590,7 @@ function markDayComplete(focus, dayIndex, statusElement) {
     queueProgressSync(focus.id, dayIndex);
     syncPendingProgress(statusElement);
   } else if (statusElement) {
-    statusElement.textContent = "Step saved on this device. Sign in to sync progress across devices.";
+    statusElement.textContent = "Day saved on this device. Sign in to sync progress across devices.";
   }
   const becameFocusComplete = !wasDayComplete && !wasFocusComplete && isFocusComplete(focus);
   return { becameFocusComplete, didComplete: !wasDayComplete };
@@ -2458,7 +2622,7 @@ function renderFocusList() {
     if (focus) {
       const completeCount = completedSet(focus.id).size;
       activeFocusSummaryTitle.textContent = focus.title;
-      activeFocusSummaryCopy.textContent = `${completeCount} of ${focus.days.length} steps walked. ${focus.description}`;
+      activeFocusSummaryCopy.textContent = `${completeCount} of ${focus.days.length} days completed. ${focus.description}`;
     } else {
       activeFocusSummaryTitle.textContent = "Choose a focus";
       activeFocusSummaryCopy.textContent = "Open the focus library to choose a Scripture theme.";
@@ -2474,7 +2638,7 @@ function renderFocusList() {
           <span>
             <span class="theme-name">${focus.title}</span>
             <span class="theme-purpose">${escapeHtml(focus.description)}</span>
-            <span class="theme-count">${completeCount}/${focus.days.length} steps walked</span>
+            <span class="theme-count">${completeCount}/${focus.days.length} days completed</span>
             <span class="theme-progress-mini" aria-hidden="true"><span style="width: ${progressPercent}%"></span></span>
           </span>
         </button>
@@ -2874,15 +3038,16 @@ function renderWalking() {
 }
 
 function renderAdmin() {
-  const canAdmin = state.user?.role === "admin" && state.adminUnlocked;
+  const canAdmin = state.user?.role === "admin";
+  state.adminUnlocked = canAdmin;
+  sessionStorage.setItem("walkWithGodAdminUnlocked", String(canAdmin));
+  if (adminUnlockForm) adminUnlockForm.hidden = true;
   addFocusForm.hidden = !canAdmin;
   if (premiumContentForm) premiumContentForm.hidden = !canAdmin;
   if (adminReminderMessageForm) adminReminderMessageForm.hidden = !canAdmin;
   adminDashboard.hidden = !canAdmin;
-  lockAdminButton.hidden = !state.adminUnlocked;
-  if (state.adminUnlocked && state.user?.role !== "admin") {
-    adminStatus.textContent = "Admin code accepted, but this account is not an admin.";
-  } else if (canAdmin) {
+  if (lockAdminButton) lockAdminButton.hidden = true;
+  if (canAdmin) {
     adminStatus.textContent = "Admin unlocked. You can manage focuses, accounts, feedback, and reports.";
   }
 }
@@ -2924,7 +3089,7 @@ function renderAdminDashboard(data = null) {
         .map((user) => `
           <button class="admin-row" type="button" data-user-id="${escapeHtml(user.id)}">
             <strong>${escapeHtml(user.name)}</strong>
-            <span>${escapeHtml(user.email)} - ${escapeHtml(user.role)} - ${user.metrics.completedDays} steps walked</span>
+            <span>${escapeHtml(user.email)} - ${escapeHtml(user.role)} - ${user.metrics.completedDays} days completed</span>
             <span>${escapeHtml(formatMailingAddress(user.mailingAddress) || "No mailing address shared")}</span>
           </button>
         `)
@@ -3057,8 +3222,8 @@ function render() {
   activeTitle.textContent = focus.title;
   activePurpose.textContent = focus.description;
   daysPill.textContent = `${focus.days.length} days`;
-  progressText.textContent = `${completed.size} of ${focus.days.length} steps walked`;
-  encouragementText.textContent = isFocusComplete ? "This focus has been walked through. Choose another next step when you are ready." : `Walk this focus over ${focus.days.length} days.`;
+  progressText.textContent = `${completed.size} of ${focus.days.length} days completed`;
+  encouragementText.textContent = isFocusComplete ? "This focus has been completed. Choose another focus when you are ready." : `Walk this focus over ${focus.days.length} days.`;
   progressFill.style.width = `${progress}%`;
   if (currentDayShortcut) {
     currentDayShortcut.textContent = `${focusDayContext(focus, day, state.activeDayIndex)} open: ${day[1]}`;
@@ -3093,7 +3258,7 @@ function render() {
   invitationInput.value = checkin.invitation || "";
   blessInput.value = checkin.bless || "";
   noteStatus.textContent = "";
-  completeButton.textContent = isDayComplete ? "Step Taken" : "Mark Step Taken";
+  completeButton.textContent = isDayComplete ? "Day Complete" : "Mark Day Complete";
   completeButton.classList.toggle("is-complete", isDayComplete);
   nextButton.disabled = state.activeDayIndex === focus.days.length - 1;
   completionContainer.innerHTML = renderCompletion(focus, isFocusComplete);
@@ -3115,6 +3280,7 @@ function render() {
   renderNotesLibrary();
   renderPrayerLibrary();
   renderAdmin();
+  renderTodayFlow();
   saveActivePosition();
 }
 
@@ -3156,6 +3322,93 @@ if (dayOverlay) {
   });
 }
 
+if (todayFlowCloseButton) {
+  todayFlowCloseButton.addEventListener("click", hideTodayFlow);
+}
+
+if (todayFlowOverlay) {
+  todayFlowOverlay.addEventListener("click", (event) => {
+    if (event.target === todayFlowOverlay) hideTodayFlow();
+  });
+}
+
+if (todayFlowReadAloudButton) {
+  todayFlowReadAloudButton.addEventListener("click", readPassageAloud);
+}
+
+if (todayFlowReadButton) {
+  todayFlowReadButton.addEventListener("click", () => setTodayFlowStep("active"));
+}
+
+if (todayFlowActiveButton) {
+  todayFlowActiveButton.addEventListener("click", () => setTodayFlowStep("application"));
+}
+
+if (todayFlowApplicationButton) {
+  todayFlowApplicationButton.addEventListener("click", () => {
+    const response = todayFlowApplicationInput?.value.trim() || "";
+    if (!response) {
+      todayFlowStatus.textContent = "Write a short response before moving on.";
+      return;
+    }
+    const key = dayKey();
+    state.checkins[key] = { ...(state.checkins[key] || {}), applicationResponse: response };
+    saveCheckins();
+    todayFlowStatus.textContent = "Application response saved.";
+    renderNotesLibrary();
+    renderToday();
+    setTodayFlowStep("checkin");
+  });
+}
+
+if (todayFlowCheckinButton) {
+  todayFlowCheckinButton.addEventListener("click", () => {
+    const key = dayKey();
+    const existing = state.checkins[key] || {};
+    state.notes[key] = todayFlowNoteInput?.value.trim() || "";
+    state.checkins[key] = {
+      ...existing,
+      stoodOut: todayFlowStoodOutInput?.value.trim() || "",
+      invitation: todayFlowInvitationInput?.value.trim() || ""
+    };
+    saveNotes();
+    saveCheckins();
+    renderNotesLibrary();
+    renderToday();
+    const focus = activeFocus();
+    if (state.user && focus) {
+      const serverText = notePreview({ text: state.notes[key] || "", checkin: state.checkins[key] || {} });
+      if (serverText.trim()) {
+        apiFetch("/api/notes", {
+          method: "POST",
+          body: JSON.stringify({ focusId: focus.id, dayIndex: state.activeDayIndex, text: serverText })
+        }).catch(() => undefined);
+      }
+    }
+    todayFlowStatus.textContent = "Check-in saved.";
+    setTodayFlowStep("deed");
+  });
+}
+
+if (todayFlowCompleteButton) {
+  todayFlowCompleteButton.addEventListener("click", () => {
+    const focus = activeFocus();
+    const result = markDayComplete(focus, state.activeDayIndex, todayFlowStatus);
+    if (!result.becameFocusComplete) state.activeDayIndex = nextOpenDay(focus);
+    render();
+    renderTodayFlow();
+    todayFlowStatus.textContent = result.didComplete
+      ? "Day marked complete. Your Today section is updated."
+      : "That day was already marked complete.";
+    scrollToTodaySection();
+    if (result.becameFocusComplete) showFocusCelebration(focus);
+  });
+}
+
+if (todayFlowDoneButton) {
+  todayFlowDoneButton.addEventListener("click", hideTodayFlow);
+}
+
 if (dayChoiceList) {
   dayChoiceList.addEventListener("click", (event) => {
     const button = event.target.closest(".day-button");
@@ -3175,11 +3428,35 @@ notesLibraryList.addEventListener("click", (event) => {
   loadCommunity().finally(render);
 });
 
+if (toggleNotesLibraryButton) {
+  toggleNotesLibraryButton.addEventListener("click", () => {
+    state.notesLibraryOpen = !state.notesLibraryOpen;
+    localStorage.setItem("walkWithGodNotesLibraryOpen", String(state.notesLibraryOpen));
+    renderNotesLibrary();
+  });
+}
+
 if (prayerLibraryList) {
   prayerLibraryList.addEventListener("click", (event) => {
     const button = event.target.closest(".prayer-library-card");
     if (!button) return;
     openPrayerModal(Number(button.dataset.prayerIndex));
+  });
+}
+
+if (togglePrayerLibraryButton) {
+  togglePrayerLibraryButton.addEventListener("click", () => {
+    state.prayerLibraryOpen = !state.prayerLibraryOpen;
+    localStorage.setItem("walkWithGodPrayerLibraryOpen", String(state.prayerLibraryOpen));
+    renderPrayerLibrary();
+  });
+}
+
+if (toggleFavoritesLibraryButton) {
+  toggleFavoritesLibraryButton.addEventListener("click", () => {
+    state.favoritesLibraryOpen = !state.favoritesLibraryOpen;
+    localStorage.setItem("walkWithGodFavoritesLibraryOpen", String(state.favoritesLibraryOpen));
+    renderFavorites();
   });
 }
 
@@ -3306,8 +3583,8 @@ completeButton.addEventListener("click", () => {
   if (!result.becameFocusComplete) state.activeDayIndex = nextOpenDay(focus);
   render();
   todayStatus.textContent = result.didComplete
-    ? "Step marked. Your Today section is updated with your next step."
-    : "That step was already marked. Your Today section is up to date.";
+    ? "Day marked complete. Your Today section is updated."
+    : "That day was already marked complete. Your Today section is up to date.";
   scrollToTodaySection();
   if (result.becameFocusComplete) showFocusCelebration(focus);
 });
@@ -3316,8 +3593,10 @@ continueTodayButton.addEventListener("click", () => {
   const focus = activeFocus() || state.focuses[0];
   state.activeId = focus.id;
   state.activeDayIndex = nextOpenDay(focus);
-  document.querySelector("#themes").scrollIntoView({ behavior: "smooth" });
-  loadCommunity().finally(render);
+  loadCommunity().finally(() => {
+    render();
+    showTodayFlow("passage");
+  });
 });
 
 quickCompleteButton.addEventListener("click", () => {
@@ -3328,7 +3607,7 @@ quickCompleteButton.addEventListener("click", () => {
   if (!result.becameFocusComplete) state.activeDayIndex = nextOpenDay(focus);
   todayStatus.textContent = result.becameFocusComplete
     ? `${focus.title} walked through. Take a moment to celebrate what God has walked you through.`
-    : "Step marked for today. Welcome back whenever you are ready for the next step.";
+    : "Day marked complete. Welcome back whenever you are ready for the next day.";
   render();
   scrollToTodaySection();
   if (result.becameFocusComplete) showFocusCelebration(focus);
@@ -3677,7 +3956,7 @@ function openAuthForm(mode) {
   authName.closest("label").hidden = mode === "login";
   if (mailingAddressFields) mailingAddressFields.hidden = mode === "login";
   submitAuthButton.textContent = mode === "signup" ? "Create Account" : "Log In";
-  authMessage.textContent = mode === "signup" ? "Create your account to save your path rhythm and join community." : "Log in to continue.";
+  authMessage.textContent = mode === "signup" ? "Create your account to save your progress and join community." : "Log in to continue.";
 }
 
 showSignupButton.addEventListener("click", () => openAuthForm("signup"));
@@ -4004,7 +4283,7 @@ adminUserList.addEventListener("click", (event) => {
         <p><strong>${escapeHtml(user.name)}</strong></p>
         <p>${escapeHtml(user.email)} - ${escapeHtml(user.role)}</p>
         <p><strong>Mailing address:</strong> ${escapeHtml(formatMailingAddress(user.mailingAddress) || "Not shared")}</p>
-        <p>${user.metrics.completedDays} steps walked, ${user.metrics.communityPosts} community posts, ${user.metrics.privateNotes} private notes.</p>
+        <p>${user.metrics.completedDays} days completed, ${user.metrics.communityPosts} community posts, ${user.metrics.privateNotes} private notes.</p>
         <p>Reminder: ${escapeHtml(user.metrics.reminder?.time || "not set")} - Push devices: ${user.metrics.pushSubscriptions}</p>
       `;
       adminSupportForm.hidden = false;
