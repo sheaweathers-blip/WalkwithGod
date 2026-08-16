@@ -2869,12 +2869,40 @@ select:focus {
   background: var(--nature-leaf);
 }
 
+.admin-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .admin-list {
   display: grid;
   gap: 10px;
   margin-top: 14px;
   max-height: 520px;
   overflow: auto;
+}
+
+.admin-notification-item {
+  border-color: rgba(31, 75, 59, 0.18);
+}
+
+.admin-notification-item.is-unread {
+  border-color: rgba(31, 75, 59, 0.42);
+  background:
+    radial-gradient(circle at 90% 12%, rgba(205, 161, 72, 0.16), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(230, 244, 226, 0.9));
+}
+
+.admin-notification-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .admin-row {

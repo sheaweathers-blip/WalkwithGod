@@ -1015,6 +1015,8 @@ const adminReminderMessage = document.querySelector("#adminReminderMessage");
 const adminReminderMessageStatus = document.querySelector("#adminReminderMessageStatus");
 const adminDashboard = document.querySelector("#adminDashboard");
 const adminSummary = document.querySelector("#adminSummary");
+const adminNotificationList = document.querySelector("#adminNotificationList");
+const markAdminNotificationsReadButton = document.querySelector("#markAdminNotificationsReadButton");
 const adminUserList = document.querySelector("#adminUserList");
 const adminUserDetail = document.querySelector("#adminUserDetail");
 const adminSupportForm = document.querySelector("#adminSupportForm");
@@ -1075,11 +1077,11 @@ function savePendingProgress(entries) {
   localStorage.setItem("walkWithGodPendingProgress", JSON.stringify(entries));
 }
 
-function queueProgressSync(focusId, dayIndex) {
+function queueProgressSync(focusId, dayIndex, details = {}) {
   const pending = pendingProgressEntries();
   const key = progressKey(focusId, dayIndex);
   if (!pending.some((item) => progressKey(item.focusId, item.dayIndex) === key)) {
-    pending.push({ focusId, dayIndex: Number(dayIndex) });
+    pending.push({ focusId, dayIndex: Number(dayIndex), ...details });
     savePendingProgress(pending);
   }
 }
@@ -1091,7 +1093,7 @@ async function syncPendingProgress(statusElement = null) {
   const remaining = [];
   for (const item of pending) {
     try {
-      await apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ focusId: item.focusId, dayIndex: Number(item.dayIndex) }) });
+      await apiFetch("/api/progress", { method: "POST", body: JSON.stringify({ ...item, focusId: item.focusId, dayIndex: Number(item.dayIndex) }) });
     } catch {
       remaining.push(item);
     }
@@ -2587,7 +2589,12 @@ function markDayComplete(focus, dayIndex, statusElement) {
   rememberCompletionDate();
   saveCompleted();
   if (state.user) {
-    queueProgressSync(focus.id, dayIndex);
+    queueProgressSync(focus.id, dayIndex, {
+      focusTitle: focus.title,
+      dayTitle: focus.days[dayIndex]?.[1] || "",
+      focusDayCount: focus.days.length,
+      isFocusComplete: !wasFocusComplete && isFocusComplete(focus)
+    });
     syncPendingProgress(statusElement);
   } else if (statusElement) {
     statusElement.textContent = "Day saved on this device. Sign in to sync progress across devices.";
@@ -3066,9 +3073,30 @@ function renderAdminDashboard(data = null) {
     <div><strong>${data.summary.communityPosts}</strong><span>Posts</span></div>
     <div><strong>${data.summary.openFeedback}</strong><span>Open feedback</span></div>
     <div><strong>${data.summary.openReports}</strong><span>Open reports</span></div>
+    <div><strong>${data.summary.unreadNotifications || 0}</strong><span>Unread alerts</span></div>
     <div><strong>${data.summary.totalPrayerClicks || 0}</strong><span>Prayer opens</span></div>
     <div><strong>${data.summary.premiumContent || 0}</strong><span>Abide content</span></div>
   `;
+
+  if (adminNotificationList) {
+    adminNotificationList.innerHTML = data.notifications?.length
+      ? data.notifications
+          .map((item) => `
+            <article class="admin-item admin-notification-item ${item.status !== "read" ? "is-unread" : ""}">
+              <strong>${escapeHtml(item.title)}</strong>
+              <p>${escapeHtml(item.message)}</p>
+              <div class="admin-notification-meta">
+                <span>${escapeHtml(item.type)}</span>
+                <span>${escapeHtml(item.user?.name || "System")}</span>
+                <span>${escapeHtml(item.createdAt ? new Date(item.createdAt).toLocaleString() : "")}</span>
+                <span>${item.emailedAt ? "Email sent" : "Dashboard only"}</span>
+              </div>
+              ${item.status !== "read" ? `<button class="quiet-button admin-notification-read" type="button" data-id="${escapeHtml(item.id)}">Mark Reviewed</button>` : ""}
+            </article>
+          `)
+          .join("")
+      : '<p class="empty-feed">Admin alerts will appear here.</p>';
+  }
 
   if (adminPrayerClickList) {
     adminPrayerClickList.innerHTML = data.summary.prayerClicks?.length
@@ -3158,8 +3186,9 @@ function renderAdminDashboard(data = null) {
 
 async function loadAdminDashboard() {
   if (state.user?.role !== "admin") return;
-  const [summary, users, feedback, reports, communityPosts, prayerRequests, reminderMessage] = await Promise.all([
+  const [summary, notifications, users, feedback, reports, communityPosts, prayerRequests, reminderMessage] = await Promise.all([
     apiFetch("/api/admin/summary"),
+    apiFetch("/api/admin/notifications"),
     apiFetch("/api/admin/users"),
     apiFetch("/api/admin/feedback"),
     apiFetch("/api/admin/reports"),
@@ -3169,6 +3198,7 @@ async function loadAdminDashboard() {
   ]);
   renderAdminDashboard({
     summary,
+    notifications: notifications.notifications || [],
     users: users.users || [],
     feedback: feedback.feedback || [],
     reports: reports.reports || [],
@@ -4337,6 +4367,34 @@ adminFeedbackList.addEventListener("click", (event) => {
       adminStatus.textContent = error.message;
     });
 });
+
+if (adminNotificationList) {
+  adminNotificationList.addEventListener("click", (event) => {
+    const button = event.target.closest(".admin-notification-read");
+    if (!button) return;
+    apiFetch("/api/admin/notifications/status", {
+      method: "POST",
+      body: JSON.stringify({ id: button.dataset.id, status: "read" })
+    })
+      .then(loadAdminDashboard)
+      .catch((error) => {
+        adminStatus.textContent = error.message;
+      });
+  });
+}
+
+if (markAdminNotificationsReadButton) {
+  markAdminNotificationsReadButton.addEventListener("click", () => {
+    apiFetch("/api/admin/notifications/status", {
+      method: "POST",
+      body: JSON.stringify({ id: "all", status: "read" })
+    })
+      .then(loadAdminDashboard)
+      .catch((error) => {
+        adminStatus.textContent = error.message;
+      });
+  });
+}
 
 adminReportList.addEventListener("click", (event) => {
   const reportButton = event.target.closest(".admin-report-action");

@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Walk With God" />
     <link rel="apple-touch-icon" href="/assets/icon-192.png?v=20260627-visual-refresh" />
     <script src="logo-fallback.js?v=20260627-visual-refresh"></script>
-    <link rel="stylesheet" href="styles.css?v=20260814-clean-flow" />
+    <link rel="stylesheet" href="styles.css?v=20260816-admin-alerts" />
   </head>
   <body>
     <div class="server-warning" id="serverWarning" hidden>
@@ -880,6 +880,17 @@
 
           <div class="admin-grid">
             <section class="admin-panel">
+              <div class="admin-panel-heading">
+                <h3>Admin Alerts</h3>
+                <button class="quiet-button" type="button" id="markAdminNotificationsReadButton">Mark All Reviewed</button>
+              </div>
+              <p class="field-note">New sign-ups, reported issues, community reports, and milestones to celebrate.</p>
+              <div class="admin-list" id="adminNotificationList"></div>
+            </section>
+          </div>
+
+          <div class="admin-grid">
+            <section class="admin-panel">
               <h3>Client Accounts</h3>
               <div class="admin-list" id="adminUserList"></div>
             </section>
@@ -1115,6 +1126,6 @@
       </nav>
     </footer>
 
-    <script src="app.js?v=20260814-clean-flow"></script>
+    <script src="app.js?v=20260816-admin-alerts"></script>
   </body>
 </html>

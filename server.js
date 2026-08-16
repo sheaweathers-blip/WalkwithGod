@@ -90,6 +90,7 @@ function defaultDb() {
     pushSubscriptions: [],
     feedback: [],
     reports: [],
+    adminNotifications: [],
     supportMessages: [],
     prayerRequests: [],
     prayerClicks: [],
@@ -152,6 +153,9 @@ function normalizeDb(db) {
   }
   normalized.settings = { ...defaultSettings(), ...(normalized.settings || {}) };
   normalized.settings.reminderMessage = normalizeText(normalized.settings.reminderMessage, 240) || DEFAULT_REMINDER_MESSAGE;
+  normalized.adminNotifications = normalized.adminNotifications
+    .map(normalizeAdminNotification)
+    .filter((item) => item.id && item.title);
   normalized.users = normalized.users.map((user, index) => ({
     ...user,
     email: normalizeEmail(user.email),
@@ -365,6 +369,56 @@ function normalizeEmail(value) {
 
 function shouldBeAdmin(db, email) {
   return db.users.length === 0 || ADMIN_EMAILS.has(normalizeEmail(email));
+}
+
+function normalizeAdminNotification(item) {
+  return {
+    id: normalizeText(item?.id, 120),
+    key: normalizeText(item?.key, 180),
+    type: normalizeText(item?.type, 60) || "general",
+    title: normalizeText(item?.title, 180),
+    message: normalizeText(item?.message, 1200),
+    userId: normalizeText(item?.userId, 120),
+    status: normalizeText(item?.status, 20) || "unread",
+    metadata: item?.metadata && typeof item.metadata === "object" ? item.metadata : {},
+    createdAt: normalizeText(item?.createdAt, 40) || new Date().toISOString(),
+    emailedAt: normalizeText(item?.emailedAt, 40)
+  };
+}
+
+function adminNotificationEmail() {
+  return normalizeEmail(process.env.ADMIN_NOTIFICATION_EMAIL || OWNER_ADMIN_EMAIL);
+}
+
+async function createAdminNotification(db, details) {
+  if (!Array.isArray(db.adminNotifications)) db.adminNotifications = [];
+  const key = normalizeText(details.key, 180);
+  if (key && db.adminNotifications.some((item) => item.key === key)) return null;
+  const notification = normalizeAdminNotification({
+    id: crypto.randomUUID(),
+    key,
+    type: details.type,
+    title: details.title,
+    message: details.message,
+    userId: details.userId,
+    status: "unread",
+    metadata: details.metadata || {},
+    createdAt: new Date().toISOString()
+  });
+  db.adminNotifications.push(notification);
+  db.adminNotifications = db.adminNotifications.slice(-250);
+  if (details.email !== false) {
+    try {
+      const result = await sendEmail(adminNotificationEmail(), {
+        title: `Walk With God admin: ${notification.title}`,
+        body: `${notification.message}\n\nOpen admin dashboard: https://walk-with-god.org/#admin`
+      });
+      if (result.ok) notification.emailedAt = new Date().toISOString();
+    } catch {
+      // The dashboard alert is still saved when email is unavailable.
+    }
+  }
+  return notification;
 }
 
 function normalizePrayerClick(item) {
@@ -612,6 +666,14 @@ async function handleApi(request, response) {
     const session = { id: crypto.randomUUID(), userId: user.id, expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 30 };
     db.users.push(user);
     db.sessions.push(session);
+    await createAdminNotification(db, {
+      key: `signup:${user.id}`,
+      type: "signup",
+      title: "New sign-up",
+      message: `${user.name} created a Walk With God account using ${user.email}.`,
+      userId: user.id,
+      metadata: { email: user.email, name: user.name }
+    });
     await writeDb(db);
     return json(response, 201, { user: publicUser(user) }, { "Set-Cookie": `sid=${session.id}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2592000` });
   }
@@ -825,6 +887,14 @@ async function handleApi(request, response) {
       createdAt: new Date().toISOString()
     };
     db.reports.push(report);
+    await createAdminNotification(db, {
+      key: `report:${report.id}`,
+      type: "report",
+      title: "Community report",
+      message: `${user.name} reported a community post: ${report.reason}`,
+      userId: user.id,
+      metadata: { reportId: report.id, postId: post.id }
+    });
     await writeDb(db);
     return json(response, 201, { report });
   }
@@ -844,6 +914,14 @@ async function handleApi(request, response) {
       createdAt: new Date().toISOString()
     };
     db.feedback.push(feedback);
+    await createAdminNotification(db, {
+      key: `feedback:${feedback.id}`,
+      type: feedback.type === "bug" || feedback.type === "reminder" ? "issue" : "feedback",
+      title: feedback.type === "bug" || feedback.type === "reminder" ? "New issue reported" : "New feedback",
+      message: `${user.name} sent ${feedback.type} feedback: ${feedback.text}`,
+      userId: user.id,
+      metadata: { feedbackId: feedback.id, feedbackType: feedback.type }
+    });
     await writeDb(db);
     return json(response, 201, { feedback });
   }
@@ -887,8 +965,33 @@ async function handleApi(request, response) {
     const focusId = normalizeText(body.focusId, 120);
     const dayIndex = Number(body.dayIndex);
     if (!focusId || !Number.isInteger(dayIndex)) return json(response, 400, { error: "focusId and dayIndex are required." });
-    if (!db.progress.some((item) => item.userId === user.id && item.focusId === focusId && item.dayIndex === dayIndex)) {
+    const alreadyCompleted = db.progress.some((item) => item.userId === user.id && item.focusId === focusId && item.dayIndex === dayIndex);
+    if (!alreadyCompleted) {
       db.progress.push({ userId: user.id, focusId, dayIndex, completedAt: new Date().toISOString() });
+      const userCompletedCount = db.progress.filter((item) => item.userId === user.id).length;
+      const milestoneDays = [1, 3, 7, 14, 30, 60, 100];
+      if (milestoneDays.includes(userCompletedCount)) {
+        await createAdminNotification(db, {
+          key: `milestone-days:${user.id}:${userCompletedCount}`,
+          type: "milestone",
+          title: `${userCompletedCount} day milestone`,
+          message: `${user.name} has completed ${userCompletedCount} ${userCompletedCount === 1 ? "day" : "days"} in Walk With God.`,
+          userId: user.id,
+          metadata: { completedDays: userCompletedCount, focusId, dayIndex }
+        });
+      }
+      const focusTitle = normalizeText(body.focusTitle, 160);
+      const dayTitle = normalizeText(body.dayTitle, 160);
+      if (Boolean(body.isFocusComplete)) {
+        await createAdminNotification(db, {
+          key: `milestone-focus:${user.id}:${focusId}`,
+          type: "milestone",
+          title: "Focus completed",
+          message: `${user.name} completed ${focusTitle || "a focus"}${dayTitle ? ` after finishing ${dayTitle}` : ""}.`,
+          userId: user.id,
+          metadata: { focusId, focusTitle, dayIndex, dayTitle }
+        });
+      }
       await writeDb(db);
     }
     return json(response, 200, { ok: true });
@@ -1053,12 +1156,49 @@ async function handleApi(request, response) {
         communityPosts: db.posts.filter((post) => !post.hiddenAt).length,
         openFeedback: db.feedback.filter((item) => item.status === "open").length,
         openReports: db.reports.filter((item) => item.status === "open").length,
+        unreadNotifications: db.adminNotifications.filter((item) => item.status !== "read").length,
         reminders: db.reminders.length,
         pushSubscriptions: db.pushSubscriptions.length,
         premiumContent: db.premiumContent.filter((item) => !item.archivedAt).length,
         prayerClicks: topPrayerClicks,
         totalPrayerClicks: db.prayerClicks.reduce((sum, item) => sum + (Number(item.count) || 0), 0)
       });
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/admin/notifications") {
+      return json(response, 200, {
+        notifications: db.adminNotifications
+          .slice()
+          .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+          .slice(0, 80)
+          .map((item) => ({
+            ...item,
+            user: publicUser(db.users.find((user) => user.id === item.userId))
+          }))
+      });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/admin/notifications/status") {
+      const body = await readBody(request);
+      const id = normalizeText(body.id, 120);
+      const status = normalizeText(body.status, 20) || "read";
+      const allowed = new Set(["read", "unread"]);
+      if (!allowed.has(status)) return json(response, 400, { error: "Notification status was not recognized." });
+      if (id === "all") {
+        db.adminNotifications.forEach((item) => {
+          item.status = status;
+          item.reviewedBy = admin.id;
+          item.reviewedAt = new Date().toISOString();
+        });
+      } else {
+        const item = db.adminNotifications.find((notification) => notification.id === id);
+        if (!item) return json(response, 404, { error: "Admin notification not found." });
+        item.status = status;
+        item.reviewedBy = admin.id;
+        item.reviewedAt = new Date().toISOString();
+      }
+      await writeDb(db);
+      return json(response, 200, { ok: true });
     }
 
     if (request.method === "GET" && url.pathname === "/api/admin/reminder-message") {
