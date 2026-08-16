@@ -48,6 +48,7 @@ const premiumMedia = {
 
 const DEFAULT_REMINDER_MESSAGE = "Walk With God: Take your next step with God today. Open today's focus: https://walk-with-god.org";
 const OWNER_ADMIN_EMAIL = "sheaweather@gmail.com";
+const DEFAULT_ADMIN_NOTIFICATION_EMAIL = "walkedwithgodtoday@gmail.com";
 const ADMIN_EMAILS = new Set(
   [OWNER_ADMIN_EMAIL, ...(process.env.ADMIN_EMAILS || "").split(",")]
     .map((email) => normalizeEmail(email))
@@ -387,7 +388,7 @@ function normalizeAdminNotification(item) {
 }
 
 function adminNotificationEmail() {
-  return normalizeEmail(process.env.ADMIN_NOTIFICATION_EMAIL || OWNER_ADMIN_EMAIL);
+  return normalizeEmail(process.env.ADMIN_NOTIFICATION_EMAIL || DEFAULT_ADMIN_NOTIFICATION_EMAIL);
 }
 
 async function createAdminNotification(db, details) {
